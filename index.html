@@ -120,8 +120,12 @@ body{
   background:var(--bg2);
   border-bottom:1px solid var(--border);
   padding:10px 24px;
-  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+  display:flex;gap:8px;flex-wrap:nowrap;align-items:center;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
+.filters-bar::-webkit-scrollbar{display:none;}
 .filter-btn{
   background:rgba(255,255,255,0.04);
   border:1px solid rgba(255,255,255,0.08);
@@ -551,7 +555,253 @@ body{
   margin-top:14px;letter-spacing:.5px;
 }
 
-/* ═══════════════ ANIMATIONS ═══════════════ */
+/* ═══════════════ COMPARE BUTTON ═══════════════ */
+.food-card-compare{
+  position:absolute;top:10px;left:10px;
+  background:rgba(201,168,76,0.12);
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:6px;padding:3px 8px;
+  font-size:9px;color:var(--gold);
+  cursor:pointer;transition:all .2s;
+  font-family:'Cairo',sans-serif;
+  opacity:0;pointer-events:none;
+  letter-spacing:.5px;
+}
+.food-card:hover .food-card-compare{opacity:1;pointer-events:all;}
+.food-card-compare.added{
+  background:var(--gold-dim);
+  border-color:var(--gold);
+  opacity:1;pointer-events:all;
+}
+
+/* ═══════════════ COMPARE BAR ═══════════════ */
+.compare-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(135deg,#141210,#0e0c0a);
+  border-top:1px solid var(--border);
+  padding:12px 24px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  transform:translateY(100%);transition:transform .3s;
+}
+.compare-bar.show{transform:translateY(0);}
+.compare-bar-label{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;letter-spacing:2px;color:var(--gold);
+  flex-shrink:0;
+}
+.compare-items{display:flex;gap:10px;flex:1;flex-wrap:wrap;}
+.compare-chip{
+  background:var(--gold-dim);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.compare-chip-remove{
+  background:none;border:none;color:#888;
+  cursor:pointer;font-size:12px;padding:0;line-height:1;
+}
+.compare-chip-remove:hover{color:var(--text);}
+.compare-btn-go{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:9px 20px;font-family:'Cairo',sans-serif;
+  font-size:12px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.compare-btn-go:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);}
+.compare-btn-clear{
+  background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--text-muted);border-radius:10px;
+  padding:9px 16px;font-family:'Cairo',sans-serif;
+  font-size:11px;cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.compare-btn-clear:hover{border-color:var(--gold);color:var(--text);}
+
+/* ═══════════════ COMPARE MODAL ═══════════════ */
+.compare-modal-overlay{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,0.9);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity .3s;overflow-y:auto;
+}
+.compare-modal-overlay.open{opacity:1;pointer-events:all;}
+.compare-modal-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  width:100%;max-width:700px;
+  overflow:hidden;
+  transform:scale(.95) translateY(20px);
+  transition:transform .3s;
+}
+.compare-modal-overlay.open .compare-modal-card{transform:scale(1) translateY(0);}
+.compare-modal-header{
+  padding:24px 28px 0;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.compare-modal-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;color:var(--gold);
+}
+.compare-table{width:100%;border-collapse:collapse;margin-top:20px;}
+.compare-table th{
+  background:rgba(255,255,255,0.03);
+  padding:12px 16px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;letter-spacing:2px;
+  color:var(--text-muted);text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.compare-table th:first-child{text-align:right;}
+.compare-table td{
+  padding:12px 16px;font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  text-align:center;
+}
+.compare-table td:first-child{text-align:right;color:var(--text-muted);font-size:11px;letter-spacing:.5px;}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+.compare-table .best-val{color:var(--green);font-weight:900;}
+.compare-modal-body{padding:0 28px 28px;overflow-x:auto;}
+
+/* ═══════════════ MEAL CALC ═══════════════ */
+.meal-calc-section{
+  padding:0 24px 32px;max-width:900px;margin:0 auto;
+}
+.meal-calc-card{
+  background:linear-gradient(135deg,#0f0d0b,#0a0a0a);
+  border:1px solid var(--border);
+  border-radius:20px;padding:28px 32px;
+  position:relative;overflow:hidden;
+}
+.meal-calc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold-light),transparent);
+}
+.meal-calc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;
+  color:var(--gold);margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+}
+.meal-calc-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+.meal-add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px;}
+.meal-add-field{flex:1;min-width:160px;}
+.meal-add-field label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px;}
+.meal-add-field select,.meal-add-field input{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:12px 14px;
+  font-family:'Cairo',sans-serif;font-size:13px;
+  color:var(--text);outline:none;transition:border-color .2s;appearance:none;
+}
+.meal-add-field select:focus,.meal-add-field input:focus{border-color:var(--gold);}
+.meal-add-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:12px 22px;font-family:'Cairo',sans-serif;
+  font-size:13px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;align-self:flex-end;
+}
+.meal-add-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
+.meal-items-list{margin-bottom:16px;}
+.meal-item-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;margin-bottom:8px;
+  font-size:13px;
+}
+.meal-item-name{flex:1;color:var(--text);}
+.meal-item-macros{
+  display:flex;gap:14px;font-size:11px;
+  color:var(--text-muted);flex-shrink:0;
+}
+.meal-item-macros span{font-family:'Bebas Neue',sans-serif;font-size:13px;}
+.meal-item-macros .mp{color:var(--prot);}
+.meal-item-macros .mc{color:var(--carb);}
+.meal-item-macros .mf{color:var(--fat);}
+.meal-item-macros .mk{color:var(--gold);}
+.meal-item-remove{
+  background:none;border:none;color:#555;
+  cursor:pointer;font-size:14px;transition:color .2s;padding:0 4px;
+}
+.meal-item-remove:hover{color:#E87A7A;}
+.meal-total-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
+}
+.meal-total-cell{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:14px 10px;text-align:center;
+}
+.meal-total-cell::before{content:'';display:block;height:2px;margin-bottom:10px;border-radius:1px;}
+.meal-total-cell.k::before{background:var(--gold);}
+.meal-total-cell.p::before{background:var(--prot);}
+.meal-total-cell.c::before{background:var(--carb);}
+.meal-total-cell.f::before{background:var(--fat);}
+.meal-total-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.meal-total-cell.k .meal-total-val{color:var(--gold);}
+.meal-total-cell.p .meal-total-val{color:var(--prot);}
+.meal-total-cell.c .meal-total-val{color:var(--carb);}
+.meal-total-cell.f .meal-total-val{color:var(--fat);}
+.meal-total-lbl{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:4px;}
+.meal-empty{text-align:center;padding:24px;color:var(--text-muted);font-size:13px;}
+.meal-clear-btn{
+  background:none;border:1px solid rgba(255,255,255,0.08);
+  color:var(--text-muted);border-radius:8px;
+  padding:6px 14px;font-family:'Cairo',sans-serif;
+  font-size:11px;cursor:pointer;transition:all .2s;
+  margin-top:10px;
+}
+.meal-clear-btn:hover{border-color:var(--gold);color:var(--text);}
+
+/* ═══════════════ SMART FILTERS ═══════════════ */
+.smart-filters{
+  padding:8px 24px;
+  background:rgba(255,255,255,0.01);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.smart-filter-label{
+  font-size:10px;color:var(--text-muted);letter-spacing:1px;
+  font-family:'Bebas Neue',sans-serif;flex-shrink:0;
+}
+.smart-btn{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;padding:5px 12px;
+  font-family:'Cairo',sans-serif;font-size:11px;
+  color:var(--text-muted);cursor:pointer;transition:all .2s;
+  white-space:nowrap;
+}
+.smart-btn:hover{border-color:rgba(201,168,76,.4);color:var(--text);}
+.smart-btn.on{background:rgba(122,200,122,0.1);border-color:rgba(122,200,122,0.3);color:var(--green);}
+
+/* ═══════════════ SHARE BUTTON ═══════════════ */
+.food-card-share{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:3px 7px;
+  font-size:10px;cursor:pointer;transition:all .2s;
+  opacity:0;pointer-events:none;
+}
+.food-card:hover .food-card-share{opacity:1;pointer-events:all;}
+.food-card-share:hover{border-color:var(--gold);background:var(--gold-dim);}
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1a1a1a;border:1px solid var(--border);
+  border-radius:10px;padding:10px 20px;
+  font-size:12px;color:var(--text);
+  z-index:800;opacity:0;transition:all .3s;
+  pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(16px);}
   to{opacity:1;transform:translateY(0);}
@@ -641,6 +891,46 @@ body{
   </div>
 </section>
 
+<!-- ═══════ SMART FILTERS ═══════ -->
+<div class="smart-filters" id="smartFilters">
+  <span class="smart-filter-label">⚡ فلتر ذكي:</span>
+  <button class="smart-btn" data-smart="high-protein" onclick="setSmartFilter(this)">💪 عالي البروتين (&gt;20g)</button>
+  <button class="smart-btn" data-smart="low-carb" onclick="setSmartFilter(this)">🥩 قليل الكارب (&lt;5g)</button>
+  <button class="smart-btn" data-smart="low-cal" onclick="setSmartFilter(this)">🌿 منخفض السعرات (&lt;50)</button>
+  <button class="smart-btn" data-smart="post-workout" onclick="setSmartFilter(this)">⚡ بعد التمرين</button>
+</div>
+
+<!-- ═══════ MEAL CALCULATOR ═══════ -->
+<section class="meal-calc-section" id="mealCalcSection">
+  <div class="meal-calc-card">
+    <div class="meal-calc-title">🍽️ حاسبة الوجبة الكاملة</div>
+    <div class="meal-calc-sub">أضف عدة مكونات واحسب ماكرو وجبتك الكاملة</div>
+    <div class="meal-add-row">
+      <div class="meal-add-field">
+        <label>اختر المكوّن</label>
+        <select id="mealSelect"><option value="">— اختر مكوّناً —</option></select>
+      </div>
+      <div class="meal-add-field" style="max-width:120px">
+        <label>الكمية (g)</label>
+        <input type="number" id="mealGrams" placeholder="100" min="1" max="2000">
+      </div>
+      <button class="meal-add-btn" onclick="addMealItem()">+ أضف</button>
+    </div>
+    <div class="meal-items-list" id="mealItemsList">
+      <div class="meal-empty" id="mealEmpty">ابدأ بإضافة مكونات وجبتك 👆</div>
+    </div>
+    <div class="meal-total-row" id="mealTotalRow" style="display:none">
+      <div class="meal-total-cell k"><div class="meal-total-val" id="mtKcal">0</div><div class="meal-total-lbl">KCAL</div></div>
+      <div class="meal-total-cell p"><div class="meal-total-val" id="mtProt">0g</div><div class="meal-total-lbl">بروتين</div></div>
+      <div class="meal-total-cell c"><div class="meal-total-val" id="mtCarb">0g</div><div class="meal-total-lbl">كارب</div></div>
+      <div class="meal-total-cell f"><div class="meal-total-val" id="mtFat">0g</div><div class="meal-total-lbl">دهون</div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end" id="mealClearWrap" style="display:none">
+      <button class="meal-clear-btn" onclick="clearMeal()">🗑️ مسح الوجبة</button>
+    </div>
+  </div>
+</section>
+
 <!-- ═══════ CALCULATOR ═══════ -->
 <section class="calc-section" id="calcSection">
   <div class="calc-card">
@@ -707,6 +997,30 @@ body{
     </div>
   </div>
 </div>
+
+<!-- ═══════ COMPARE BAR ═══════ -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-label">⚖️ مقارنة:</div>
+  <div class="compare-items" id="compareItems"></div>
+  <button class="compare-btn-go" onclick="openCompareModal()">قارن الآن</button>
+  <button class="compare-btn-clear" onclick="clearCompare()">مسح</button>
+</div>
+
+<!-- ═══════ COMPARE MODAL ═══════ -->
+<div class="compare-modal-overlay" id="compareModal" onclick="closeCompareModal(event)">
+  <div class="compare-modal-card">
+    <div class="compare-modal-header">
+      <div class="compare-modal-title">⚖️ مقارنة المكونات</div>
+      <button class="modal-close" onclick="closeCompareModal({target:document.getElementById('compareModal')})">✕</button>
+    </div>
+    <div class="compare-modal-body">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TOAST ═══════ -->
+<div class="toast" id="toast"></div>
 
 <!-- ═══════ CTA ═══════ -->
 <section class="cta-section">
@@ -923,10 +1237,15 @@ const CATS = {
 let activeFilter = 'all';
 let searchTerm = '';
 let currentModalFood = null;
+let activeSmartFilter = null;
+let compareList = [];
+let mealItems = [];
+let toastTimeout;
 
 /* ═══════ INIT ═══════ */
 function init() {
   populateCalcSelect();
+  populateMealSelect();
   renderGrid();
 }
 
@@ -977,17 +1296,19 @@ function clearSearch() {
 /* ═══════ RENDER GRID ═══════ */
 function renderGrid() {
   const sec = document.getElementById('gridSection');
-  // keep empty state element
   const emptyEl = document.getElementById('emptyState');
 
-  // filter foods
   let filtered = FOODS.filter(f => {
     const catOk = activeFilter === 'all' || f.cat === activeFilter;
     const searchOk = !searchTerm || f.name.includes(searchTerm) || (f.nameEn && f.nameEn.toLowerCase().includes(searchTerm));
-    return catOk && searchOk;
+    let smartOk = true;
+    if (activeSmartFilter === 'high-protein') smartOk = f.prot >= 20;
+    else if (activeSmartFilter === 'low-carb') smartOk = f.carb < 5;
+    else if (activeSmartFilter === 'low-cal') smartOk = f.kcal < 50;
+    else if (activeSmartFilter === 'post-workout') smartOk = (f.carb > 15 && f.fat < 5) || f.prot > 20;
+    return catOk && searchOk && smartOk;
   });
 
-  // clear old sections
   sec.querySelectorAll('.cat-section').forEach(el => el.remove());
 
   if (filtered.length === 0) {
@@ -999,15 +1320,13 @@ function renderGrid() {
   emptyEl.classList.remove('show');
   document.getElementById('filterCount').textContent = filtered.length + ' مكوّن';
 
-  // group by cat
-  if (activeFilter === 'all' && !searchTerm) {
+  if (activeFilter === 'all' && !searchTerm && !activeSmartFilter) {
     Object.keys(CATS).forEach(cat => {
       const items = filtered.filter(f => f.cat === cat);
       if (items.length === 0) return;
       sec.appendChild(buildSection(cat, items));
     });
   } else {
-    // single flat grid
     const wrapper = document.createElement('div');
     wrapper.className = 'cat-section';
     const grid = document.createElement('div');
@@ -1044,6 +1363,7 @@ function buildCard(f) {
   const card = document.createElement('div');
   card.className = 'food-card';
   card.onclick = () => openModal(f);
+  const isInCompare = compareList.some(c => c.id === f.id);
   card.innerHTML = `
     <div class="food-card-accent" style="background:${cfg.color}"></div>
     <div class="food-card-body">
@@ -1063,6 +1383,8 @@ function buildCard(f) {
       </div>
     </div>
     <div class="food-card-footer">${f.note}</div>
+    <button class="food-card-share" onclick="shareFood(event, ${JSON.stringify(f).replace(/"/g,'&quot;')})">📤 شارك</button>
+    <button class="food-card-compare ${isInCompare ? 'added' : ''}" onclick="toggleCompare(event,'${f.id}')">${isInCompare ? '✓ مضاف' : '⚖️ قارن'}</button>
   `;
   return card;
 }
@@ -1134,6 +1456,215 @@ document.addEventListener('keydown', e => {
 });
 
 init();
+
+/* ═══════ SMART FILTERS ═══════ */
+function setSmartFilter(btn) {
+  if (btn.classList.contains('on')) {
+    btn.classList.remove('on');
+    activeSmartFilter = null;
+  } else {
+    document.querySelectorAll('.smart-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeSmartFilter = btn.dataset.smart;
+  }
+  renderGrid();
+}
+
+function toggleCompare(e, foodId) {
+  e.stopPropagation();
+  const food = FOODS.find(f => f.id === foodId);
+  if (!food) return;
+  const idx = compareList.findIndex(f => f.id === foodId);
+  if (idx > -1) {
+    compareList.splice(idx, 1);
+  } else {
+    if (compareList.length >= 4) { showToast('الحد الأقصى 4 مكونات للمقارنة'); return; }
+    compareList.push(food);
+  }
+  updateCompareBar();
+  renderGrid();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const itemsEl = document.getElementById('compareItems');
+  if (compareList.length === 0) { bar.classList.remove('show'); return; }
+  bar.classList.add('show');
+  itemsEl.innerHTML = compareList.map(f =>
+    `<div class="compare-chip">${f.emoji} ${f.name}<button class="compare-chip-remove" onclick="toggleCompare(event,'${f.id}')">✕</button></div>`
+  ).join('');
+}
+
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  renderGrid();
+}
+
+function openCompareModal() {
+  if (compareList.length < 2) { showToast('اختر على الأقل مكوّنَين للمقارنة'); return; }
+  const table = document.getElementById('compareTable');
+  const rows = [
+    { label: 'المكوّن', key: null },
+    { label: 'KCAL / 100g', key: 'kcal' },
+    { label: 'بروتين (g)', key: 'prot' },
+    { label: 'كارب (g)', key: 'carb' },
+    { label: 'دهون (g)', key: 'fat' },
+  ];
+
+  let html = '<thead><tr><th>القيمة</th>';
+  compareList.forEach(f => { html += `<th>${f.emoji} ${f.name}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  rows.forEach(row => {
+    if (!row.key) {
+      html += `<tr><td>${row.label}</td>`;
+      compareList.forEach(f => { html += `<td style="font-size:11px;color:var(--text-muted)">${f.nameEn}</td>`; });
+      html += '</tr>';
+      return;
+    }
+    const vals = compareList.map(f => f[row.key]);
+    const best = row.key === 'kcal' || row.key === 'fat' ? Math.min(...vals) : Math.max(...vals);
+    html += `<tr><td>${row.label}</td>`;
+    compareList.forEach(f => {
+      const v = f[row.key];
+      const isBest = v === best;
+      html += `<td class="${isBest ? 'best-val' : ''}">${v}${row.key !== 'kcal' ? 'g' : ''}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  table.innerHTML = html;
+  document.getElementById('compareModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCompareModal(e) {
+  if (e && e.target !== document.getElementById('compareModal') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('compareModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════ SHARE CARD ═══════ */
+function shareFood(e, food) {
+  e.stopPropagation();
+  const text = `🔥 ${food.emoji} ${food.name} — لكل 100g:\n💪 بروتين: ${food.prot}g\n🍚 كارب: ${food.carb}g\n🫒 دهون: ${food.fat}g\n⚡ ${food.kcal} سعرة\n\nمصدر: قاعدة بيانات Coach Anis\nhttps://coach-anis.github.io/calories-db/`;
+  if (navigator.share) {
+    navigator.share({ text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('✓ تم نسخ البيانات'));
+  }
+}
+
+/* ═══════ TOAST ═══════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ═══════ MEAL CALCULATOR ═══════ */
+function populateMealSelect() {
+  const sel = document.getElementById('mealSelect');
+  const byCat = {};
+  FOODS.forEach(f => {
+    if (!byCat[f.cat]) byCat[f.cat] = [];
+    byCat[f.cat].push(f);
+  });
+  Object.keys(CATS).forEach(cat => {
+    if (!byCat[cat]) return;
+    const og = document.createElement('optgroup');
+    og.label = CATS[cat].label;
+    byCat[cat].forEach(f => {
+      const op = document.createElement('option');
+      op.value = f.id;
+      op.textContent = f.emoji + ' ' + f.name;
+      og.appendChild(op);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function addMealItem() {
+  const selVal = document.getElementById('mealSelect').value;
+  const grams = parseFloat(document.getElementById('mealGrams').value);
+  if (!selVal || !grams || grams <= 0) { showToast('اختر مكوّناً وأدخل الكمية'); return; }
+  const food = FOODS.find(f => f.id === selVal);
+  if (!food) return;
+  const ratio = grams / 100;
+  mealItems.push({
+    id: Date.now(),
+    food,
+    grams,
+    kcal: Math.round(food.kcal * ratio),
+    prot: parseFloat((food.prot * ratio).toFixed(1)),
+    carb: parseFloat((food.carb * ratio).toFixed(1)),
+    fat: parseFloat((food.fat * ratio).toFixed(1)),
+  });
+  document.getElementById('mealSelect').value = '';
+  document.getElementById('mealGrams').value = '';
+  renderMeal();
+}
+
+function removeMealItem(id) {
+  mealItems = mealItems.filter(i => i.id !== id);
+  renderMeal();
+}
+
+function clearMeal() {
+  mealItems = [];
+  renderMeal();
+}
+
+function renderMeal() {
+  const listEl = document.getElementById('mealItemsList');
+  const emptyEl = document.getElementById('mealEmpty');
+  const totalRow = document.getElementById('mealTotalRow');
+  const clearWrap = document.getElementById('mealClearWrap');
+
+  if (mealItems.length === 0) {
+    listEl.innerHTML = '<div class="meal-empty" id="mealEmpty">ابدأ بإضافة مكونات وجبتك 👆</div>';
+    totalRow.style.display = 'none';
+    clearWrap.style.display = 'none';
+    return;
+  }
+
+  listEl.innerHTML = mealItems.map(item => `
+    <div class="meal-item-row">
+      <div class="meal-item-name">${item.food.emoji} ${item.food.name} <span style="color:var(--text-muted);font-size:11px">(${item.grams}g)</span></div>
+      <div class="meal-item-macros">
+        <span><span class="mk">${item.kcal}</span> kcal</span>
+        <span><span class="mp">${item.prot}g</span> P</span>
+        <span><span class="mc">${item.carb}g</span> C</span>
+        <span><span class="mf">${item.fat}g</span> F</span>
+      </div>
+      <button class="meal-item-remove" onclick="removeMealItem(${item.id})">✕</button>
+    </div>
+  `).join('');
+
+  const totals = mealItems.reduce((acc, i) => ({
+    kcal: acc.kcal + i.kcal,
+    prot: acc.prot + i.prot,
+    carb: acc.carb + i.carb,
+    fat: acc.fat + i.fat,
+  }), { kcal: 0, prot: 0, carb: 0, fat: 0 });
+
+  document.getElementById('mtKcal').textContent = totals.kcal;
+  document.getElementById('mtProt').textContent = totals.prot.toFixed(1) + 'g';
+  document.getElementById('mtCarb').textContent = totals.carb.toFixed(1) + 'g';
+  document.getElementById('mtFat').textContent = totals.fat.toFixed(1) + 'g';
+  totalRow.style.display = 'grid';
+  clearWrap.style.display = 'flex';
+}
+
+// Enter key on meal grams
+document.getElementById('mealGrams').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addMealItem();
+});
+
 </script>
 </body>
 </html>
