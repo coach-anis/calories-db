@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>قاعدة بيانات السعرات | Coach Anis</title>
+<meta name="description" content="قاعدة بيانات علمية دقيقة لسعرات وماكرو أكثر من 80 مكوناً غذائياً — بناءً على USDA FoodData Central">
+
+<!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
+<meta property="og:type"        content="website">
+<meta property="og:url"         content="https://coach-anis.github.io/calories-db/">
+<meta property="og:title"       content="قاعدة بيانات السعرات الحرارية | Coach Anis">
+<meta property="og:description" content="80+ مكوّن غذائي · سعرات · بروتين · كارب · دهون — مبني على USDA FoodData Central">
+<meta property="og:image"       content="https://coach-anis.github.io/calories-db/preview.png">
+<meta property="og:image:width"  content="1400">
+<meta property="og:image:height" content="700">
+<meta property="og:image:alt"   content="Calories Database - Coach Anis">
+<meta property="og:locale"      content="ar_AR">
+<meta property="og:site_name"   content="Coach Anis">
+
+<!-- Twitter Card -->
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:site"        content="@coach__anis">
+<meta name="twitter:title"       content="قاعدة بيانات السعرات الحرارية | Coach Anis">
+<meta name="twitter:description" content="80+ مكوّن غذائي · سعرات · بروتين · كارب · دهون">
+<meta name="twitter:image"       content="https://coach-anis.github.io/calories-db/preview.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Calories DB">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="manifest" href="/calories-db/manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --gold:       #C9A84C;
+  --gold-light: #E8C97A;
+  --gold-dim:   rgba(201,168,76,0.15);
+  --bg:         #0A0A0A;
+  --bg2:        #111111;
+  --bg3:        #181818;
+  --bg4:        #202020;
+  --border:     rgba(201,168,76,0.18);
+  --text:       #F0EDE8;
+  --text-muted: #888;
+  --prot:       #E8A87A;
+  --carb:       #7AB8E8;
+  --fat:        #E87A7A;
+  --green:      #7AC87A;
+  --radius:     14px;
+  --shadow:     0 8px 40px rgba(0,0,0,0.6);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+html{scroll-behavior:smooth;}
+
+body{
+  background:var(--bg);
+  font-family:'Cairo',sans-serif;
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ═══════════════ SCROLLBAR ═══════════════ */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:#111;}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* ═══════════════ NAVBAR ═══════════════ */
+.nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,10,0.92);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+  padding:14px 24px;
+  display:flex;align-items:center;gap:16px;
+  flex-wrap:wrap;
+}
+
+.nav-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:22px;letter-spacing:4px;
+  color:var(--gold);flex-shrink:0;
+}
+.nav-brand span{color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:2px;display:block;margin-top:-4px;}
+
+.nav-search{
+  flex:1;min-width:180px;max-width:340px;
+  position:relative;display:flex;align-items:center;
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:10px;overflow:hidden;
+  transition:border-color .2s;
+}
+.nav-search:focus-within{border-color:var(--gold);}
+.nav-search-icon{padding:0 10px;font-size:14px;color:var(--text-muted);}
+.nav-search input{
+  background:transparent;border:none;outline:none;
+  color:var(--text);font-family:'Cairo',sans-serif;
+  font-size:13px;padding:9px 0;flex:1;direction:rtl;
+}
+.nav-search input::placeholder{color:#444;}
+.nav-search-clear{
+  background:none;border:none;color:#555;cursor:pointer;
+  padding:0 10px;font-size:14px;display:none;transition:color .2s;
+}
+.nav-search-clear:hover{color:var(--gold);}
+.nav-search-clear.show{display:block;}
+
+.nav-calc-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:9px 18px;font-family:'Cairo',sans-serif;
+  font-size:12px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;flex-shrink:0;
+  display:flex;align-items:center;gap:6px;
+}
+.nav-calc-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
+
+/* ═══════════════ FILTERS ═══════════════ */
+.filters-bar{
+  background:var(--bg2);
+  border-bottom:1px solid var(--border);
+  padding:10px 24px;
+  display:flex;gap:8px;flex-wrap:nowrap;align-items:center;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.filters-bar::-webkit-scrollbar{display:none;}
+.filter-btn{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;padding:6px 14px;
+  font-family:'Cairo',sans-serif;font-size:12px;
+  color:var(--text-muted);cursor:pointer;transition:all .2s;
+  white-space:nowrap;
+}
+.filter-btn:hover{border-color:var(--gold);color:var(--text);}
+.filter-btn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);font-weight:700;}
+
+.filters-count{
+  margin-right:auto;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;letter-spacing:2px;color:var(--text-muted);
+}
+
+/* ═══════════════ HERO STATS ═══════════════ */
+.hero{
+  padding:48px 24px 32px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+.hero-badge{
+  font-family:'Bebas Neue',sans-serif;
+  letter-spacing:5px;font-size:11px;
+  color:var(--gold);opacity:.8;
+  border:1px solid var(--border);
+  padding:5px 18px;border-radius:20px;
+  display:inline-block;margin-bottom:20px;
+}
+.hero-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,8vw,76px);
+  line-height:.9;color:var(--text);
+  letter-spacing:2px;margin-bottom:12px;
+}
+.hero-title span{color:var(--gold);}
+.hero-sub{
+  font-size:14px;color:var(--text-muted);
+  max-width:420px;margin:0 auto 32px;line-height:1.8;
+}
+.hero-stats{
+  display:inline-flex;gap:40px;
+  border:1px solid var(--border);
+  border-radius:16px;padding:18px 36px;
+  background:rgba(255,255,255,0.02);
+}
+.hero-stat-n{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:36px;color:var(--gold);line-height:1;
+}
+.hero-stat-l{font-size:10px;color:var(--text-muted);letter-spacing:2px;margin-top:3px;}
+.hero-stat{text-align:center;}
+.hero-divider{width:1px;background:var(--border);}
+
+.source-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(122,200,122,0.08);
+  border:1px solid rgba(122,200,122,0.2);
+  border-radius:8px;padding:6px 14px;
+  font-size:11px;color:var(--green);
+  margin-top:16px;
+}
+.source-tag::before{content:'✓';font-weight:900;}
+
+/* ═══════════════ CALCULATOR ═══════════════ */
+.calc-section{
+  padding:0 24px 32px;
+  max-width:900px;margin:0 auto;
+}
+.calc-card{
+  background:linear-gradient(135deg,#141210,#0e0e0e);
+  border:1px solid var(--border);
+  border-radius:20px;padding:28px 32px;
+  position:relative;overflow:hidden;
+}
+.calc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+}
+.calc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;
+  color:var(--gold);margin-bottom:20px;
+  display:flex;align-items:center;gap:10px;
+}
+.calc-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
+
+.calc-field{flex:1;min-width:160px;}
+.calc-field label{
+  display:block;font-size:11px;color:var(--text-muted);
+  letter-spacing:1px;margin-bottom:8px;
+}
+.calc-field select,.calc-field input{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:12px 14px;
+  font-family:'Cairo',sans-serif;font-size:13px;
+  color:var(--text);outline:none;
+  transition:border-color .2s;
+  appearance:none;
+}
+.calc-field select:focus,.calc-field input:focus{border-color:var(--gold);}
+.calc-field select option{background:#111;color:#fff;}
+
+.calc-btn-go{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:12px 28px;font-family:'Cairo',sans-serif;
+  font-size:14px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;
+  align-self:flex-end;
+}
+.calc-btn-go:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
+
+.calc-result{
+  margin-top:20px;
+  display:none;
+  animation:fadeUp .3s ease;
+}
+.calc-result.show{display:block;}
+.calc-result-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+}
+@media(max-width:500px){.calc-result-grid{grid-template-columns:repeat(2,1fr);}}
+
+.calc-res-cell{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:14px 10px;
+  text-align:center;
+}
+.calc-res-cell::before{content:'';display:block;height:2px;margin-bottom:10px;border-radius:1px;}
+.calc-res-cell.k::before{background:var(--gold);}
+.calc-res-cell.p::before{background:var(--prot);}
+.calc-res-cell.c::before{background:var(--carb);}
+.calc-res-cell.f::before{background:var(--fat);}
+.calc-res-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:28px;line-height:1;
+}
+.calc-res-cell.k .calc-res-val{color:var(--gold);}
+.calc-res-cell.p .calc-res-val{color:var(--prot);}
+.calc-res-cell.c .calc-res-val{color:var(--carb);}
+.calc-res-cell.f .calc-res-val{color:var(--fat);}
+.calc-res-lbl{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:4px;}
+.calc-food-name{
+  margin-bottom:12px;
+  font-size:13px;color:var(--text-muted);
+}
+.calc-food-name strong{color:var(--text);font-size:15px;}
+
+/* ═══════════════ FOOD GRID ═══════════════ */
+.grid-section{padding:0 24px 80px;}
+.section-header{
+  display:flex;align-items:center;gap:16px;
+  padding:24px 0 16px;
+  border-bottom:1px solid rgba(255,255,255,0.06);
+  margin-bottom:20px;
+}
+.section-label{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;letter-spacing:3px;
+  padding:6px 14px;border-radius:8px;
+  font-weight:400;
+}
+.section-count{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:12px;letter-spacing:2px;color:var(--text-muted);
+  margin-right:auto;
+}
+
+.food-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:14px;
+  margin-bottom:40px;
+}
+
+.food-card{
+  background:var(--bg2);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:var(--radius);
+  padding:0;overflow:hidden;
+  transition:transform .2s,border-color .2s,box-shadow .2s;
+  cursor:pointer;
+  position:relative;
+}
+.food-card:hover{
+  transform:translateY(-3px);
+  border-color:rgba(201,168,76,0.3);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5);
+}
+.food-card-accent{height:3px;width:100%;}
+
+.food-card-body{padding:16px;}
+
+.food-card-top{
+  display:flex;justify-content:space-between;
+  align-items:flex-start;margin-bottom:12px;
+}
+.food-emoji{font-size:28px;line-height:1;}
+.food-kcal{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;color:var(--gold);line-height:1;
+}
+.food-kcal-sub{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-align:left;}
+
+.food-name{
+  font-size:15px;font-weight:700;color:var(--text);
+  margin-bottom:3px;
+}
+.food-name-en{font-size:11px;color:var(--text-muted);margin-bottom:12px;}
+
+.food-macros{
+  display:flex;gap:6px;
+}
+.macro-pill{
+  flex:1;text-align:center;padding:6px 4px;
+  border-radius:8px;font-size:9px;letter-spacing:.5px;
+}
+.macro-pill-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:16px;display:block;line-height:1;margin-bottom:2px;
+}
+.mp-p{background:rgba(232,168,122,0.1);color:var(--prot);}
+.mp-c{background:rgba(122,184,232,0.1);color:var(--carb);}
+.mp-f{background:rgba(232,122,122,0.1);color:var(--fat);}
+
+.food-card-footer{
+  padding:10px 16px;
+  background:rgba(255,255,255,0.02);
+  border-top:1px solid rgba(255,255,255,0.04);
+  font-size:10px;color:var(--text-muted);
+  display:flex;align-items:center;gap:6px;
+}
+.food-card-footer::before{content:'📊';font-size:11px;}
+
+/* ═══════════════ EMPTY STATE ═══════════════ */
+.empty-state{
+  text-align:center;padding:80px 20px;color:var(--text-muted);
+  display:none;
+}
+.empty-state.show{display:block;}
+.empty-state div:first-child{font-size:48px;margin-bottom:16px;}
+
+/* ═══════════════ CTA SECTION ═══════════════ */
+.cta-section{
+  background:linear-gradient(135deg,#0d0b08,#080808);
+  border-top:1px solid var(--border);
+  padding:80px 24px;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+}
+.cta-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(201,168,76,0.02) 40px,rgba(201,168,76,0.02) 41px),
+    repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(201,168,76,0.02) 40px,rgba(201,168,76,0.02) 41px);
+}
+.cta-inner{position:relative;z-index:1;max-width:540px;margin:0 auto;}
+.cta-eyebrow{
+  font-family:'Bebas Neue',sans-serif;
+  letter-spacing:5px;font-size:11px;
+  color:var(--gold);opacity:.7;
+  border:1px solid var(--border);
+  padding:5px 16px;border-radius:20px;
+  display:inline-block;margin-bottom:24px;
+}
+.cta-title{
+  font-size:clamp(22px,5vw,34px);
+  font-weight:900;color:var(--text);
+  line-height:1.4;margin-bottom:12px;
+}
+.cta-title span{color:var(--gold);}
+.cta-divider{
+  width:60px;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:20px auto;
+}
+.cta-body{
+  font-size:14px;color:rgba(255,255,255,.5);
+  line-height:2;margin-bottom:32px;
+}
+.cta-highlights{
+  display:flex;flex-direction:column;gap:10px;
+  margin-bottom:36px;text-align:right;
+  max-width:320px;margin-left:auto;margin-right:auto;
+}
+.cta-item{
+  display:flex;align-items:center;gap:12px;
+  font-size:13px;color:rgba(255,255,255,.7);
+}
+.cta-item-dot{
+  width:6px;height:6px;
+  background:var(--gold);border-radius:50%;flex-shrink:0;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold));
+  background-size:200% 200%;
+  color:#000;border:none;border-radius:14px;
+  padding:16px 36px;font-family:'Cairo',sans-serif;
+  font-size:15px;font-weight:900;cursor:pointer;
+  transition:all .3s;text-decoration:none;
+  letter-spacing:.5px;
+}
+.cta-btn:hover{
+  background-position:right center;
+  transform:translateY(-3px);
+  box-shadow:0 12px 40px rgba(201,168,76,.5);
+}
+.cta-btn-icon{font-size:18px;}
+.cta-note{
+  margin-top:16px;font-size:11px;
+  color:rgba(255,255,255,.25);letter-spacing:1px;
+}
+
+/* ═══════════════ FOOTER ═══════════════ */
+.site-footer{
+  background:#050505;
+  border-top:1px solid rgba(255,255,255,0.04);
+  padding:24px;
+  display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:12px;
+}
+.footer-brand{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:18px;letter-spacing:4px;color:var(--gold);opacity:.6;
+}
+.footer-source{
+  font-size:10px;color:rgba(255,255,255,.2);
+  letter-spacing:1px;text-align:center;
+}
+.footer-source a{color:rgba(201,168,76,.4);text-decoration:none;}
+.footer-source a:hover{color:var(--gold);}
+.footer-copy{
+  font-size:10px;color:rgba(255,255,255,.2);
+  letter-spacing:1px;
+}
+
+/* ═══════════════ MODAL / DETAIL ═══════════════ */
+.modal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,0.85);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity .3s;
+}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  width:100%;max-width:440px;
+  overflow:hidden;
+  transform:scale(.95) translateY(20px);
+  transition:transform .3s;
+}
+.modal-overlay.open .modal-card{transform:scale(1) translateY(0);}
+.modal-top{height:4px;}
+.modal-body{padding:28px;}
+.modal-close{
+  float:left;background:none;border:none;
+  color:var(--text-muted);cursor:pointer;font-size:18px;
+  transition:color .2s;padding:0;
+}
+.modal-close:hover{color:var(--text);}
+.modal-emoji{font-size:44px;margin-bottom:12px;display:block;}
+.modal-name{font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px;}
+.modal-name-en{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+.modal-per{font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:14px;}
+.modal-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
+.modal-cell{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 8px;text-align:center;}
+.modal-cell::before{content:'';display:block;height:2px;border-radius:1px;margin-bottom:8px;}
+.modal-cell.mk::before{background:var(--gold);}
+.modal-cell.mp::before{background:var(--prot);}
+.modal-cell.mc::before{background:var(--carb);}
+.modal-cell.mf::before{background:var(--fat);}
+.modal-val{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1;}
+.modal-cell.mk .modal-val{color:var(--gold);}
+.modal-cell.mp .modal-val{color:var(--prot);}
+.modal-cell.mc .modal-val{color:var(--carb);}
+.modal-cell.mf .modal-val{color:var(--fat);}
+.modal-lbl{font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-top:3px;}
+
+.modal-calc{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);}
+.modal-calc-label{font-size:11px;color:var(--text-muted);margin-bottom:8px;letter-spacing:1px;}
+.modal-calc-row{display:flex;gap:8px;}
+.modal-calc-input{
+  flex:1;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:10px 12px;
+  font-family:'Cairo',sans-serif;font-size:14px;
+  color:var(--text);outline:none;
+  transition:border-color .2s;
+}
+.modal-calc-input:focus{border-color:var(--gold);}
+.modal-calc-go{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:8px;
+  padding:10px 18px;font-family:'Cairo',sans-serif;
+  font-size:12px;font-weight:900;cursor:pointer;
+  white-space:nowrap;transition:all .2s;
+}
+.modal-calc-go:hover{box-shadow:0 4px 16px rgba(201,168,76,.3);}
+.modal-result-row{
+  display:flex;justify-content:space-between;
+  padding:10px 12px;background:rgba(255,255,255,0.03);
+  border-radius:8px;margin-top:10px;
+  font-size:12px;
+}
+.modal-result-row.hide{display:none;}
+
+.modal-source{
+  font-size:10px;color:rgba(255,255,255,.2);
+  margin-top:14px;letter-spacing:.5px;
+}
+
+/* ═══════════════ COMPARE BUTTON ═══════════════ */
+.food-card-compare{
+  position:absolute;top:10px;left:10px;
+  background:rgba(201,168,76,0.12);
+  border:1px solid rgba(201,168,76,0.25);
+  border-radius:6px;padding:3px 8px;
+  font-size:9px;color:var(--gold);
+  cursor:pointer;transition:all .2s;
+  font-family:'Cairo',sans-serif;
+  opacity:0;pointer-events:none;
+  letter-spacing:.5px;
+}
+.food-card:hover .food-card-compare{opacity:1;pointer-events:all;}
+.food-card-compare.added{
+  background:var(--gold-dim);
+  border-color:var(--gold);
+  opacity:1;pointer-events:all;
+}
+
+/* ═══════════════ COMPARE BAR ═══════════════ */
+.compare-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:linear-gradient(135deg,#141210,#0e0c0a);
+  border-top:1px solid var(--border);
+  padding:12px 24px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  transform:translateY(100%);transition:transform .3s;
+}
+.compare-bar.show{transform:translateY(0);}
+.compare-bar-label{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:13px;letter-spacing:2px;color:var(--gold);
+  flex-shrink:0;
+}
+.compare-items{display:flex;gap:10px;flex:1;flex-wrap:wrap;}
+.compare-chip{
+  background:var(--gold-dim);border:1px solid var(--border);
+  border-radius:20px;padding:5px 12px;
+  font-size:11px;color:var(--text);
+  display:flex;align-items:center;gap:8px;
+}
+.compare-chip-remove{
+  background:none;border:none;color:#888;
+  cursor:pointer;font-size:12px;padding:0;line-height:1;
+}
+.compare-chip-remove:hover{color:var(--text);}
+.compare-btn-go{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:9px 20px;font-family:'Cairo',sans-serif;
+  font-size:12px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;flex-shrink:0;
+}
+.compare-btn-go:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);}
+.compare-btn-clear{
+  background:none;border:1px solid rgba(255,255,255,0.1);
+  color:var(--text-muted);border-radius:10px;
+  padding:9px 16px;font-family:'Cairo',sans-serif;
+  font-size:11px;cursor:pointer;transition:all .2s;flex-shrink:0;
+}
+.compare-btn-clear:hover{border-color:var(--gold);color:var(--text);}
+
+/* ═══════════════ COMPARE MODAL ═══════════════ */
+.compare-modal-overlay{
+  position:fixed;inset:0;z-index:600;
+  background:rgba(0,0,0,0.9);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;opacity:0;pointer-events:none;
+  transition:opacity .3s;overflow-y:auto;
+}
+.compare-modal-overlay.open{opacity:1;pointer-events:all;}
+.compare-modal-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:20px;
+  width:100%;max-width:700px;
+  overflow:hidden;
+  transform:scale(.95) translateY(20px);
+  transition:transform .3s;
+}
+.compare-modal-overlay.open .compare-modal-card{transform:scale(1) translateY(0);}
+.compare-modal-header{
+  padding:24px 28px 0;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.compare-modal-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;color:var(--gold);
+}
+.compare-table{width:100%;border-collapse:collapse;margin-top:20px;}
+.compare-table th{
+  background:rgba(255,255,255,0.03);
+  padding:12px 16px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:14px;letter-spacing:2px;
+  color:var(--text-muted);text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.compare-table th:first-child{text-align:right;}
+.compare-table td{
+  padding:12px 16px;font-size:13px;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  text-align:center;
+}
+.compare-table td:first-child{text-align:right;color:var(--text-muted);font-size:11px;letter-spacing:.5px;}
+.compare-table tr:hover td{background:rgba(255,255,255,0.02);}
+.compare-table .best-val{color:var(--green);font-weight:900;}
+.compare-modal-body{padding:0 28px 28px;overflow-x:auto;}
+
+/* ═══════════════ MEAL CALC ═══════════════ */
+.meal-calc-section{
+  padding:0 24px 32px;max-width:900px;margin:0 auto;
+}
+.meal-calc-card{
+  background:linear-gradient(135deg,#0f0d0b,#0a0a0a);
+  border:1px solid var(--border);
+  border-radius:20px;padding:28px 32px;
+  position:relative;overflow:hidden;
+}
+.meal-calc-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--gold-light),transparent);
+}
+.meal-calc-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:20px;letter-spacing:3px;
+  color:var(--gold);margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+}
+.meal-calc-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
+.meal-add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px;}
+.meal-add-field{flex:1;min-width:160px;}
+.meal-add-field label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px;}
+.meal-add-field select,.meal-add-field input{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:10px;padding:12px 14px;
+  font-family:'Cairo',sans-serif;font-size:13px;
+  color:var(--text);outline:none;transition:border-color .2s;appearance:none;
+}
+.meal-add-field select:focus,.meal-add-field input:focus{border-color:var(--gold);}
+.meal-add-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;border:none;border-radius:10px;
+  padding:12px 22px;font-family:'Cairo',sans-serif;
+  font-size:13px;font-weight:900;cursor:pointer;
+  transition:all .2s;white-space:nowrap;align-self:flex-end;
+}
+.meal-add-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
+.meal-items-list{margin-bottom:16px;}
+.meal-item-row{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;margin-bottom:8px;
+  font-size:13px;
+}
+.meal-item-name{flex:1;color:var(--text);}
+.meal-item-macros{
+  display:flex;gap:14px;font-size:11px;
+  color:var(--text-muted);flex-shrink:0;
+}
+.meal-item-macros span{font-family:'Bebas Neue',sans-serif;font-size:13px;}
+.meal-item-macros .mp{color:var(--prot);}
+.meal-item-macros .mc{color:var(--carb);}
+.meal-item-macros .mf{color:var(--fat);}
+.meal-item-macros .mk{color:var(--gold);}
+.meal-item-remove{
+  background:none;border:none;color:#555;
+  cursor:pointer;font-size:14px;transition:color .2s;padding:0 4px;
+}
+.meal-item-remove:hover{color:#E87A7A;}
+.meal-total-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
+  padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
+}
+.meal-total-cell{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:12px;padding:14px 10px;text-align:center;
+}
+.meal-total-cell::before{content:'';display:block;height:2px;margin-bottom:10px;border-radius:1px;}
+.meal-total-cell.k::before{background:var(--gold);}
+.meal-total-cell.p::before{background:var(--prot);}
+.meal-total-cell.c::before{background:var(--carb);}
+.meal-total-cell.f::before{background:var(--fat);}
+.meal-total-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
+.meal-total-cell.k .meal-total-val{color:var(--gold);}
+.meal-total-cell.p .meal-total-val{color:var(--prot);}
+.meal-total-cell.c .meal-total-val{color:var(--carb);}
+.meal-total-cell.f .meal-total-val{color:var(--fat);}
+.meal-total-lbl{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:4px;}
+.meal-empty{text-align:center;padding:24px;color:var(--text-muted);font-size:13px;}
+.meal-clear-btn{
+  background:none;border:1px solid rgba(255,255,255,0.08);
+  color:var(--text-muted);border-radius:8px;
+  padding:6px 14px;font-family:'Cairo',sans-serif;
+  font-size:11px;cursor:pointer;transition:all .2s;
+  margin-top:10px;
+}
+.meal-clear-btn:hover{border-color:var(--gold);color:var(--text);}
+
+/* ═══════════════ SMART FILTERS ═══════════════ */
+.smart-filters{
+  padding:8px 24px;
+  background:rgba(255,255,255,0.01);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;gap:8px;flex-wrap:wrap;align-items:center;
+}
+.smart-filter-label{
+  font-size:10px;color:var(--text-muted);letter-spacing:1px;
+  font-family:'Bebas Neue',sans-serif;flex-shrink:0;
+}
+.smart-btn{
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:16px;padding:5px 12px;
+  font-family:'Cairo',sans-serif;font-size:11px;
+  color:var(--text-muted);cursor:pointer;transition:all .2s;
+  white-space:nowrap;
+}
+.smart-btn:hover{border-color:rgba(201,168,76,.4);color:var(--text);}
+.smart-btn.on{background:rgba(122,200,122,0.1);border-color:rgba(122,200,122,0.3);color:var(--green);}
+
+/* ═══════════════ SHARE BUTTON ═══════════════ */
+.food-card-share{
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;padding:3px 7px;
+  font-size:10px;cursor:pointer;transition:all .2s;
+  opacity:0;pointer-events:none;
+}
+.food-card:hover .food-card-share{opacity:1;pointer-events:all;}
+.food-card-share:hover{border-color:var(--gold);background:var(--gold-dim);}
+
+/* ═══════════════ TOAST ═══════════════ */
+.toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:#1a1a1a;border:1px solid var(--border);
+  border-radius:10px;padding:10px 20px;
+  font-size:12px;color:var(--text);
+  z-index:800;opacity:0;transition:all .3s;
+  pointer-events:none;white-space:nowrap;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(16px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.food-card{animation:fadeUp .4s ease both;}
+
+/* Stagger for visible cards */
+.food-card:nth-child(1){animation-delay:.05s;}
+.food-card:nth-child(2){animation-delay:.08s;}
+.food-card:nth-child(3){animation-delay:.11s;}
+.food-card:nth-child(4){animation-delay:.14s;}
+.food-card:nth-child(5){animation-delay:.17s;}
+.food-card:nth-child(6){animation-delay:.20s;}
+
+/* ═══════════════ RESPONSIVE ═══════════════ */
+@media(max-width:600px){
+  .hero{padding:32px 16px 24px;}
+  .hero-stats{gap:24px;padding:14px 20px;}
+  .hero-stat-n{font-size:28px;}
+  .calc-card{padding:20px;}
+  .grid-section{padding:0 12px 60px;}
+  .food-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
+  .filters-bar{padding:8px 12px;}
+  .nav{padding:10px 14px;}
+  .cta-section{padding:60px 16px;}
+  .site-footer{justify-content:center;text-align:center;}
+}
+/* ═══════════════ WELCOME OVERLAY ═══════════════ */
+.welcome-overlay{
+  position:fixed;inset:0;z-index:1000;
+  background:#0A0A0A;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:16px;
+  animation:wFadeIn .3s ease both;
+  pointer-events:none;
+}
+.welcome-overlay.hide{animation:wFadeOut .5s ease both;}
+@keyframes wFadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes wFadeOut{from{opacity:1;}to{opacity:0;}}
+.welcome-box{
+  text-align:center;
+  animation:wPop .5s cubic-bezier(.34,1.56,.64,1) .1s both;
+}
+@keyframes wPop{
+  from{opacity:0;transform:scale(0.85) translateY(12px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.welcome-emoji{font-size:56px;display:block;margin-bottom:14px;}
+.welcome-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;letter-spacing:4px;
+  color:var(--gold);margin-bottom:6px;
+}
+.welcome-sub{font-size:0.82rem;color:var(--text-muted);letter-spacing:1px;}
+.welcome-line{
+  width:0;height:3px;border-radius:2px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  margin:14px auto 0;
+  animation:wLine .6s ease .3s both;
+}
+@keyframes wLine{from{width:0;opacity:0;}to{width:80px;opacity:1;}}
+
+/* ═══════════════ PWA TOAST ═══════════════ */
+.pwa-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+  z-index:900;background:#1a1a1a;
+  border:1px solid rgba(201,168,76,0.3);
+  border-radius:40px;padding:10px 22px;
+  font-size:0.82rem;font-weight:700;color:var(--gold);
+  white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.pwa-toast.show{opacity:1;}
+
+/* ═══════════════ PWA INSTALL BANNER ═══════════════ */
+.pwa-banner{
+  position:fixed;bottom:20px;left:16px;right:16px;z-index:800;
+  background:#111;border:1px solid rgba(201,168,76,0.25);
+  border-radius:18px;padding:14px 18px;
+  display:flex;align-items:center;gap:12px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+.pwa-banner.hidden{display:none;}
+.pwa-icon{font-size:26px;flex-shrink:0;}
+.pwa-text{flex:1;}
+.pwa-title{font-size:0.85rem;font-weight:700;color:var(--text);}
+.pwa-sub{font-size:0.72rem;color:var(--text-muted);margin-top:2px;}
+.pwa-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0;}
+.btn-pwa-install{
+  padding:8px 16px;border-radius:10px;border:none;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light));
+  color:#000;font-family:'Cairo',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;
+}
+.btn-pwa-dismiss{
+  background:none;border:none;color:var(--text-muted);
+  font-size:0.75rem;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:600;
+}
+</style>
+</head>
+<body>
+
+<!-- WELCOME OVERLAY -->
+<div class="welcome-overlay" id="welcome-overlay">
+  <div class="welcome-box">
+    <span class="welcome-emoji">🥗</span>
+    <div class="welcome-title">Coach Anis</div>
+    <div class="welcome-sub">قاعدة بيانات السعرات الحرارية</div>
+    <div class="welcome-line"></div>
+  </div>
+</div>
+
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner hidden" id="pwa-banner">
+  <div class="pwa-icon">📲</div>
+  <div class="pwa-text">
+    <div class="pwa-title">ثبّت التطبيق على هاتفك</div>
+    <div class="pwa-sub">يعمل بدون إنترنت · أسرع · مثل تطبيق حقيقي</div>
+  </div>
+  <div class="pwa-actions">
+    <button class="btn-pwa-install" id="btn-pwa-install">تثبيت</button>
+    <button class="btn-pwa-dismiss" id="btn-pwa-dismiss">لاحقاً</button>
+  </div>
+</div>
+
+<!-- PWA TOAST -->
+<div class="pwa-toast" id="pwa-toast"></div>
+
+<!-- ═══════ NAVBAR ═══════ -->
+<nav class="nav">
+  <div class="nav-brand">
+    COACH ANIS
+    <span>قاعدة السعرات الحرارية</span>
+  </div>
+
+  <div class="nav-search">
+    <span class="nav-search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="ابحث عن مكوّن..." oninput="handleSearch(this.value)" autocomplete="off">
+    <button class="nav-search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+  </div>
+
+  <button class="nav-calc-btn" onclick="document.getElementById('calcSection').scrollIntoView({behavior:'smooth'})">
+    🧮 الحاسبة
+  </button>
+</nav>
+
+<!-- ═══════ FILTERS ═══════ -->
+<div class="filters-bar" id="filtersBar">
+  <button class="filter-btn on" data-cat="all" onclick="setFilter(this)">الكل</button>
+  <button class="filter-btn" data-cat="fruit" onclick="setFilter(this)">🍎 فواكه</button>
+  <button class="filter-btn" data-cat="veg" onclick="setFilter(this)">🥦 خضروات</button>
+  <button class="filter-btn" data-cat="protein" onclick="setFilter(this)">🍗 بروتينات</button>
+  <button class="filter-btn" data-cat="grain" onclick="setFilter(this)">🌾 حبوب وكارب</button>
+  <button class="filter-btn" data-cat="dairy" onclick="setFilter(this)">🥛 منتجات الألبان</button>
+  <button class="filter-btn" data-cat="legume" onclick="setFilter(this)">🫘 بقوليات</button>
+  <button class="filter-btn" data-cat="fat" onclick="setFilter(this)">🫙 دهون وزيوت</button>
+  <button class="filter-btn" data-cat="nut" onclick="setFilter(this)">🥜 مكسرات وبذور</button>
+  <span class="filters-count" id="filterCount">80 مكوّن</span>
+</div>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero">
+  <div class="hero-badge">مبني على USDA FoodData Central</div>
+  <h1 class="hero-title">قاعدة بيانات<br><span>السعرات الحرارية</span></h1>
+  <p class="hero-sub">أرقام دقيقة علمياً لكل مكوّن — ماكرو كامل لكل 100g مع حاسبة تفاعلية</p>
+  <div class="hero-stats">
+    <div class="hero-stat">
+      <div class="hero-stat-n">80+</div>
+      <div class="hero-stat-l">FOODS</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">4</div>
+      <div class="hero-stat-l">MACROS</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-stat">
+      <div class="hero-stat-n">100g</div>
+      <div class="hero-stat-l">BASIS</div>
+    </div>
+  </div>
+  <div>
+    <div class="source-tag">المصدر: USDA FoodData Central · NIH DRI · EFSA Nutrient Database</div>
+  </div>
+</section>
+
+<!-- ═══════ SMART FILTERS ═══════ -->
+<div class="smart-filters" id="smartFilters">
+  <span class="smart-filter-label">⚡ فلتر ذكي:</span>
+  <button class="smart-btn" data-smart="high-protein" onclick="setSmartFilter(this)">💪 عالي البروتين (&gt;20g)</button>
+  <button class="smart-btn" data-smart="low-carb" onclick="setSmartFilter(this)">🥩 قليل الكارب (&lt;5g)</button>
+  <button class="smart-btn" data-smart="low-cal" onclick="setSmartFilter(this)">🌿 منخفض السعرات (&lt;50)</button>
+  <button class="smart-btn" data-smart="post-workout" onclick="setSmartFilter(this)">⚡ بعد التمرين</button>
+</div>
+
+<!-- ═══════ MEAL CALCULATOR ═══════ -->
+<section class="meal-calc-section" id="mealCalcSection">
+  <div class="meal-calc-card">
+    <div class="meal-calc-title">🍽️ حاسبة الوجبة الكاملة</div>
+    <div class="meal-calc-sub">أضف عدة مكونات واحسب ماكرو وجبتك الكاملة</div>
+    <div class="meal-add-row">
+      <div class="meal-add-field">
+        <label>اختر المكوّن</label>
+        <select id="mealSelect"><option value="">— اختر مكوّناً —</option></select>
+      </div>
+      <div class="meal-add-field" style="max-width:120px">
+        <label>الكمية (g)</label>
+        <input type="number" id="mealGrams" placeholder="100" min="1" max="2000">
+      </div>
+      <button class="meal-add-btn" onclick="addMealItem()">+ أضف</button>
+    </div>
+    <div class="meal-items-list" id="mealItemsList">
+      <div class="meal-empty" id="mealEmpty">ابدأ بإضافة مكونات وجبتك 👆</div>
+    </div>
+    <div class="meal-total-row" id="mealTotalRow" style="display:none">
+      <div class="meal-total-cell k"><div class="meal-total-val" id="mtKcal">0</div><div class="meal-total-lbl">KCAL</div></div>
+      <div class="meal-total-cell p"><div class="meal-total-val" id="mtProt">0g</div><div class="meal-total-lbl">بروتين</div></div>
+      <div class="meal-total-cell c"><div class="meal-total-val" id="mtCarb">0g</div><div class="meal-total-lbl">كارب</div></div>
+      <div class="meal-total-cell f"><div class="meal-total-val" id="mtFat">0g</div><div class="meal-total-lbl">دهون</div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end" id="mealClearWrap" style="display:none">
+      <button class="meal-clear-btn" onclick="clearMeal()">🗑️ مسح الوجبة</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CALCULATOR ═══════ -->
+<section class="calc-section" id="calcSection">
+  <div class="calc-card">
+    <div class="calc-title">🧮 حاسبة السعرات التفاعلية</div>
+    <div class="calc-row">
+      <div class="calc-field">
+        <label>اختر المكوّن</label>
+        <select id="calcSelect"><option value="">— اختر مكوّناً —</option></select>
+      </div>
+      <div class="calc-field" style="max-width:130px">
+        <label>الكمية (بالجرام)</label>
+        <input type="number" id="calcGrams" placeholder="مثال: 150" min="1" max="2000" oninput="calcResult()">
+      </div>
+    </div>
+    <div class="calc-result" id="calcResult">
+      <div class="calc-food-name" id="calcFoodName"></div>
+      <div class="calc-result-grid">
+        <div class="calc-res-cell k"><div class="calc-res-val" id="cKcal">—</div><div class="calc-res-lbl">KCAL</div></div>
+        <div class="calc-res-cell p"><div class="calc-res-val" id="cProt">—</div><div class="calc-res-lbl">بروتين</div></div>
+        <div class="calc-res-cell c"><div class="calc-res-val" id="cCarb">—</div><div class="calc-res-lbl">كارب</div></div>
+        <div class="calc-res-cell f"><div class="calc-res-val" id="cFat">—</div><div class="calc-res-lbl">دهون</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOD GRID ═══════ -->
+<section class="grid-section" id="gridSection">
+  <div id="emptyState" class="empty-state">
+    <div>🔍</div>
+    <div>لا توجد نتائج لـ "<span id="emptyTerm"></span>"</div>
+  </div>
+  <!-- categories rendered by JS -->
+</section>
+
+<!-- ═══════ MODAL ═══════ -->
+<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+  <div class="modal-card">
+    <div class="modal-top" id="modalAccent"></div>
+    <div class="modal-body">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <span class="modal-emoji" id="mEmoji"></span>
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-name-en" id="mNameEn"></div>
+      <div class="modal-per">القيم الغذائية لكل 100g</div>
+      <div class="modal-macros">
+        <div class="modal-cell mk"><div class="modal-val" id="mKcal"></div><div class="modal-lbl">KCAL</div></div>
+        <div class="modal-cell mp"><div class="modal-val" id="mProt"></div><div class="modal-lbl">بروتين</div></div>
+        <div class="modal-cell mc"><div class="modal-val" id="mCarb"></div><div class="modal-lbl">كارب</div></div>
+        <div class="modal-cell mf"><div class="modal-val" id="mFat"></div><div class="modal-lbl">دهون</div></div>
+      </div>
+      <div class="modal-calc">
+        <div class="modal-calc-label">احسب حسب الكمية الخاصة بك</div>
+        <div class="modal-calc-row">
+          <input type="number" class="modal-calc-input" id="modalGrams" placeholder="أدخل الكمية بالجرام..." min="1">
+          <button class="modal-calc-go" onclick="modalCalc()">احسب</button>
+        </div>
+        <div class="modal-result-row hide" id="modalResultRow">
+          <span id="modalResText"></span>
+          <span id="modalResKcal" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px;"></span>
+        </div>
+      </div>
+      <div class="modal-source" id="mSource"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ COMPARE BAR ═══════ -->
+<div class="compare-bar" id="compareBar">
+  <div class="compare-bar-label">⚖️ مقارنة:</div>
+  <div class="compare-items" id="compareItems"></div>
+  <button class="compare-btn-go" onclick="openCompareModal()">قارن الآن</button>
+  <button class="compare-btn-clear" onclick="clearCompare()">مسح</button>
+</div>
+
+<!-- ═══════ COMPARE MODAL ═══════ -->
+<div class="compare-modal-overlay" id="compareModal" onclick="closeCompareModal(event)">
+  <div class="compare-modal-card">
+    <div class="compare-modal-header">
+      <div class="compare-modal-title">⚖️ مقارنة المكونات</div>
+      <button class="modal-close" onclick="closeCompareModal({target:document.getElementById('compareModal')})">✕</button>
+    </div>
+    <div class="compare-modal-body">
+      <table class="compare-table" id="compareTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TOAST ═══════ -->
+<div class="toast" id="toast"></div>
+
+<!-- ═══════ CTA ═══════ -->
+<section class="cta-section">
+  <div class="cta-grid-bg"></div>
+  <div class="cta-inner">
+    <div class="cta-eyebrow">COACH ANIS · تدريب مخصص</div>
+    <h2 class="cta-title">
+      أعجبك ما شفت؟<br>
+      هذا <span>10% فقط</span> مما أقدمه
+    </h2>
+    <div class="cta-divider"></div>
+    <p class="cta-body">في برنامجي الكامل ستحصل على أكثر من مجرد أرقام —<br>تحصل على نتائج حقيقية وتغيير دائم</p>
+
+    <a href="https://www.instagram.com/coach__anis" target="_blank" rel="noopener" class="cta-btn">
+      <span class="cta-btn-icon">📸</span>
+      أرسل كلمة <strong>coaching</strong> وابدأ اليوم
+    </a>
+    <div class="cta-note">@coach__anis · INSTAGRAM</div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer class="site-footer">
+  <div class="footer-brand">COACH ANIS</div>
+  <div class="footer-source">
+    مصادر البيانات: <a href="https://fdc.nal.usda.gov" target="_blank">USDA FoodData Central</a> ·
+    <a href="https://www.efsa.europa.eu" target="_blank">EFSA</a> ·
+    <a href="https://www.who.int" target="_blank">WHO</a>
+    <br>جميع القيم لكل 100g من المكوّن النيء إلا ما هو مذكور
+  </div>
+  <div class="footer-copy">© 2025 Coach Anis · جميع الحقوق محفوظة</div>
+</footer>
+
+<!-- ═══════════════════════════════════
+     JAVASCRIPT — DATA + LOGIC
+═══════════════════════════════════ -->
+<script>
+/*
+  DATA SOURCE: USDA FoodData Central (fdc.nal.usda.gov)
+  All values per 100g of raw/uncooked food unless noted.
+  Cooked items are explicitly labeled.
+  Last verified: 2025
+*/
+
+const FOODS = [
+  /* ══════ FRUITS ══════ */
+  {id:'f01',cat:'fruit',emoji:'🍌',name:'موز',nameEn:'Banana',kcal:89,prot:1.1,carb:22.8,fat:0.3,
+   note:'مصدر ممتاز للبوتاسيوم وفيتامين B6',source:'USDA FDC #173944'},
+  {id:'f02',cat:'fruit',emoji:'🍎',name:'تفاحة',nameEn:'Apple',kcal:52,prot:0.3,carb:13.8,fat:0.2,
+   note:'غني بمضادات الأكسدة والألياف القابلة للذوبان',source:'USDA FDC #171688'},
+  {id:'f03',cat:'fruit',emoji:'🍊',name:'برتقال',nameEn:'Orange',kcal:47,prot:0.9,carb:11.8,fat:0.1,
+   note:'100g تغطي 89% من الاحتياج اليومي لفيتامين C',source:'USDA FDC #169097'},
+  {id:'f04',cat:'fruit',emoji:'🍋',name:'ليمون',nameEn:'Lemon',kcal:29,prot:1.1,carb:9.3,fat:0.3,
+   note:'مضادات أكسدة قوية + فيتامين C عالي',source:'USDA FDC #167746'},
+  {id:'f05',cat:'fruit',emoji:'🍇',name:'عنب',nameEn:'Grapes',kcal:69,prot:0.7,carb:18.1,fat:0.2,
+   note:'يحتوي على الريسفيراترول مضاد التأكسد',source:'USDA FDC #174683'},
+  {id:'f06',cat:'fruit',emoji:'🍓',name:'فراولة',nameEn:'Strawberry',kcal:32,prot:0.7,carb:7.7,fat:0.3,
+   note:'منخفض السعرات جداً مع فيتامين C عالٍ',source:'USDA FDC #167762'},
+  {id:'f07',cat:'fruit',emoji:'🍑',name:'مشمش',nameEn:'Apricot',kcal:48,prot:1.4,carb:11.1,fat:0.4,
+   note:'غني بالبيتا كاروتين وفيتامين A',source:'USDA FDC #171697'},
+  {id:'f08',cat:'fruit',emoji:'🍈',name:'بطيخ',nameEn:'Watermelon',kcal:30,prot:0.6,carb:7.6,fat:0.2,
+   note:'نسبة ماء 91% — مثالي للترطيب بعد التمرين',source:'USDA FDC #167765'},
+  {id:'f09',cat:'fruit',emoji:'🌴',name:'تمر',nameEn:'Dates',kcal:277,prot:1.8,carb:74.9,fat:0.2,
+   note:'كارب سريع ممتاز لما قبل/بعد التمرين',source:'USDA FDC #168191'},
+  {id:'f10',cat:'fruit',emoji:'🍐',name:'كمثرى',nameEn:'Pear',kcal:57,prot:0.4,carb:15.2,fat:0.1,
+   note:'غني بالألياف والفلافونويد',source:'USDA FDC #169118'},
+  {id:'f11',cat:'fruit',emoji:'🍒',name:'رمان',nameEn:'Pomegranate',kcal:83,prot:1.7,carb:18.7,fat:1.2,
+   note:'من أعلى الفواكه بمضادات الأكسدة',source:'USDA FDC #169134'},
+  {id:'f12',cat:'fruit',emoji:'🫐',name:'تين طازج',nameEn:'Fig (fresh)',kcal:74,prot:0.8,carb:19.2,fat:0.3,
+   note:'مصدر جيد للكالسيوم والبوتاسيوم',source:'USDA FDC #169910'},
+
+  /* ══════ VEGETABLES ══════ */
+  {id:'v01',cat:'veg',emoji:'🍅',name:'طماطم',nameEn:'Tomato',kcal:18,prot:0.9,carb:3.9,fat:0.2,
+   note:'مصدر الليكوبين — مضاد أكسدة يقلل الالتهابات',source:'USDA FDC #170457'},
+  {id:'v02',cat:'veg',emoji:'🧅',name:'بصل',nameEn:'Onion',kcal:40,prot:1.1,carb:9.3,fat:0.1,
+   note:'يحتوي الكيرسيتين المضاد للالتهابات',source:'USDA FDC #170000'},
+  {id:'v03',cat:'veg',emoji:'🧄',name:'ثوم',nameEn:'Garlic',kcal:149,prot:6.4,carb:33.1,fat:0.5,
+   note:'الأليسين — مضاد ميكروبي ومحسّن للمناعة',source:'USDA FDC #169230'},
+  {id:'v04',cat:'veg',emoji:'🥕',name:'جزرة',nameEn:'Carrot',kcal:41,prot:0.9,carb:9.6,fat:0.2,
+   note:'المصدر الأغنى بالبيتا كاروتين (فيتامين A)',source:'USDA FDC #170393'},
+  {id:'v05',cat:'veg',emoji:'🥔',name:'بطاطا',nameEn:'Potato',kcal:77,prot:2.0,carb:17.5,fat:0.1,
+   note:'كارب معقد + بوتاسيوم — ممتاز بعد التمرين',source:'USDA FDC #170026'},
+  {id:'v06',cat:'veg',emoji:'🫑',name:'فلفل أحمر',nameEn:'Red Bell Pepper',kcal:31,prot:1.0,carb:6.0,fat:0.3,
+   note:'أغنى من البرتقال بفيتامين C — 128mg/100g',source:'USDA FDC #170108'},
+  {id:'v07',cat:'veg',emoji:'🫑',name:'فلفل أخضر',nameEn:'Green Bell Pepper',kcal:20,prot:0.9,carb:4.6,fat:0.2,
+   note:'منخفض السعرات جداً — مضادات أكسدة قوية',source:'USDA FDC #170109'},
+  {id:'v08',cat:'veg',emoji:'🥒',name:'خيار',nameEn:'Cucumber',kcal:16,prot:0.7,carb:3.6,fat:0.1,
+   note:'نسبة ماء 96% — مرطّب ومنخفض السعرات',source:'USDA FDC #168409'},
+  {id:'v09',cat:'veg',emoji:'🥦',name:'بروكلي',nameEn:'Broccoli',kcal:34,prot:2.8,carb:6.6,fat:0.4,
+   note:'كبريتورافان — من أقوى المضادات للسرطان',source:'USDA FDC #170379'},
+  {id:'v10',cat:'veg',emoji:'🥬',name:'سبانخ',nameEn:'Spinach',kcal:23,prot:2.9,carb:3.6,fat:0.4,
+   note:'من أعلى الخضر بالحديد والمغنيسيوم',source:'USDA FDC #168462'},
+  {id:'v11',cat:'veg',emoji:'🍠',name:'بطاطا حلوة',nameEn:'Sweet Potato',kcal:86,prot:1.6,carb:20.1,fat:0.1,
+   note:'مؤشر جلايسيمي أقل من البطاطا العادية',source:'USDA FDC #168482'},
+  {id:'v12',cat:'veg',emoji:'🫛',name:'كوسة',nameEn:'Zucchini',kcal:17,prot:1.2,carb:3.1,fat:0.3,
+   note:'منخفض السعرات — مصدر جيد لفيتامين C وB6',source:'USDA FDC #169291'},
+  {id:'v13',cat:'veg',emoji:'🍆',name:'باذنجان',nameEn:'Eggplant',kcal:25,prot:1.0,carb:5.9,fat:0.2,
+   note:'الناسونين — مضاد أكسدة يحمي غشاء الخلايا',source:'USDA FDC #169228'},
+  {id:'v14',cat:'veg',emoji:'🥗',name:'خس',nameEn:'Lettuce',kcal:15,prot:1.4,carb:2.9,fat:0.2,
+   note:'منخفض جداً — مصدر فيتامين K وحمض الفوليك',source:'USDA FDC #169247'},
+  {id:'v15',cat:'veg',emoji:'🫚',name:'ملفوف',nameEn:'Cabbage',kcal:25,prot:1.3,carb:5.8,fat:0.1,
+   note:'غني بفيتامين K وC مع سعرات منخفضة جداً',source:'USDA FDC #169975'},
+
+  /* ══════ PROTEINS ══════ */
+  {id:'p01',cat:'protein',emoji:'🍗',name:'صدر دجاج (مطبوخ)',nameEn:'Chicken Breast (cooked)',kcal:165,prot:31.0,carb:0,fat:3.6,
+   note:'الخيار الأول للرياضيين — أعلى نسبة بروتين/سعرات',source:'USDA FDC #171477'},
+  {id:'p02',cat:'protein',emoji:'🍖',name:'أفخاذ الدجاج (مطبوخة)',nameEn:'Chicken Thighs (cooked)',kcal:209,prot:26.0,carb:0,fat:11.0,
+   note:'أكثر دهوناً من الصدر لكن أغنى بالزنك والحديد',source:'USDA FDC #171490'},
+  {id:'p03',cat:'protein',emoji:'🥚',name:'بيض كامل',nameEn:'Whole Egg',kcal:155,prot:13.0,carb:1.1,fat:11.0,
+   note:'أعلى درجة جودة بيولوجية للبروتين (BV=100)',source:'USDA FDC #171287'},
+  {id:'p04',cat:'protein',emoji:'🍳',name:'بياض بيض',nameEn:'Egg White',kcal:52,prot:11.0,carb:0.7,fat:0.2,
+   note:'بروتين نقي بدون دهون — مثالي للتنشيف',source:'USDA FDC #172183'},
+  {id:'p05',cat:'protein',emoji:'🐟',name:'تونة في الماء',nameEn:'Tuna (canned in water)',kcal:116,prot:25.5,carb:0,fat:1.0,
+   note:'أفضل نسبة بروتين/سعرات في الأسماك المعلبة',source:'USDA FDC #171986'},
+  {id:'p06',cat:'protein',emoji:'🐠',name:'سردين (معلب)',nameEn:'Sardines (canned)',kcal:208,prot:24.6,carb:0,fat:11.5,
+   note:'أوميغا 3 عالي + كالسيوم ممتاز من العظام',source:'USDA FDC #175139'},
+  {id:'p07',cat:'protein',emoji:'🥩',name:'لحم بقر مفروم (10% دهن)',nameEn:'Ground Beef (10% fat)',kcal:176,prot:26.0,carb:0,fat:7.8,
+   note:'الكرياتين الطبيعي + الحديد الهيمي عالي الامتصاص',source:'USDA FDC #174035'},
+  {id:'p08',cat:'protein',emoji:'🫀',name:'كبدة الدجاج',nameEn:'Chicken Liver',kcal:119,prot:16.9,carb:0.7,fat:4.8,
+   note:'أعلى مصدر للحديد والزنك وفيتامين B12',source:'USDA FDC #172479'},
+
+  /* ══════ GRAINS ══════ */
+  {id:'g01',cat:'grain',emoji:'🍚',name:'رز أبيض (مطبوخ)',nameEn:'White Rice (cooked)',kcal:130,prot:2.7,carb:28.2,fat:0.3,
+   note:'كارب سريع — مثالي مباشرة بعد التمرين',source:'USDA FDC #168879'},
+  {id:'g02',cat:'grain',emoji:'🌾',name:'رز بني (مطبوخ)',nameEn:'Brown Rice (cooked)',kcal:123,prot:2.6,carb:25.6,fat:1.0,
+   note:'مؤشر جلايسيمي أقل + ألياف أكثر من الأبيض',source:'USDA FDC #168882'},
+  {id:'g03',cat:'grain',emoji:'🍝',name:'معكرونة (مطبوخة)',nameEn:'Pasta (cooked)',kcal:131,prot:5.0,carb:25.0,fat:1.1,
+   note:'كارب معقد + بروتين معتدل — وجبة متوازنة',source:'USDA FDC #168936'},
+  {id:'g04',cat:'grain',emoji:'🌾',name:'شوفان (جاف)',nameEn:'Oats (dry)',kcal:389,prot:16.9,carb:66.3,fat:6.9,
+   note:'بيتا جلوكان يخفض الكوليسترول ويحسن الشبع',source:'USDA FDC #173904'},
+  {id:'g05',cat:'grain',emoji:'🍞',name:'خبز أبيض',nameEn:'White Bread',kcal:265,prot:9.0,carb:49.0,fat:3.2,
+   note:'مؤشر جلايسيمي عالٍ — تناوله بعد التمرين',source:'USDA FDC #172687'},
+  {id:'g06',cat:'grain',emoji:'🫓',name:'خبز بر كامل',nameEn:'Whole Wheat Bread',kcal:247,prot:13.0,carb:41.0,fat:4.2,
+   note:'ألياف أعلى وتأثير أبطأ على سكر الدم',source:'USDA FDC #172684'},
+  {id:'g07',cat:'grain',emoji:'🟡',name:'كسكس (مطبوخ)',nameEn:'Couscous (cooked)',kcal:112,prot:3.8,carb:23.2,fat:0.2,
+   note:'سريع التحضير وجيد للاسترداد بعد التمرين',source:'USDA FDC #169700'},
+  {id:'g08',cat:'grain',emoji:'⬜',name:'دقيق أبيض',nameEn:'All-Purpose Flour',kcal:364,prot:10.0,carb:76.0,fat:1.0,
+   note:'مرجع للخبز والطهي — مؤشر جلايسيمي مرتفع',source:'USDA FDC #169761'},
+  {id:'g09',cat:'grain',emoji:'🟤',name:'دقيق الشوفان',nameEn:'Oat Flour',kcal:404,prot:14.7,carb:65.7,fat:9.1,
+   note:'أفضل من الدقيق الأبيض — ألياف أعلى بكثير',source:'USDA FDC #173905'},
+
+  /* ══════ DAIRY ══════ */
+  {id:'d01',cat:'dairy',emoji:'🥛',name:'حليب كامل',nameEn:'Whole Milk',kcal:61,prot:3.2,carb:4.8,fat:3.3,
+   note:'كالسيوم + فيتامين D — بروتين كازين بطيء الهضم',source:'USDA FDC #171265'},
+  {id:'d02',cat:'dairy',emoji:'🥛',name:'حليب خالي الدسم',nameEn:'Skim Milk',kcal:35,prot:3.4,carb:5.0,fat:0.2,
+   note:'نفس البروتين والكالسيوم مع سعرات أقل',source:'USDA FDC #171268'},
+  {id:'d03',cat:'dairy',emoji:'🫙',name:'زبادي طبيعي',nameEn:'Plain Yogurt',kcal:59,prot:3.5,carb:5.0,fat:3.3,
+   note:'بروبيوتيك + كالسيوم — يحسن صحة الأمعاء',source:'USDA FDC #170886'},
+  {id:'d04',cat:'dairy',emoji:'🫙',name:'زبادي يوناني 0%',nameEn:'Greek Yogurt 0%',kcal:59,prot:10.0,carb:3.6,fat:0.4,
+   note:'ضعف بروتين الزبادي العادي — الأفضل للرياضيين',source:'USDA FDC #170903'},
+  {id:'d05',cat:'dairy',emoji:'🧀',name:'جبن كريمي',nameEn:'Cream Cheese',kcal:342,prot:6.0,carb:4.1,fat:34.0,
+   note:'عالي الدهون — استخدمه بكميات صغيرة فقط',source:'USDA FDC #172179'},
+  {id:'d06',cat:'dairy',emoji:'🧀',name:'جبن شيدر',nameEn:'Cheddar Cheese',kcal:402,prot:25.0,carb:1.3,fat:33.0,
+   note:'بروتين + كالسيوم عالٍ — محتوى دهون مرتفع',source:'USDA FDC #173414'},
+  {id:'d07',cat:'dairy',emoji:'🧈',name:'زبدة',nameEn:'Butter',kcal:717,prot:0.9,carb:0.1,fat:81.0,
+   note:'دهون مشبعة — استخدم بحذر وبكميات قليلة',source:'USDA FDC #173410'},
+  {id:'d08',cat:'dairy',emoji:'🍦',name:'جبن قريش',nameEn:'Cottage Cheese',kcal:98,prot:11.1,carb:3.4,fat:4.3,
+   note:'بروتين كازين — مثالي قبل النوم لبناء العضلات',source:'USDA FDC #173418'},
+
+  /* ══════ LEGUMES ══════ */
+  {id:'l01',cat:'legume',emoji:'🫘',name:'عدس أحمر (مطبوخ)',nameEn:'Red Lentils (cooked)',kcal:116,prot:9.0,carb:20.0,fat:0.4,
+   note:'بروتين نباتي كامل عالٍ + حديد + ألياف',source:'USDA FDC #172421'},
+  {id:'l02',cat:'legume',emoji:'🫘',name:'حمص (مطبوخ)',nameEn:'Chickpeas (cooked)',kcal:164,prot:8.9,carb:27.4,fat:2.6,
+   note:'بروتين + كارب + ألياف — مؤشر جلايسيمي منخفض',source:'USDA FDC #173756'},
+  {id:'l03',cat:'legume',emoji:'🟤',name:'فول مطبوخ',nameEn:'Fava Beans (cooked)',kcal:110,prot:7.6,carb:19.6,fat:0.4,
+   note:'غني بحمض الفوليك والمنغنيز والنحاس',source:'USDA FDC #174280'},
+  {id:'l04',cat:'legume',emoji:'⬜',name:'فاصوليا بيضاء (مطبوخة)',nameEn:'White Beans (cooked)',kcal:139,prot:9.7,carb:25.0,fat:0.5,
+   note:'من أغنى البقوليات بالكالسيوم والحديد',source:'USDA FDC #175196'},
+  {id:'l05',cat:'legume',emoji:'🟡',name:'فول سوداني (كامل)',nameEn:'Peanuts (raw)',kcal:567,prot:25.8,carb:16.1,fat:49.2,
+   note:'دهون غير مشبعة + بروتين عالٍ + فيتامين E',source:'USDA FDC #172430'},
+
+  /* ══════ FATS & OILS ══════ */
+  {id:'o01',cat:'fat',emoji:'🫒',name:'زيت زيتون',nameEn:'Olive Oil',kcal:884,prot:0,carb:0,fat:100.0,
+   note:'أوليك أسيد — يقلل الالتهابات ويحمي القلب',source:'USDA FDC #171413'},
+  {id:'o02',cat:'fat',emoji:'🌻',name:'زيت عباد الشمس',nameEn:'Sunflower Oil',kcal:884,prot:0,carb:0,fat:100.0,
+   note:'أوميغا 6 عالٍ — يُستخدم للطبخ على حرارة عالية',source:'USDA FDC #172336'},
+  {id:'o03',cat:'fat',emoji:'🌴',name:'زيت جوز الهند',nameEn:'Coconut Oil',kcal:862,prot:0,carb:0,fat:100.0,
+   note:'MCT — دهون مشبعة ذات سلسلة متوسطة سريعة الهضم',source:'USDA FDC #173573'},
+  {id:'o04',cat:'fat',emoji:'🟤',name:'زبدة الفول السوداني',nameEn:'Peanut Butter',kcal:588,prot:25.0,carb:20.0,fat:50.0,
+   note:'بروتين + دهون صحية — الأكثر اقتصادية',source:'USDA FDC #172470'},
+  {id:'o05',cat:'fat',emoji:'🍯',name:'عسل طبيعي',nameEn:'Honey',kcal:304,prot:0.3,carb:82.4,fat:0.0,
+   note:'سكر طبيعي — بديل صحي للسكر الأبيض بكميات معتدلة',source:'USDA FDC #169640'},
+  {id:'o06',cat:'fat',emoji:'🥑',name:'أفوكادو',nameEn:'Avocado',kcal:160,prot:2.0,carb:8.5,fat:14.7,
+   note:'دهون أحادية غير مشبعة + بوتاسيوم + فيتامين K',source:'USDA FDC #171705'},
+
+  /* ══════ NUTS & SEEDS ══════ */
+  {id:'n01',cat:'nut',emoji:'🌰',name:'لوز',nameEn:'Almonds',kcal:579,prot:21.2,carb:21.6,fat:49.9,
+   note:'أعلى المكسرات بفيتامين E + مغنيسيوم ممتاز',source:'USDA FDC #170567'},
+  {id:'n02',cat:'nut',emoji:'🪨',name:'جوز',nameEn:'Walnuts',kcal:654,prot:15.2,carb:13.7,fat:65.2,
+   note:'المصدر النباتي الأغنى بأوميغا 3 (ALA)',source:'USDA FDC #170187'},
+  {id:'n03',cat:'nut',emoji:'🤎',name:'بذور السمسم',nameEn:'Sesame Seeds',kcal:573,prot:17.7,carb:23.4,fat:49.7,
+   note:'كالسيوم عالٍ جداً + ليغنان مضاد للأكسدة',source:'USDA FDC #170150'},
+  {id:'n04',cat:'nut',emoji:'🌑',name:'بذور الشيا',nameEn:'Chia Seeds',kcal:486,prot:16.5,carb:42.1,fat:30.7,
+   note:'أوميغا 3 + ألياف هائلة + يمتص 12 ضعف وزنه ماء',source:'USDA FDC #170554'},
+  {id:'n05',cat:'nut',emoji:'🟤',name:'فول سوداني محمص',nameEn:'Peanuts (roasted)',kcal:585,prot:23.7,carb:21.5,fat:49.7,
+   note:'نفس القيمة الغذائية مع نكهة أقوى',source:'USDA FDC #172434'},
+  {id:'n06',cat:'nut',emoji:'⚪',name:'بذور الكتان',nameEn:'Flaxseed',kcal:534,prot:18.3,carb:28.9,fat:42.2,
+   note:'المصدر الأغنى بليغنان + أوميغا 3 عالٍ',source:'USDA FDC #169414'},
+];
+
+/* ═══════ CATEGORY CONFIG ═══════ */
+const CATS = {
+  fruit:   {label:'🍎 فواكه',        color:'#E87A7A', bg:'rgba(232,122,122,0.1)'},
+  veg:     {label:'🥦 خضروات',      color:'#7AC87A', bg:'rgba(122,200,122,0.1)'},
+  protein: {label:'🍗 بروتينات',     color:'#E8A87A', bg:'rgba(232,168,122,0.1)'},
+  grain:   {label:'🌾 حبوب وكارب',   color:'#7AB8E8', bg:'rgba(122,184,232,0.1)'},
+  dairy:   {label:'🥛 منتجات الألبان',color:'#C8C8FF', bg:'rgba(200,200,255,0.1)'},
+  legume:  {label:'🫘 بقوليات',       color:'#A8C87A', bg:'rgba(168,200,122,0.1)'},
+  fat:     {label:'🫒 دهون وزيوت',    color:'#C9A84C', bg:'rgba(201,168,76,0.1)'},
+  nut:     {label:'🥜 مكسرات وبذور', color:'#D4A97A', bg:'rgba(212,169,122,0.1)'},
+};
+
+/* ═══════ STATE ═══════ */
+let activeFilter = 'all';
+let searchTerm = '';
+let currentModalFood = null;
+let activeSmartFilter = null;
+let compareList = [];
+let mealItems = [];
+let toastTimeout;
+
+/* ═══════ INIT ═══════ */
+function init() {
+  populateCalcSelect();
+  populateMealSelect();
+  renderGrid();
+}
+
+function populateCalcSelect() {
+  const sel = document.getElementById('calcSelect');
+  const byCat = {};
+  FOODS.forEach(f => {
+    if (!byCat[f.cat]) byCat[f.cat] = [];
+    byCat[f.cat].push(f);
+  });
+  Object.keys(CATS).forEach(cat => {
+    if (!byCat[cat]) return;
+    const og = document.createElement('optgroup');
+    og.label = CATS[cat].label;
+    byCat[cat].forEach(f => {
+      const op = document.createElement('option');
+      op.value = f.id;
+      op.textContent = f.emoji + ' ' + f.name;
+      og.appendChild(op);
+    });
+    sel.appendChild(og);
+  });
+  sel.addEventListener('change', calcResult);
+}
+
+/* ═══════ FILTER ═══════ */
+function setFilter(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeFilter = btn.dataset.cat;
+  renderGrid();
+}
+
+/* ═══════ SEARCH ═══════ */
+function handleSearch(val) {
+  searchTerm = val.trim().toLowerCase();
+  document.getElementById('searchClear').classList.toggle('show', searchTerm.length > 0);
+  renderGrid();
+}
+function clearSearch() {
+  document.getElementById('searchInput').value = '';
+  searchTerm = '';
+  document.getElementById('searchClear').classList.remove('show');
+  renderGrid();
+  document.getElementById('searchInput').focus();
+}
+
+/* ═══════ RENDER GRID ═══════ */
+function renderGrid() {
+  const sec = document.getElementById('gridSection');
+  const emptyEl = document.getElementById('emptyState');
+
+  let filtered = FOODS.filter(f => {
+    const catOk = activeFilter === 'all' || f.cat === activeFilter;
+    const searchOk = !searchTerm || f.name.includes(searchTerm) || (f.nameEn && f.nameEn.toLowerCase().includes(searchTerm));
+    let smartOk = true;
+    if (activeSmartFilter === 'high-protein') smartOk = f.prot >= 20;
+    else if (activeSmartFilter === 'low-carb') smartOk = f.carb < 5;
+    else if (activeSmartFilter === 'low-cal') smartOk = f.kcal < 50;
+    else if (activeSmartFilter === 'post-workout') smartOk = (f.carb > 15 && f.fat < 5) || f.prot > 20;
+    return catOk && searchOk && smartOk;
+  });
+
+  sec.querySelectorAll('.cat-section').forEach(el => el.remove());
+
+  if (filtered.length === 0) {
+    emptyEl.classList.add('show');
+    document.getElementById('emptyTerm').textContent = searchTerm || activeFilter;
+    document.getElementById('filterCount').textContent = '0 مكوّن';
+    return;
+  }
+  emptyEl.classList.remove('show');
+  document.getElementById('filterCount').textContent = filtered.length + ' مكوّن';
+
+  if (activeFilter === 'all' && !searchTerm && !activeSmartFilter) {
+    Object.keys(CATS).forEach(cat => {
+      const items = filtered.filter(f => f.cat === cat);
+      if (items.length === 0) return;
+      sec.appendChild(buildSection(cat, items));
+    });
+  } else {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'cat-section';
+    const grid = document.createElement('div');
+    grid.className = 'food-grid';
+    filtered.forEach(f => grid.appendChild(buildCard(f)));
+    wrapper.appendChild(grid);
+    sec.appendChild(wrapper);
+  }
+}
+
+function buildSection(cat, items) {
+  const cfg = CATS[cat];
+  const wrap = document.createElement('div');
+  wrap.className = 'cat-section';
+
+  const header = document.createElement('div');
+  header.className = 'section-header';
+  header.innerHTML = `
+    <div class="section-label" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</div>
+    <div class="section-count">${items.length} مكوّن</div>
+  `;
+
+  const grid = document.createElement('div');
+  grid.className = 'food-grid';
+  items.forEach(f => grid.appendChild(buildCard(f)));
+
+  wrap.appendChild(header);
+  wrap.appendChild(grid);
+  return wrap;
+}
+
+function buildCard(f) {
+  const cfg = CATS[f.cat];
+  const card = document.createElement('div');
+  card.className = 'food-card';
+  card.onclick = () => openModal(f);
+  const isInCompare = compareList.some(c => c.id === f.id);
+  card.innerHTML = `
+    <div class="food-card-accent" style="background:${cfg.color}"></div>
+    <div class="food-card-body">
+      <div class="food-card-top">
+        <div class="food-emoji">${f.emoji}</div>
+        <div>
+          <div class="food-kcal">${f.kcal}</div>
+          <div class="food-kcal-sub">KCAL/100g</div>
+        </div>
+      </div>
+      <div class="food-name">${f.name}</div>
+      <div class="food-name-en">${f.nameEn}</div>
+      <div class="food-macros">
+        <div class="macro-pill mp-p"><span class="macro-pill-val">${f.prot}g</span>بروتين</div>
+        <div class="macro-pill mp-c"><span class="macro-pill-val">${f.carb}g</span>كارب</div>
+        <div class="macro-pill mp-f"><span class="macro-pill-val">${f.fat}g</span>دهون</div>
+      </div>
+    </div>
+    <div class="food-card-footer">${f.note}</div>
+    <button class="food-card-share" onclick="shareFood(event, ${JSON.stringify(f).replace(/"/g,'&quot;')})">📤 شارك</button>
+    <button class="food-card-compare ${isInCompare ? 'added' : ''}" onclick="toggleCompare(event,'${f.id}')">${isInCompare ? '✓ مضاف' : '⚖️ قارن'}</button>
+  `;
+  return card;
+}
+
+/* ═══════ CALCULATOR ═══════ */
+function calcResult() {
+  const selVal = document.getElementById('calcSelect').value;
+  const grams = parseFloat(document.getElementById('calcGrams').value);
+  const resultEl = document.getElementById('calcResult');
+
+  if (!selVal || !grams || grams <= 0) { resultEl.classList.remove('show'); return; }
+
+  const food = FOODS.find(f => f.id === selVal);
+  if (!food) return;
+
+  const ratio = grams / 100;
+  document.getElementById('cKcal').textContent = Math.round(food.kcal * ratio);
+  document.getElementById('cProt').textContent = (food.prot * ratio).toFixed(1) + 'g';
+  document.getElementById('cCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
+  document.getElementById('cFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
+  document.getElementById('calcFoodName').innerHTML = `<strong>${food.emoji} ${food.name}</strong> — ${grams}g`;
+  resultEl.classList.add('show');
+}
+
+/* ═══════ MODAL ═══════ */
+function openModal(f) {
+  currentModalFood = f;
+  const cfg = CATS[f.cat];
+  document.getElementById('modalAccent').style.background = cfg.color;
+  document.getElementById('mEmoji').textContent = f.emoji;
+  document.getElementById('mName').textContent = f.name;
+  document.getElementById('mNameEn').textContent = f.nameEn;
+  document.getElementById('mKcal').textContent = f.kcal;
+  document.getElementById('mProt').textContent = f.prot + 'g';
+  document.getElementById('mCarb').textContent = f.carb + 'g';
+  document.getElementById('mFat').textContent = f.fat + 'g';
+  document.getElementById('mSource').textContent = '📊 المصدر: ' + f.source;
+  document.getElementById('modalGrams').value = '';
+  document.getElementById('modalResultRow').classList.add('hide');
+  document.getElementById('modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(e) {
+  if (e && e.target !== document.getElementById('modal') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function modalCalc() {
+  const g = parseFloat(document.getElementById('modalGrams').value);
+  if (!g || g <= 0 || !currentModalFood) return;
+  const f = currentModalFood;
+  const r = g / 100;
+  const row = document.getElementById('modalResultRow');
+  document.getElementById('modalResText').textContent =
+    `${g}g = بروتين: ${(f.prot*r).toFixed(1)}g · كارب: ${(f.carb*r).toFixed(1)}g · دهون: ${(f.fat*r).toFixed(1)}g`;
+  document.getElementById('modalResKcal').textContent = Math.round(f.kcal * r) + ' kcal';
+  row.classList.remove('hide');
+}
+
+document.getElementById('modalGrams').addEventListener('keydown', e => {
+  if (e.key === 'Enter') modalCalc();
+});
+
+// Keyboard: Escape to close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal({target: document.getElementById('modal')});
+});
+
+init();
+
+/* ═══════ SMART FILTERS ═══════ */
+function setSmartFilter(btn) {
+  if (btn.classList.contains('on')) {
+    btn.classList.remove('on');
+    activeSmartFilter = null;
+  } else {
+    document.querySelectorAll('.smart-btn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    activeSmartFilter = btn.dataset.smart;
+  }
+  renderGrid();
+}
+
+function toggleCompare(e, foodId) {
+  e.stopPropagation();
+  const food = FOODS.find(f => f.id === foodId);
+  if (!food) return;
+  const idx = compareList.findIndex(f => f.id === foodId);
+  if (idx > -1) {
+    compareList.splice(idx, 1);
+  } else {
+    if (compareList.length >= 4) { showToast('الحد الأقصى 4 مكونات للمقارنة'); return; }
+    compareList.push(food);
+  }
+  updateCompareBar();
+  renderGrid();
+}
+
+function updateCompareBar() {
+  const bar = document.getElementById('compareBar');
+  const itemsEl = document.getElementById('compareItems');
+  if (compareList.length === 0) { bar.classList.remove('show'); return; }
+  bar.classList.add('show');
+  itemsEl.innerHTML = compareList.map(f =>
+    `<div class="compare-chip">${f.emoji} ${f.name}<button class="compare-chip-remove" onclick="toggleCompare(event,'${f.id}')">✕</button></div>`
+  ).join('');
+}
+
+function clearCompare() {
+  compareList = [];
+  updateCompareBar();
+  renderGrid();
+}
+
+function openCompareModal() {
+  if (compareList.length < 2) { showToast('اختر على الأقل مكوّنَين للمقارنة'); return; }
+  const table = document.getElementById('compareTable');
+  const rows = [
+    { label: 'المكوّن', key: null },
+    { label: 'KCAL / 100g', key: 'kcal' },
+    { label: 'بروتين (g)', key: 'prot' },
+    { label: 'كارب (g)', key: 'carb' },
+    { label: 'دهون (g)', key: 'fat' },
+  ];
+
+  let html = '<thead><tr><th>القيمة</th>';
+  compareList.forEach(f => { html += `<th>${f.emoji} ${f.name}</th>`; });
+  html += '</tr></thead><tbody>';
+
+  rows.forEach(row => {
+    if (!row.key) {
+      html += `<tr><td>${row.label}</td>`;
+      compareList.forEach(f => { html += `<td style="font-size:11px;color:var(--text-muted)">${f.nameEn}</td>`; });
+      html += '</tr>';
+      return;
+    }
+    const vals = compareList.map(f => f[row.key]);
+    const best = row.key === 'kcal' || row.key === 'fat' ? Math.min(...vals) : Math.max(...vals);
+    html += `<tr><td>${row.label}</td>`;
+    compareList.forEach(f => {
+      const v = f[row.key];
+      const isBest = v === best;
+      html += `<td class="${isBest ? 'best-val' : ''}">${v}${row.key !== 'kcal' ? 'g' : ''}</td>`;
+    });
+    html += '</tr>';
+  });
+
+  html += '</tbody>';
+  table.innerHTML = html;
+  document.getElementById('compareModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeCompareModal(e) {
+  if (e && e.target !== document.getElementById('compareModal') && !e.target.classList.contains('modal-close')) return;
+  document.getElementById('compareModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ═══════ SHARE CARD ═══════ */
+function shareFood(e, food) {
+  e.stopPropagation();
+  const text = `🔥 ${food.emoji} ${food.name} — لكل 100g:\n💪 بروتين: ${food.prot}g\n🍚 كارب: ${food.carb}g\n🫒 دهون: ${food.fat}g\n⚡ ${food.kcal} سعرة\n\nمصدر: قاعدة بيانات Coach Anis\nhttps://coach-anis.github.io/calories-db/`;
+  if (navigator.share) {
+    navigator.share({ text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => showToast('✓ تم نسخ البيانات'));
+  }
+}
+
+/* ═══════ TOAST ═══════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+/* ═══════ MEAL CALCULATOR ═══════ */
+function populateMealSelect() {
+  const sel = document.getElementById('mealSelect');
+  const byCat = {};
+  FOODS.forEach(f => {
+    if (!byCat[f.cat]) byCat[f.cat] = [];
+    byCat[f.cat].push(f);
+  });
+  Object.keys(CATS).forEach(cat => {
+    if (!byCat[cat]) return;
+    const og = document.createElement('optgroup');
+    og.label = CATS[cat].label;
+    byCat[cat].forEach(f => {
+      const op = document.createElement('option');
+      op.value = f.id;
+      op.textContent = f.emoji + ' ' + f.name;
+      og.appendChild(op);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function addMealItem() {
+  const selVal = document.getElementById('mealSelect').value;
+  const grams = parseFloat(document.getElementById('mealGrams').value);
+  if (!selVal || !grams || grams <= 0) { showToast('اختر مكوّناً وأدخل الكمية'); return; }
+  const food = FOODS.find(f => f.id === selVal);
+  if (!food) return;
+  const ratio = grams / 100;
+  mealItems.push({
+    id: Date.now(),
+    food,
+    grams,
+    kcal: Math.round(food.kcal * ratio),
+    prot: parseFloat((food.prot * ratio).toFixed(1)),
+    carb: parseFloat((food.carb * ratio).toFixed(1)),
+    fat: parseFloat((food.fat * ratio).toFixed(1)),
+  });
+  document.getElementById('mealSelect').value = '';
+  document.getElementById('mealGrams').value = '';
+  renderMeal();
+}
+
+function removeMealItem(id) {
+  mealItems = mealItems.filter(i => i.id !== id);
+  renderMeal();
+}
+
+function clearMeal() {
+  mealItems = [];
+  renderMeal();
+}
+
+function renderMeal() {
+  const listEl = document.getElementById('mealItemsList');
+  const emptyEl = document.getElementById('mealEmpty');
+  const totalRow = document.getElementById('mealTotalRow');
+  const clearWrap = document.getElementById('mealClearWrap');
+
+  if (mealItems.length === 0) {
+    listEl.innerHTML = '<div class="meal-empty" id="mealEmpty">ابدأ بإضافة مكونات وجبتك 👆</div>';
+    totalRow.style.display = 'none';
+    clearWrap.style.display = 'none';
+    return;
+  }
+
+  listEl.innerHTML = mealItems.map(item => `
+    <div class="meal-item-row">
+      <div class="meal-item-name">${item.food.emoji} ${item.food.name} <span style="color:var(--text-muted);font-size:11px">(${item.grams}g)</span></div>
+      <div class="meal-item-macros">
+        <span><span class="mk">${item.kcal}</span> kcal</span>
+        <span><span class="mp">${item.prot}g</span> P</span>
+        <span><span class="mc">${item.carb}g</span> C</span>
+        <span><span class="mf">${item.fat}g</span> F</span>
+      </div>
+      <button class="meal-item-remove" onclick="removeMealItem(${item.id})">✕</button>
+    </div>
+  `).join('');
+
+  const totals = mealItems.reduce((acc, i) => ({
+    kcal: acc.kcal + i.kcal,
+    prot: acc.prot + i.prot,
+    carb: acc.carb + i.carb,
+    fat: acc.fat + i.fat,
+  }), { kcal: 0, prot: 0, carb: 0, fat: 0 });
+
+  document.getElementById('mtKcal').textContent = totals.kcal;
+  document.getElementById('mtProt').textContent = totals.prot.toFixed(1) + 'g';
+  document.getElementById('mtCarb').textContent = totals.carb.toFixed(1) + 'g';
+  document.getElementById('mtFat').textContent = totals.fat.toFixed(1) + 'g';
+  totalRow.style.display = 'grid';
+  clearWrap.style.display = 'flex';
+}
+
+
+/* ═══════ PWA ═══════ */
+// Welcome overlay
+window.addEventListener('load', () => {
+  const overlay = document.getElementById('welcome-overlay');
+  setTimeout(() => {
+    overlay.classList.add('hide');
+    setTimeout(() => overlay.remove(), 500);
+  }, 1100);
+});
+
+// Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/calories-db/sw.js').catch(() => {});
+  window.addEventListener('offline', () => showPwaToast('📵 أنت غير متصل — يعمل أوف لاين'));
+  window.addEventListener('online',  () => showPwaToast('🌐 عاد الاتصال بالإنترنت'));
+}
+
+// Install prompt
+let _deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  _deferredPrompt = e;
+  if (!localStorage.getItem('pwa_cal_dismissed')) {
+    setTimeout(() => document.getElementById('pwa-banner').classList.remove('hidden'), 3000);
+  }
+});
+document.getElementById('btn-pwa-install').addEventListener('click', () => {
+  document.getElementById('pwa-banner').classList.add('hidden');
+  if (_deferredPrompt) {
+    _deferredPrompt.prompt();
+    _deferredPrompt.userChoice.then(r => {
+      if (r.outcome === 'accepted') showPwaToast('🎉 تم تثبيت التطبيق!');
+      _deferredPrompt = null;
+    });
+  }
+});
+document.getElementById('btn-pwa-dismiss').addEventListener('click', () => {
+  document.getElementById('pwa-banner').classList.add('hidden');
+  localStorage.setItem('pwa_cal_dismissed', '1');
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-banner').classList.add('hidden');
+  showPwaToast('🎉 تم تثبيت التطبيق بنجاح!');
+});
+
+function showPwaToast(msg) {
+  const t = document.getElementById('pwa-toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+</script>
+</body>
+</html>
