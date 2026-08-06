@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>قاعدة بيانات السعرات | Coach Anis</title>
-<meta name="description" content="قاعدة بيانات علمية دقيقة لسعرات وماكرو أكثر من 80 مكوناً غذائياً — بناءً على USDA FoodData Central">
+<meta name="description" content="قاعدة بيانات علمية دقيقة لسعرات وماكرو أكثر من 180 مكوناً غذائياً — بناءً على USDA FoodData Central">
 
 <!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coach-anis.github.io/calories-db/">
 <meta property="og:title" content="قاعدة بيانات السعرات الحرارية | Coach Anis">
-<meta property="og:description" content="139+ مكوّن غذائي · سعرات · بروتين · كارب · دهون — مبني على USDA FoodData Central">
+<meta property="og:description" content="180+ مكوّن غذائي · سعرات · بروتين · كارب · دهون — مبني على USDA FoodData Central">
 <meta property="og:image" content="https://coach-anis.github.io/calories-db/preview.png">
 <meta property="og:image:width" content="1400">
 <meta property="og:image:height" content="700">
@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@coach__anis">
 <meta name="twitter:title" content="قاعدة بيانات السعرات الحرارية | Coach Anis">
-<meta name="twitter:description" content="139+ مكوّن غذائي · سعرات · بروتين · كارب · دهون">
+<meta name="twitter:description" content="180+ مكوّن غذائي · سعرات · بروتين · كارب · دهون">
 <meta name="twitter:image" content="https://coach-anis.github.io/calories-db/preview.png">
 
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1244,9 +1244,64 @@ body{
 <nav class="nav">
  <div class="nav-brand">
  COACH ANIS
- <span>حاسبة السعرات الحرارية</span>
+ <span>قاعدة بيانات السعرات</span>
  </div>
+ <div class="nav-search">
+ <span class="nav-search-icon">🔎</span>
+ <input type="text" id="searchInput" placeholder="ابحث عن مكوّن... (عربي أو English)" oninput="handleSearch(this.value)">
+ <button class="nav-search-clear" id="searchClear" onclick="clearSearch()">✕</button>
+ </div>
+ <button class="nav-calc-btn" onclick="document.getElementById('calcSection').scrollIntoView({behavior:'smooth'})">🧮 الحاسبة</button>
 </nav>
+
+<!-- HERO -->
+<section class="hero">
+ <div class="hero-badge">COACH ANIS · قاعدة بيانات غذائية</div>
+ <h1 class="hero-title">قاعدة بيانات <span>السعرات الحرارية</span></h1>
+ <p class="hero-sub">قيم غذائية دقيقة لكل 100g — سعرات، بروتين، كارب ودهون — لأكثر من مكوّن غذائي واحد</p>
+ <div class="hero-stats">
+ <div class="hero-stat">
+ <div class="hero-stat-n" id="statTotal">0</div>
+ <div class="hero-stat-l">مكوّن غذائي</div>
+ </div>
+ <div class="hero-divider"></div>
+ <div class="hero-stat">
+ <div class="hero-stat-n" id="statCats">8</div>
+ <div class="hero-stat-l">تصنيفات</div>
+ </div>
+ <div class="hero-divider"></div>
+ <div class="hero-stat">
+ <div class="hero-stat-n">100g</div>
+ <div class="hero-stat-l">وحدة القياس</div>
+ </div>
+ </div>
+ <div>
+ <span class="source-tag">✓ مبني على USDA FoodData Central</span>
+ </div>
+</section>
+
+<!-- SMART FILTERS -->
+<div class="smart-filters">
+ <span class="smart-filter-label">فلاتر ذكية:</span>
+ <button class="smart-btn" data-smart="high-protein" onclick="setSmartFilter(this)">⚡ بروتين عالي</button>
+ <button class="smart-btn" data-smart="low-carb" onclick="setSmartFilter(this)">🥗 كارب منخفض</button>
+ <button class="smart-btn" data-smart="low-cal" onclick="setSmartFilter(this)">🪶 سعرات منخفضة</button>
+ <button class="smart-btn" data-smart="post-workout" onclick="setSmartFilter(this)">🏋️ بعد التمرين</button>
+</div>
+
+<!-- CATEGORY FILTERS -->
+<div class="filters-bar">
+ <button class="filter-btn on" data-cat="all" onclick="setFilter(this)">الكل</button>
+ <button class="filter-btn" data-cat="fruit" onclick="setFilter(this)">🍎 فواكه</button>
+ <button class="filter-btn" data-cat="veg" onclick="setFilter(this)">🥦 خضروات</button>
+ <button class="filter-btn" data-cat="protein" onclick="setFilter(this)">🍗 بروتينات</button>
+ <button class="filter-btn" data-cat="grain" onclick="setFilter(this)">🌾 حبوب وكارب</button>
+ <button class="filter-btn" data-cat="dairy" onclick="setFilter(this)">🥛 ألبان</button>
+ <button class="filter-btn" data-cat="legume" onclick="setFilter(this)">🫘 بقوليات</button>
+ <button class="filter-btn" data-cat="fat" onclick="setFilter(this)">🫒 دهون وزيوت</button>
+ <button class="filter-btn" data-cat="nut" onclick="setFilter(this)">🥜 مكسرات وبذور</button>
+ <span class="filters-count" id="filterCount"></span>
+</div>
 
 <section class="calc-section" id="calcSection">
  <div class="calc-card">
@@ -1273,13 +1328,11 @@ body{
  </div>
 </section>
 
-<div class="cta-compact">
- <div class="cta-compact-text">
- <strong>أعجبك ما شفت؟</strong> هذا 10% فقط مما يقدمه Coach Anis
- </div>
- <a href="https://www.instagram.com/coach__anis" target="_blank" rel="noopener" class="cta-compact-btn">
- ابدأ معي اليوم
- </a>
+<!-- FOOD GRID -->
+<section class="grid-section" id="gridSection"></section>
+<div class="empty-state" id="emptyState">
+ <div>🔍</div>
+ <div>لا توجد نتائج لـ "<span id="emptyTerm"></span>"</div>
 </div>
 
 <!-- MODAL -->
@@ -1675,6 +1728,104 @@ const FOODS = [
  note:'MCT طبيعي + ألياف عالية — طاقة سريعة وشبع مديد',source:'USDA FDC #169908'},
  {id:'o12',cat:'fat',emoji:'',name:'زبدة اللوز',nameEn:'Almond Butter',kcal:614,prot:20.8,carb:18.8,fat:55.5,
  note:'فيتامين E أعلى من زبدة الفول السوداني + مغنيسيوم ممتاز',source:'USDA FDC #168588'},
+
+ /* FRUITS — إضافات جديدة */
+ {id:'f25',cat:'fruit',emoji:'',name:'جريب فروت',nameEn:'Grapefruit',kcal:42,prot:0.8,carb:10.7,fat:0.1,
+ note:'غني بفيتامين C ومضادات الأكسدة — منخفض جداً بالسعرات',source:'USDA FDC #169098'},
+ {id:'f26',cat:'fruit',emoji:'',name:'بابايا',nameEn:'Papaya',kcal:43,prot:0.5,carb:10.8,fat:0.3,
+ note:'يحتوي إنزيم الباباين المساعد على هضم البروتين',source:'USDA FDC #169926'},
+ {id:'f27',cat:'fruit',emoji:'',name:'توت العليق (ريسبيري)',nameEn:'Raspberry',kcal:52,prot:1.2,carb:11.9,fat:0.7,
+ note:'من أغنى الفواكه بالألياف — 6.5g لكل 100g',source:'USDA FDC #167755'},
+ {id:'f28',cat:'fruit',emoji:'',name:'زبيب',nameEn:'Raisins',kcal:299,prot:3.1,carb:79.2,fat:0.5,
+ note:'كارب مركّز وسريع الامتصاص — كمية صغيرة تكفي كوجبة قبل التمرين',source:'USDA FoodData Central'},
+ {id:'f29',cat:'fruit',emoji:'',name:'مشمش مجفف',nameEn:'Dried Apricot',kcal:241,prot:3.4,carb:62.6,fat:0.5,
+ note:'مصدر ممتاز للحديد والبوتاسيوم والألياف',source:'USDA FoodData Central'},
+
+ /* VEGETABLES — إضافات جديدة */
+ {id:'v29',cat:'veg',emoji:'',name:'فجل',nameEn:'Radish',kcal:16,prot:0.7,carb:3.4,fat:0.1,
+ note:'منخفض جداً بالسعرات — مدر طبيعي ومفيد للهضم',source:'USDA FDC #169279'},
+ {id:'v30',cat:'veg',emoji:'',name:'بامية',nameEn:'Okra',kcal:33,prot:1.9,carb:7.5,fat:0.2,
+ note:'غني بالألياف القابلة للذوبان — يحسّن استجابة سكر الدم',source:'USDA FDC #169244'},
+ {id:'v31',cat:'veg',emoji:'',name:'خرشوف',nameEn:'Artichoke',kcal:47,prot:3.3,carb:10.5,fat:0.3,
+ note:'غني بالإينولين — ألياف بروبيوتيك تدعم البكتيريا النافعة',source:'USDA FDC #169205'},
+ {id:'v32',cat:'veg',emoji:'',name:'بقدونس',nameEn:'Parsley',kcal:36,prot:3.0,carb:6.3,fat:0.8,
+ note:'من أعلى الأعشاب بفيتامين K وفيتامين C',source:'USDA FDC #172229'},
+ {id:'v33',cat:'veg',emoji:'',name:'كزبرة',nameEn:'Cilantro (Coriander Leaves)',kcal:23,prot:2.1,carb:3.7,fat:0.5,
+ note:'غني بمضادات الأكسدة — يُستخدم طازجاً كتوابل ونكهة',source:'USDA FDC #172233'},
+ {id:'v34',cat:'veg',emoji:'',name:'نعناع طازج',nameEn:'Fresh Mint',kcal:44,prot:3.3,carb:8.4,fat:0.7,
+ note:'غني بفيتامين A والحديد — أساسي في أتاي/الشاي بالنعناع',source:'USDA FDC #173475'},
+ {id:'v35',cat:'veg',emoji:'',name:'جرجير',nameEn:'Arugula (Rocket)',kcal:25,prot:2.6,carb:3.6,fat:0.7,
+ note:'من أغنى الخضر الورقية بالنترات الطبيعية وفيتامين K',source:'USDA FDC #168421'},
+ {id:'v36',cat:'veg',emoji:'',name:'سلق (سلق سويسري)',nameEn:'Swiss Chard',kcal:19,prot:1.8,carb:3.7,fat:0.2,
+ note:'غني بالمغنيسيوم وفيتامين K وفيتامين A',source:'USDA FDC #169991'},
+ {id:'v37',cat:'veg',emoji:'',name:'يقطين (قرع)',nameEn:'Pumpkin',kcal:26,prot:1.0,carb:6.5,fat:0.1,
+ note:'غني بالبيتا كاروتين ومنخفض جداً بالسعرات',source:'USDA FDC #169301'},
+ {id:'v38',cat:'veg',emoji:'',name:'فلفل حار (شطة خضراء)',nameEn:'Hot Chili Pepper',kcal:40,prot:1.9,carb:8.8,fat:0.4,
+ note:'الكابسيسين يرفع معدل الحرق مؤقتاً ويحسّن الشبع',source:'USDA FDC #170108'},
+ {id:'v39',cat:'veg',emoji:'',name:'طماطم مجففة بالشمس',nameEn:'Sun-Dried Tomato',kcal:258,prot:14.1,carb:55.8,fat:3.0,
+ note:'نكهة ومغذيات مركّزة — استخدم كمية صغيرة لارتفاع سعراتها',source:'USDA FoodData Central'},
+
+ /* PROTEINS — إضافات جديدة */
+ {id:'p21',cat:'protein',emoji:'',name:'سمك القد (مطبوخ)',nameEn:'Cod (cooked)',kcal:105,prot:22.8,carb:0,fat:0.9,
+ note:'بروتين نقي منخفض الدهون جداً — مثالي في مرحلة التنشيف',source:'USDA FDC #175159'},
+ {id:'p22',cat:'protein',emoji:'',name:'سلمون مرقط / تراوت (مطبوخ)',nameEn:'Trout (cooked)',kcal:168,prot:24.4,carb:0,fat:7.2,
+ note:'أوميغا 3 عالي مثل السلمون وأقل سعراً غالباً',source:'USDA FDC #173692'},
+ {id:'p23',cat:'protein',emoji:'',name:'حبار / كاليماري (مطبوخ)',nameEn:'Squid (cooked)',kcal:105,prot:17.9,carb:3.5,fat:1.6,
+ note:'بروتين خفيف قليل الدهون — شائع في المأكولات البحرية',source:'USDA FoodData Central'},
+ {id:'p24',cat:'protein',emoji:'',name:'أخطبوط (مطبوخ)',nameEn:'Octopus (cooked)',kcal:164,prot:29.8,carb:4.4,fat:2.1,
+ note:'بروتين عالٍ جداً مع نسبة دهون منخفضة',source:'USDA FoodData Central'},
+ {id:'p25',cat:'protein',emoji:'',name:'محار (نيء)',nameEn:'Oysters (raw)',kcal:68,prot:7.1,carb:3.9,fat:2.5,
+ note:'من أغنى الأطعمة بالزنك — يدعم المناعة والتستوستيرون',source:'USDA FDC #175153'},
+ {id:'p26',cat:'protein',emoji:'',name:'بلح البحر / ميسيل (مطبوخ)',nameEn:'Mussels (cooked)',kcal:172,prot:23.8,carb:7.4,fat:4.5,
+ note:'غني بالحديد وفيتامين B12',source:'USDA FoodData Central'},
+ {id:'p27',cat:'protein',emoji:'',name:'لحم ديك رومي مفروم (مطبوخ)',nameEn:'Ground Turkey (cooked)',kcal:203,prot:27.4,carb:0,fat:10.4,
+ note:'بديل صحي للحم البقر المفروم مع نسبة دهون أقل',source:'USDA FDC #171506'},
+ {id:'p28',cat:'protein',emoji:'',name:'بيض السمان',nameEn:'Quail Eggs',kcal:158,prot:13.1,carb:0.4,fat:11.1,
+ note:'كثافة غذائية عالية — غني بالحديد وفيتامين B12',source:'USDA FDC #172187'},
+
+ /* GRAINS — إضافات جديدة */
+ {id:'g18',cat:'grain',emoji:'',name:'فريكة (مطبوخة)',nameEn:'Freekeh (cooked)',kcal:116,prot:4.5,carb:21.8,fat:1.0,
+ note:'قمح أخضر محمّص — أعلى بروتيناً وألياف من البرغل والأرز',source:'USDA FoodData Central'},
+ {id:'g19',cat:'grain',emoji:'',name:'نخالة القمح',nameEn:'Wheat Bran',kcal:216,prot:15.6,carb:64.5,fat:4.3,
+ note:'من أغنى المصادر بالألياف — حوالي 43g لكل 100g',source:'USDA FDC #169728'},
+ {id:'g20',cat:'grain',emoji:'',name:'أرز أسود (مطبوخ)',nameEn:'Black Rice (cooked)',kcal:100,prot:4.0,carb:21.2,fat:0.3,
+ note:'غني بالأنثوسيانين المضاد للأكسدة — بروتين أعلى من الأرز الأبيض',source:'USDA FoodData Central'},
+ {id:'g21',cat:'grain',emoji:'',name:'فشار (منفوخ بالهواء)',nameEn:'Popcorn (air-popped)',kcal:387,prot:12.9,carb:78.0,fat:4.5,
+ note:'وجبة خفيفة كاملة الحبوب — خفيفة الوزن ومنخفضة الكثافة السعرية للحصة',source:'USDA FDC #167959'},
+
+ /* DAIRY — إضافات جديدة */
+ {id:'d15',cat:'dairy',emoji:'',name:'حليب اللوز (غير محلى)',nameEn:'Almond Milk (unsweetened)',kcal:15,prot:0.6,carb:0.6,fat:1.1,
+ note:'بديل نباتي منخفض السعرات جداً للحليب البقري',source:'USDA FDC #174832'},
+ {id:'d16',cat:'dairy',emoji:'',name:'حليب الصويا (غير محلى)',nameEn:'Soy Milk (unsweetened)',kcal:39,prot:3.5,carb:1.3,fat:2.1,
+ note:'أعلى بديل نباتي بالبروتين — الأقرب للحليب البقري',source:'USDA FDC #1999630'},
+ {id:'d17',cat:'dairy',emoji:'',name:'حليب جوز الهند (معلب)',nameEn:'Coconut Milk (canned)',kcal:230,prot:2.3,carb:5.5,fat:23.8,
+ note:'دهون مشبعة عالية — يُستخدم بكميات محدودة في الطبخ',source:'USDA FoodData Central'},
+ {id:'d18',cat:'dairy',emoji:'',name:'قشطة / كريمة الطبخ',nameEn:'Heavy Cream',kcal:340,prot:2.1,carb:2.8,fat:36.1,
+ note:'عالية الدهون جداً — للطبخ وليس للاستهلاك اليومي',source:'USDA FoodData Central'},
+ {id:'d19',cat:'dairy',emoji:'',name:'جبن الماعز',nameEn:'Goat Cheese (soft)',kcal:364,prot:21.6,carb:0.1,fat:29.8,
+ note:'أسهل هضماً من جبن البقر مع بروتين عالٍ',source:'USDA FoodData Central'},
+ {id:'d20',cat:'dairy',emoji:'',name:'لبن رائب (باتيرميلك)',nameEn:'Buttermilk',kcal:40,prot:3.3,carb:4.8,fat:0.9,
+ note:'منخفض الدسم وغني بالبروبيوتيك الطبيعي',source:'USDA FoodData Central'},
+
+ /* LEGUMES — إضافات جديدة */
+ {id:'l12',cat:'legume',emoji:'',name:'لوبيا (مطبوخة)',nameEn:'Black-eyed Peas (cooked)',kcal:116,prot:7.7,carb:20.8,fat:0.5,
+ note:'غنية بالبروتين النباتي وحمض الفوليك',source:'USDA FDC #172420'},
+ {id:'l13',cat:'legume',emoji:'',name:'بازلاء صفراء مجزأة (مطبوخة)',nameEn:'Split Peas (cooked)',kcal:118,prot:8.3,carb:21.1,fat:0.4,
+ note:'من أعلى البقوليات بالألياف — يساعد على الشبع لفترة أطول',source:'USDA FDC #172431'},
+
+ /* NUTS — إضافات جديدة */
+ {id:'n14',cat:'nut',emoji:'',name:'كستناء (محمصة)',nameEn:'Chestnuts (roasted)',kcal:239,prot:4.5,carb:52.4,fat:1.2,
+ note:'الأقل دهوناً بين المكسرات — غني بالنشا وفيتامين C',source:'USDA FoodData Central'},
+ {id:'n15',cat:'nut',emoji:'',name:'جوز البرازيل',nameEn:'Brazil Nuts',kcal:659,prot:14.3,carb:11.7,fat:67.1,
+ note:'أغنى مصدر غذائي بالسيلينيوم — حبة أو اثنتان تكفي يومياً',source:'USDA FDC #170187'},
+
+ /* FATS — إضافات جديدة */
+ {id:'o13',cat:'fat',emoji:'',name:'زيت الكانولا',nameEn:'Canola Oil',kcal:884,prot:0,carb:0,fat:100,
+ note:'نسبة أوميغا 3 أفضل من معظم الزيوت النباتية الأخرى',source:'USDA FDC #171412'},
+ {id:'o14',cat:'fat',emoji:'',name:'زيت السمسم',nameEn:'Sesame Oil',kcal:884,prot:0,carb:0,fat:100,
+ note:'غني بمضادات الأكسدة الطبيعية (السمسامين)',source:'USDA FDC #171413'},
+ {id:'o15',cat:'fat',emoji:'',name:'مارجرين (سمن نباتي)',nameEn:'Margarine',kcal:717,prot:0.2,carb:0.7,fat:80.5,
+ note:'دهون مهدرجة جزئياً — يُفضَّل تفضيل الزبدة أو زيت الزيتون عليه',source:'USDA FoodData Central'},
 ];
 
 /* CATEGORY CONFIG */
@@ -1703,6 +1854,9 @@ let compareChartInstance = null;
 /* INIT */
 function init() {
  populateCalcSelect();
+ document.getElementById('statTotal').textContent = FOODS.length;
+ document.getElementById('statCats').textContent = Object.keys(CATS).length;
+ renderGrid();
 }
 
 function populateCalcSelect() {
