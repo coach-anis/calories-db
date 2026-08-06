@@ -292,6 +292,17 @@ body{
  font-size:13px;color:var(--text-muted);
 }
 .calc-food-name strong{color:var(--text);font-size:15px;}
+.calc-food-tip{
+ margin-top:14px;
+ padding:10px 14px;
+ background:rgba(201,168,76,0.06);
+ border:1px solid var(--border);
+ border-radius:10px;
+ font-size:12px;color:var(--text-muted);
+ display:none;align-items:center;gap:8px;
+}
+.calc-food-tip.show{display:flex;}
+.calc-food-tip::before{content:'💡';font-size:13px;}
 
 /* FOOD GRID */
 .grid-section{padding:0 24px 80px;}
@@ -354,30 +365,6 @@ body{
  margin-bottom:3px;
 }
 .food-name-en{font-size:11px;color:var(--text-muted);margin-bottom:12px;}
-
-.food-macros{
- display:flex;gap:6px;
-}
-.macro-pill{
- flex:1;text-align:center;padding:6px 4px;
- border-radius:8px;font-size:9px;letter-spacing:.5px;
-}
-.macro-pill-val{
- font-family:'Bebas Neue',sans-serif;
- font-size:16px;display:block;line-height:1;margin-bottom:2px;
-}
-.mp-p{background:rgba(232,168,122,0.1);color:var(--prot);}
-.mp-c{background:rgba(122,184,232,0.1);color:var(--carb);}
-.mp-f{background:rgba(232,122,122,0.1);color:var(--fat);}
-
-.food-card-footer{
- padding:10px 16px;
- background:rgba(255,255,255,0.02);
- border-top:1px solid rgba(255,255,255,0.04);
- font-size:10px;color:var(--text-muted);
- display:flex;align-items:center;gap:6px;
-}
-.food-card-footer::before{content:'';font-size:11px;}
 
 /* EMPTY STATE */
 .empty-state{
@@ -765,28 +752,6 @@ body{
  margin-top:10px;
 }
 .meal-clear-btn:hover{border-color:var(--gold);color:var(--text);}
-
-/* SMART FILTERS */
-.smart-filters{
- padding:8px 24px;
- background:rgba(255,255,255,0.01);
- border-bottom:1px solid rgba(255,255,255,0.04);
- display:flex;gap:8px;flex-wrap:wrap;align-items:center;
-}
-.smart-filter-label{
- font-size:10px;color:var(--text-muted);letter-spacing:1px;
- font-family:'Bebas Neue',sans-serif;flex-shrink:0;
-}
-.smart-btn{
- background:rgba(255,255,255,0.03);
- border:1px solid rgba(255,255,255,0.07);
- border-radius:16px;padding:5px 12px;
- font-family:'Cairo',sans-serif;font-size:11px;
- color:var(--text-muted);cursor:pointer;transition:all .2s;
- white-space:nowrap;
-}
-.smart-btn:hover{border-color:rgba(201,168,76,.4);color:var(--text);}
-.smart-btn.on{background:rgba(122,200,122,0.1);border-color:rgba(122,200,122,0.3);color:var(--green);}
 
 /* SHARE BUTTON */
 .food-card-share{
@@ -1189,25 +1154,6 @@ body{
 .tab-panel{display:none;}
 .tab-panel.active{display:block;}
 
-/* COMPACT CTA */
-.cta-compact{
- margin:0 24px 24px;
- background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.03));
- border:1px solid var(--border);border-radius:16px;
- padding:20px 24px;
- display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
-}
-.cta-compact-text{font-size:13px;color:var(--text-muted);line-height:1.6;}
-.cta-compact-text strong{color:var(--text);}
-.cta-compact-btn{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:10px;
- padding:10px 22px;font-family:'Cairo',sans-serif;
- font-size:13px;font-weight:900;cursor:pointer;
- text-decoration:none;white-space:nowrap;transition:all .2s;
-}
-.cta-compact-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
-
 /* Remove bottom padding from grid since compare bar is fixed */
 .grid-section{padding:0 24px 24px;}
 </style>
@@ -1244,64 +1190,9 @@ body{
 <nav class="nav">
  <div class="nav-brand">
  COACH ANIS
- <span>قاعدة بيانات السعرات</span>
+ <span>حاسبة السعرات الحرارية</span>
  </div>
- <div class="nav-search">
- <span class="nav-search-icon">🔎</span>
- <input type="text" id="searchInput" placeholder="ابحث عن مكوّن... (عربي أو English)" oninput="handleSearch(this.value)">
- <button class="nav-search-clear" id="searchClear" onclick="clearSearch()">✕</button>
- </div>
- <button class="nav-calc-btn" onclick="document.getElementById('calcSection').scrollIntoView({behavior:'smooth'})">🧮 الحاسبة</button>
 </nav>
-
-<!-- HERO -->
-<section class="hero">
- <div class="hero-badge">COACH ANIS · قاعدة بيانات غذائية</div>
- <h1 class="hero-title">قاعدة بيانات <span>السعرات الحرارية</span></h1>
- <p class="hero-sub">قيم غذائية دقيقة لكل 100g — سعرات، بروتين، كارب ودهون — لأكثر من مكوّن غذائي واحد</p>
- <div class="hero-stats">
- <div class="hero-stat">
- <div class="hero-stat-n" id="statTotal">0</div>
- <div class="hero-stat-l">مكوّن غذائي</div>
- </div>
- <div class="hero-divider"></div>
- <div class="hero-stat">
- <div class="hero-stat-n" id="statCats">8</div>
- <div class="hero-stat-l">تصنيفات</div>
- </div>
- <div class="hero-divider"></div>
- <div class="hero-stat">
- <div class="hero-stat-n">100g</div>
- <div class="hero-stat-l">وحدة القياس</div>
- </div>
- </div>
- <div>
- <span class="source-tag">✓ مبني على USDA FoodData Central</span>
- </div>
-</section>
-
-<!-- SMART FILTERS -->
-<div class="smart-filters">
- <span class="smart-filter-label">فلاتر ذكية:</span>
- <button class="smart-btn" data-smart="high-protein" onclick="setSmartFilter(this)">⚡ بروتين عالي</button>
- <button class="smart-btn" data-smart="low-carb" onclick="setSmartFilter(this)">🥗 كارب منخفض</button>
- <button class="smart-btn" data-smart="low-cal" onclick="setSmartFilter(this)">🪶 سعرات منخفضة</button>
- <button class="smart-btn" data-smart="post-workout" onclick="setSmartFilter(this)">🏋️ بعد التمرين</button>
-</div>
-
-<!-- CATEGORY FILTERS -->
-<div class="filters-bar">
- <button class="filter-btn on" data-cat="all" onclick="setFilter(this)">الكل</button>
- <button class="filter-btn" data-cat="fruit" onclick="setFilter(this)">🍎 فواكه</button>
- <button class="filter-btn" data-cat="veg" onclick="setFilter(this)">🥦 خضروات</button>
- <button class="filter-btn" data-cat="protein" onclick="setFilter(this)">🍗 بروتينات</button>
- <button class="filter-btn" data-cat="grain" onclick="setFilter(this)">🌾 حبوب وكارب</button>
- <button class="filter-btn" data-cat="dairy" onclick="setFilter(this)">🥛 ألبان</button>
- <button class="filter-btn" data-cat="legume" onclick="setFilter(this)">🫘 بقوليات</button>
- <button class="filter-btn" data-cat="fat" onclick="setFilter(this)">🫒 دهون وزيوت</button>
- <button class="filter-btn" data-cat="nut" onclick="setFilter(this)">🥜 مكسرات وبذور</button>
- <span class="filters-count" id="filterCount"></span>
-</div>
 
 <section class="calc-section" id="calcSection">
  <div class="calc-card">
@@ -1324,16 +1215,31 @@ body{
  <div class="calc-res-cell c"><div class="calc-res-val" id="cCarb">—</div><div class="calc-res-lbl">كارب</div></div>
  <div class="calc-res-cell f"><div class="calc-res-val" id="cFat">—</div><div class="calc-res-lbl">دهون</div></div>
  </div>
+ <div class="calc-food-tip" id="calcFoodTip"></div>
  </div>
  </div>
 </section>
 
-<!-- FOOD GRID -->
-<section class="grid-section" id="gridSection"></section>
-<div class="empty-state" id="emptyState">
- <div>🔍</div>
- <div>لا توجد نتائج لـ "<span id="emptyTerm"></span>"</div>
-</div>
+<section class="calc-section" id="manualCalcSection">
+ <div class="calc-card">
+ <div class="calc-title">حاسبة يدوية (لمكوّن غير موجود في القائمة)</div>
+ <div class="calc-row">
+ <div class="calc-field">
+ <label>السعرات لكل 100g (المرجع)</label>
+ <input type="number" id="manualRef" placeholder="مثال: 300" min="0" oninput="manualCalc()">
+ </div>
+ <div class="calc-field" style="max-width:130px">
+ <label>الكمية عندك (بالجرام)</label>
+ <input type="number" id="manualGrams" placeholder="مثال: 38" min="0" oninput="manualCalc()">
+ </div>
+ </div>
+ <div class="calc-result" id="manualResult">
+ <div class="calc-result-grid" style="grid-template-columns:1fr;">
+ <div class="calc-res-cell k"><div class="calc-res-val" id="manualKcal">—</div><div class="calc-res-lbl">KCAL</div></div>
+ </div>
+ </div>
+ </div>
+</section>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
@@ -1844,7 +1750,6 @@ const CATS = {
 let activeFilter = 'all';
 let searchTerm = '';
 let currentModalFood = null;
-let activeSmartFilter = null;
 let compareList = [];
 let toastTimeout;
 let advFilters = { protMin:0, protMax:100, carbMin:0, carbMax:100, fatMin:0, fatMax:100, kcalMin:0, kcalMax:900 };
@@ -1854,9 +1759,6 @@ let compareChartInstance = null;
 /* INIT */
 function init() {
  populateCalcSelect();
- document.getElementById('statTotal').textContent = FOODS.length;
- document.getElementById('statCats').textContent = Object.keys(CATS).length;
- renderGrid();
 }
 
 function populateCalcSelect() {
@@ -1911,11 +1813,6 @@ function renderGrid() {
  let filtered = FOODS.filter(f => {
  const catOk = activeFilter === 'all' || f.cat === activeFilter;
  const searchOk = !searchTerm || f.name.includes(searchTerm) || (f.nameEn && f.nameEn.toLowerCase().includes(searchTerm));
- let smartOk = true;
- if (activeSmartFilter === 'high-protein') smartOk = f.prot >= 20;
- else if (activeSmartFilter === 'low-carb') smartOk = f.carb < 5;
- else if (activeSmartFilter === 'low-cal') smartOk = f.kcal < 50;
- else if (activeSmartFilter === 'post-workout') smartOk = (f.carb > 15 && f.fat < 5) || f.prot > 20;
  let advOk = true;
  if (advFilterActive) {
  advOk = f.prot >= advFilters.protMin && f.prot <= advFilters.protMax &&
@@ -1923,7 +1820,7 @@ function renderGrid() {
  f.fat >= advFilters.fatMin && f.fat <= advFilters.fatMax &&
  f.kcal >= advFilters.kcalMin && f.kcal <= advFilters.kcalMax;
  }
- return catOk && searchOk && smartOk && advOk;
+ return catOk && searchOk && advOk;
  });
 
  sec.querySelectorAll('.cat-section').forEach(el => el.remove());
@@ -1937,7 +1834,7 @@ function renderGrid() {
  emptyEl.classList.remove('show');
  document.getElementById('filterCount').textContent = filtered.length + ' مكوّن';
 
- if (activeFilter === 'all' && !searchTerm && !activeSmartFilter) {
+ if (activeFilter === 'all' && !searchTerm) {
  Object.keys(CATS).forEach(cat => {
  const items = filtered.filter(f => f.cat === cat);
  if (items.length === 0) return;
@@ -1993,13 +1890,7 @@ function buildCard(f) {
  </div>
  <div class="food-name">${f.name}</div>
  <div class="food-name-en">${f.nameEn}</div>
- <div class="food-macros">
- <div class="macro-pill mp-p"><span class="macro-pill-val">${f.prot}g</span>بروتين</div>
- <div class="macro-pill mp-c"><span class="macro-pill-val">${f.carb}g</span>كارب</div>
- <div class="macro-pill mp-f"><span class="macro-pill-val">${f.fat}g</span>دهون</div>
  </div>
- </div>
- <div class="food-card-footer">${f.note}</div>
  <button class="food-card-share" onclick="shareFood(event, ${JSON.stringify(f).replace(/"/g,'&quot;')})"> شارك</button>
  <button class="food-card-compare ${isInCompare ? 'added' : ''}" onclick="toggleCompare(event,'${f.id}')">${isInCompare ? ' مضاف' : ' قارن'}</button>
  `;
@@ -2023,6 +1914,22 @@ function calcResult() {
  document.getElementById('cCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
  document.getElementById('cFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
  document.getElementById('calcFoodName').innerHTML = `<strong>${food.emoji} ${food.name}</strong> — ${grams}g`;
+ const tipEl = document.getElementById('calcFoodTip');
+ if (food.note) { tipEl.textContent = food.note; tipEl.classList.add('show'); }
+ else { tipEl.classList.remove('show'); }
+ resultEl.classList.add('show');
+}
+
+/* MANUAL CALCULATOR (for items not in the database) */
+function manualCalc() {
+ const ref = parseFloat(document.getElementById('manualRef').value);
+ const grams = parseFloat(document.getElementById('manualGrams').value);
+ const resultEl = document.getElementById('manualResult');
+
+ if (!ref || ref <= 0 || !grams || grams <= 0) { resultEl.classList.remove('show'); return; }
+
+ const kcal = Math.round(ref * grams / 100);
+ document.getElementById('manualKcal').textContent = kcal;
  resultEl.classList.add('show');
 }
 
@@ -2073,19 +1980,6 @@ document.addEventListener('keydown', e => {
 });
 
 init();
-
-/* SMART FILTERS */
-function setSmartFilter(btn) {
- if (btn.classList.contains('on')) {
- btn.classList.remove('on');
- activeSmartFilter = null;
- } else {
- document.querySelectorAll('.smart-btn').forEach(b => b.classList.remove('on'));
- btn.classList.add('on');
- activeSmartFilter = btn.dataset.smart;
- }
- renderGrid();
-}
 
 function toggleCompare(e, foodId) {
  e.stopPropagation();
