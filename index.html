@@ -2,129 +2,577 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>الحاسبة اليدوية | Coach Anis</title>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="description" content="حاسبة سعرات يدوية احترافية من Coach Anis — احسب السعرات والماكروز بدقة من القيم الغذائية لكل 100 جرام.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #121216;
-  --card-bg: #1A1A22;
-  --border: #2A2A36;
-  --text: #FFFFFF;
-  --text-muted: #8E8EA0;
-  --accent: #FF5F1F;
-  --accent-light: rgba(255, 95, 31, 0.15);
-  --radius: 12px;
-}
+  :root {
+    --bg: #0A0A0A;
+    --bg-secondary: #111111;
+    --card: #151515;
+    --elevated: #1C1C1C;
+    --border: #2A2A2A;
+    --border-subtle: #222222;
+    --gold: #D4AF57;
+    --gold-light: #E8CC82;
+    --gold-dim: rgba(212, 175, 87, 0.12);
+    --text: #F5F5F5;
+    --text-secondary: #929292;
+    --text-muted: #6B6B6B;
+    --protein: #E07A3D;
+    --carbs: #4A9BD9;
+    --fat: #C45C5C;
+    --success: #4CAF7A;
+    --radius: 14px;
+    --radius-sm: 10px;
+    --shadow: 0 8px 32px rgba(0,0,0,0.45);
+    --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-body { 
-  background: var(--bg); 
-  color: var(--text); 
-  min-height: 100vh; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-  padding: 20px; 
-}
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-.container {
-  width: 100%;
-  max-width: 420px;
-}
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
 
-.card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
-}
+  body {
+    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    min-height: 100dvh;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
 
-.card-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 18px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
+  /* ─── Header ─── */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-.form-group {
-  margin-bottom: 15px;
-}
+  .brand {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
 
-.form-label {
-  display: block;
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-}
+  .brand-name {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--gold);
+    line-height: 1.2;
+  }
 
-input {
-  width: 100%;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-  transition: border-color 0.2s;
-}
+  .brand-sub {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
 
-input:focus { border-color: var(--accent); }
+  .header-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gold);
+    background: var(--gold-dim);
+    border: 1px solid rgba(212, 175, 87, 0.25);
+    padding: 5px 12px;
+    border-radius: 20px;
+  }
 
-.result-box {
-  margin-top: 18px;
-  background: var(--accent-light);
-  border: 1px solid rgba(255, 95, 31, 0.3);
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-  display: none;
-}
+  /* ─── Main Layout ─── */
+  .page {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 28px 20px 48px;
+  }
 
-.result-box.show { display: block; }
-.food-info-text { font-size: 13px; font-weight: 600; color: var(--text-muted); }
-.total-val { font-size: 24px; font-weight: 700; color: var(--accent); margin-top: 5px; }
+  /* ─── Hero ─── */
+  .hero {
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-desc {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--gold-dim);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .card-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 1px;
+  }
+
+  /* ─── Form ─── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border-subtle);
+  }
+
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  .form-group {
+    margin-bottom: 0;
+  }
+
+  .form-group.full {
+    grid-column: 1 / -1;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-bottom: 7px;
+  }
+
+  .input-wrap {
+    position: relative;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 13px 14px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    outline: none;
+    transition: border-color var(--transition), background var(--transition);
+    -moz-appearance: textfield;
+  }
+
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  input[type="number"]:focus {
+    border-color: var(--gold);
+    background: var(--elevated);
+  }
+
+  input[type="number"]::placeholder {
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+
+  .input-unit {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  input.has-unit {
+    padding-left: 42px;
+  }
+
+  /* ─── Results ─── */
+  .result-box {
+    display: none;
+    margin-top: 22px;
+    animation: fadeUp 0.3s ease;
+  }
+
+  .result-box.show {
+    display: block;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .result-box { animation: none; }
+  }
+
+  .result-primary {
+    background: linear-gradient(145deg, rgba(212,175,87,0.1), rgba(212,175,87,0.04));
+    border: 1px solid rgba(212, 175, 87, 0.28);
+    border-radius: var(--radius);
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+
+  .result-primary-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+  }
+
+  .result-primary-value {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  .result-primary-unit {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gold-light);
+    margin-right: 4px;
+  }
+
+  .macros-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  .macro-card {
+    background: var(--elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px 10px;
+    text-align: center;
+  }
+
+  .macro-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 4px;
+  }
+
+  .macro-value {
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .macro-unit {
+    font-size: 11px;
+    font-weight: 500;
+    opacity: 0.7;
+  }
+
+  .macro-protein .macro-value { color: var(--protein); }
+  .macro-carbs .macro-value { color: var(--carbs); }
+  .macro-fat .macro-value { color: var(--fat); }
+
+  /* ─── Divider ─── */
+  .divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 22px 0;
+  }
+
+  /* ─── Tip ─── */
+  .tip {
+    display: flex;
+    gap: 10px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    margin-top: 20px;
+  }
+
+  .tip-icon {
+    flex-shrink: 0;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+  }
+
+  .tip-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 1.6;
+  }
+
+  .tip-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.55;
+  }
+
+  /* ─── Footer ─── */
+  .site-footer {
+    text-align: center;
+    padding: 24px 20px 32px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .footer-brand {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  .footer-brand span {
+    color: var(--gold);
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 4px;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 380px) {
+    .page { padding: 22px 16px 40px; }
+    .card { padding: 20px 16px; }
+    .form-grid { gap: 10px; }
+    .result-primary-value { font-size: 28px; }
+    .macro-value { font-size: 16px; }
+  }
+
+  @media (min-width: 520px) {
+    .page { padding-top: 40px; }
+    .hero-title { font-size: 24px; }
+  }
 </style>
 </head>
 <body>
 
-<div class="container">
+<header class="site-header">
+  <div class="brand">
+    <div class="brand-name">COACH ANIS</div>
+    <div class="brand-sub">Sports Nutrition</div>
+  </div>
+  <div class="header-badge">حاسبة يدوية</div>
+</header>
+
+<main class="page">
+  <section class="hero">
+    <h1 class="hero-title">الحاسبة اليدوية المخصصة</h1>
+    <p class="hero-desc">أدخل القيم الغذائية لكل 100 جرام والكمية المستهلكة لحساب السعرات والماكروز بدقة.</p>
+  </section>
+
   <section class="card">
-    <div class="card-title">⚖️ الحاسبة اليدوية المخصصة</div>
-    <div class="form-group">
-      <label class="form-label">السعرات في كل 100 جرام</label>
-      <input type="number" id="manualKcal100" placeholder="مثال: 130" oninput="calculateManual()">
+    <div class="card-header">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
+      </div>
+      <div>
+        <div class="card-title">حساب السعرات والماكروز</div>
+        <div class="card-subtitle">من القيم المرجعية لكل 100 جرام</div>
+      </div>
     </div>
-    <div class="form-group">
-      <label class="form-label">الكمية التي أكلتها (بالجرام)</label>
-      <input type="number" id="manualGrams" placeholder="مثال: 200" oninput="calculateManual()">
+
+    <!-- Reference values (per 100 g) -->
+    <div class="section-label">القيم لكل 100 جرام</div>
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label" for="manualKcal100">السعرات</label>
+        <div class="input-wrap">
+          <input type="number" id="manualKcal100" placeholder="مثال: 130" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <span class="input-unit">kcal</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="manualProtein100">البروتين</label>
+        <div class="input-wrap">
+          <input type="number" id="manualProtein100" placeholder="مثال: 25" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <span class="input-unit">g</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="manualCarbs100">الكربوهيدرات</label>
+        <div class="input-wrap">
+          <input type="number" id="manualCarbs100" placeholder="مثال: 5" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <span class="input-unit">g</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="manualFat100">الدهون</label>
+        <div class="input-wrap">
+          <input type="number" id="manualFat100" placeholder="مثال: 3" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <span class="input-unit">g</span>
+        </div>
+      </div>
     </div>
-    
+
+    <div class="divider"></div>
+
+    <!-- Consumed quantity -->
+    <div class="section-label">الكمية المستهلكة</div>
+    <div class="form-group full" style="margin-bottom: 0;">
+      <label class="form-label" for="manualGrams">الوزن بالجرام</label>
+      <div class="input-wrap">
+        <input type="number" id="manualGrams" class="has-unit" placeholder="مثال: 200" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+        <span class="input-unit">g</span>
+      </div>
+    </div>
+
+    <!-- Results -->
     <div class="result-box" id="manualResultBox">
-      <div class="food-info-text">إجمالي السعرات للكمية المدخلة:</div>
-      <div class="total-val" id="manualTotalKcal">0 سعرة</div>
+      <div class="result-primary">
+        <div class="result-primary-label">إجمالي السعرات الحرارية</div>
+        <div class="result-primary-value">
+          <span id="manualTotalKcal">0</span>
+          <span class="result-primary-unit">سعرة</span>
+        </div>
+      </div>
+
+      <div class="macros-grid">
+        <div class="macro-card macro-protein">
+          <div class="macro-label">بروتين</div>
+          <div class="macro-value"><span id="manualTotalProtein">0</span> <span class="macro-unit">g</span></div>
+        </div>
+        <div class="macro-card macro-carbs">
+          <div class="macro-label">كارب</div>
+          <div class="macro-value"><span id="manualTotalCarbs">0</span> <span class="macro-unit">g</span></div>
+        </div>
+        <div class="macro-card macro-fat">
+          <div class="macro-label">دهون</div>
+          <div class="macro-value"><span id="manualTotalFat">0</span> <span class="macro-unit">g</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-icon">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      </div>
+      <p class="tip-text">أدخل القيم الغذائية المكتوبة على العبوة (لكل 100 جرام) ثم الكمية التي تناولتها. الحاسبة تحولها تلقائياً.</p>
     </div>
   </section>
-</div>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-brand">COACH <span>ANIS</span> — Sports Nutrition</div>
+  <div class="footer-note">أداة دقيقة لحساب السعرات والماكروز</div>
+</footer>
 
 <script>
 function calculateManual() {
   const kcal100 = parseFloat(document.getElementById('manualKcal100').value);
+  const protein100 = parseFloat(document.getElementById('manualProtein100').value) || 0;
+  const carbs100 = parseFloat(document.getElementById('manualCarbs100').value) || 0;
+  const fat100 = parseFloat(document.getElementById('manualFat100').value) || 0;
   const grams = parseFloat(document.getElementById('manualGrams').value);
   const box = document.getElementById('manualResultBox');
 
+  // Original logic preserved: require positive kcal and grams
   if (!kcal100 || !grams || kcal100 <= 0 || grams <= 0) {
     box.classList.remove('show');
     return;
   }
 
-  const total = Math.round((kcal100 / 100) * grams);
-  document.getElementById('manualTotalKcal').textContent = total + ' سعرة حرارية';
+  const factor = grams / 100;
+  const totalKcal = Math.round(kcal100 * factor);
+  const totalProtein = Math.round(protein100 * factor * 10) / 10;
+  const totalCarbs = Math.round(carbs100 * factor * 10) / 10;
+  const totalFat = Math.round(fat100 * factor * 10) / 10;
+
+  document.getElementById('manualTotalKcal').textContent = totalKcal;
+  document.getElementById('manualTotalProtein').textContent = totalProtein;
+  document.getElementById('manualTotalCarbs').textContent = totalCarbs;
+  document.getElementById('manualTotalFat').textContent = totalFat;
+
   box.classList.add('show');
 }
 </script>
