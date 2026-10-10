@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>حاسبة السعرات | Coach Anis</title>
+<title>الحاسبة اليدوية | Coach Anis</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -18,170 +18,82 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
-body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
+body { 
+  background: var(--bg); 
+  color: var(--text); 
+  min-height: 100vh; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  padding: 20px; 
+}
 
-/* الشريط العلوي */
-.navbar {
-  background: var(--card-bg);
-  border-bottom: 1px solid var(--border);
-  padding: 12px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-.nav-brand { font-weight: 700; font-size: 16px; color: var(--accent); }
-.nav-search {
-  flex: 1;
-  max-width: 300px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  padding: 6px 12px;
-}
-.nav-search input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: var(--text);
-  font-size: 13px;
-  width: 100%;
-  direction: rtl;
-}
-.nav-search input::placeholder { color: var(--text-muted); }
-
-/* المحتوى الرئيسي */
 .container {
-  max-width: 550px;
-  margin: 20px auto;
-  padding: 0 15px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  width: 100%;
+  max-width: 420px;
 }
 
-/* الكارد / الخانة */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
 }
+
 .card-title {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 700;
-  margin-bottom: 15px;
+  margin-bottom: 18px;
   color: var(--text);
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* الحقول والأزرار */
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: 15px;
 }
+
 .form-label {
   display: block;
   font-size: 12px;
   color: var(--text-muted);
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
-select, input {
+
+input {
   width: 100%;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 10px 12px;
+  padding: 12px;
   color: var(--text);
-  font-size: 14px;
+  font-size: 15px;
   outline: none;
+  transition: border-color 0.2s;
 }
-select:focus, input:focus { border-color: var(--accent); }
-select option { background: var(--card-bg); color: var(--text); }
 
-/* نتائج الحساب */
+input:focus { border-color: var(--accent); }
+
 .result-box {
-  margin-top: 15px;
+  margin-top: 18px;
   background: var(--accent-light);
   border: 1px solid rgba(255, 95, 31, 0.3);
   border-radius: 8px;
-  padding: 12px;
+  padding: 15px;
+  text-align: center;
   display: none;
 }
+
 .result-box.show { display: block; }
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  text-align: center;
-  margin-top: 8px;
-}
-.res-item {
-  background: var(--bg);
-  border-radius: 6px;
-  padding: 8px 4px;
-}
-.res-val { font-weight: 700; font-size: 15px; color: var(--accent); }
-.res-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
-.food-info-text { font-size: 13px; font-weight: 600; color: var(--text); }
+.food-info-text { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+.total-val { font-size: 24px; font-weight: 700; color: var(--accent); margin-top: 5px; }
 </style>
 </head>
 <body>
 
-<!-- الشريط العلوي مع البحث -->
-<header class="navbar">
-  <div class="nav-brand">COACH ANIS</div>
-  <div class="nav-search">
-    <input type="text" id="mainSearch" placeholder="بحث سريع عن مكوّن..." oninput="filterDropdown(this.value)">
-  </div>
-</header>
-
-<main class="container">
-
-  <!-- الخانة الأولى: حاسبة السعرات (تحتوي على جميع المكونات) -->
-  <section class="card">
-    <div class="card-title">🍎 حاسبة سعرات المكونات</div>
-    <div class="form-group">
-      <label class="form-label">اختر المكوّن (شامل جميع الأطعمة)</label>
-      <select id="foodSelect" onchange="calculateFood()">
-        <option value="">-- اختر مكوّناً --</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label class="form-label">الكمية (بالجرام)</label>
-      <input type="number" id="foodGrams" placeholder="مثال: 150" min="1" oninput="calculateFood()">
-    </div>
-    
-    <div class="result-box" id="foodResultBox">
-      <div class="food-info-text" id="foodTitleRes"></div>
-      <div class="result-grid">
-        <div class="res-item">
-          <div class="res-val" id="resKcal">0</div>
-          <div class="res-lbl">سعرات</div>
-        </div>
-        <div class="res-item">
-          <div class="res-val" id="resProt">0</div>
-          <div class="res-lbl">بروتين</div>
-        </div>
-        <div class="res-item">
-          <div class="res-val" id="resCarb">0</div>
-          <div class="res-lbl">كارب</div>
-        </div>
-        <div class="res-item">
-          <div class="res-val" id="resFat">0</div>
-          <div class="res-lbl">دهون</div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- الخانة الثانية: الحاسبة اليدوية -->
+<div class="container">
   <section class="card">
     <div class="card-title">⚖️ الحاسبة اليدوية المخصصة</div>
     <div class="form-group">
@@ -195,82 +107,12 @@ select option { background: var(--card-bg); color: var(--text); }
     
     <div class="result-box" id="manualResultBox">
       <div class="food-info-text">إجمالي السعرات للكمية المدخلة:</div>
-      <div style="font-size: 22px; font-weight: 700; color: var(--accent); margin-top: 5px;" id="manualTotalKcal">0 سعرة</div>
+      <div class="total-val" id="manualTotalKcal">0 سعرة</div>
     </div>
   </section>
-
-</main>
+</div>
 
 <script>
-// قاعدة البيانات الشاملة لجميع المكونات (مع الحبوب الجافة)
-const ALL_FOODS = [
-  {id:'f01', name:'موز', kcal:89, prot:1.1, carb:22.8, fat:0.3},
-  {id:'f02', name:'تفاحة', kcal:52, prot:0.3, carb:13.8, fat:0.2},
-  {id:'p01', name:'صدر دجاج (نيء)', kcal:120, prot:22.5, carb:0, fat:2.6},
-  {id:'p03', name:'بيض كامل', kcal:155, prot:13.0, carb:1.1, fat:11.0},
-  {id:'p05', name:'تونة في الماء', kcal:116, prot:25.5, carb:0, fat:1.0},
-  {id:'g01', name:'أرز أبيض (جاف)', kcal:360, prot:6.7, carb:79.0, fat:0.6},
-  {id:'g02', name:'أرز بني (جاف)', kcal:370, prot:7.5, carb:77.2, fat:2.9},
-  {id:'g03', name:'معكرونة (جافة)', kcal:371, prot:13.0, carb:74.7, fat:1.5},
-  {id:'g04', name:'شوفان (جاف)', kcal:389, prot:16.9, carb:66.3, fat:6.9},
-  {id:'g07', name:'كسكس (جاف)', kcal:376, prot:12.8, carb:72.4, fat:0.6},
-  {id:'g10', name:'كينوا (جافة)', kcal:368, prot:14.1, carb:64.2, fat:6.1},
-  {id:'g11', name:'برغل (جاف)', kcal:342, prot:12.3, carb:75.8, fat:1.3},
-  {id:'g13', name:'شعير (جاف)', kcal:354, prot:12.5, carb:73.5, fat:2.3},
-  {id:'g15', name:'معكرونة قمح كامل (جافة)', kcal:348, prot:14.6, carb:72.5, fat:2.5},
-  {id:'g16', name:'أرز بسمتي (جاف)', kcal:350, prot:7.1, carb:78.0, fat:0.6},
-  {id:'g18', name:'فريكة (جافة)', kcal:350, prot:13.0, carb:71.0, fat:2.5},
-  {id:'d03', name:'زبادي طبيعي', kcal:59, prot:3.5, carb:5.0, fat:3.3},
-  {id:'d04', name:'زبادي يوناني 0%', kcal:59, prot:10.0, carb:3.6, fat:0.4},
-  {id:'o01', name:'زيت زيتون', kcal:884, prot:0.0, carb:0.0, fat:100.0},
-  {id:'n01', name:'لوز', kcal:579, prot:21.2, carb:21.6, fat:49.9},
-  {id:'l10', name:'توفو', kcal:76, prot:8.1, carb:1.9, fat:4.8}
-];
-
-// تعبئة قائمة المكونات عند التحميل
-function populateSelect(foodsToRender) {
-  const select = document.getElementById('foodSelect');
-  select.innerHTML = '<option value="">-- اختر مكوّناً --</option>';
-  foodsToRender.forEach(f => {
-    const opt = document.createElement('option');
-    opt.value = f.id;
-    opt.textContent = `${f.name} (${f.kcal} سعرة / 100g)`;
-    select.appendChild(opt);
-  });
-}
-
-// تصفية القائمة عبر شريط البحث العلوي
-function filterDropdown(query) {
-  const q = query.trim().toLowerCase();
-  const filtered = ALL_FOODS.filter(f => f.name.toLowerCase().includes(q));
-  populateSelect(filtered);
-}
-
-// حساب السعرات والماكرو للمكون المختاره
-function calculateFood() {
-  const foodId = document.getElementById('foodSelect').value;
-  const grams = parseFloat(document.getElementById('foodGrams').value);
-  const box = document.getElementById('foodResultBox');
-
-  if (!foodId || !grams || grams <= 0) {
-    box.classList.remove('show');
-    return;
-  }
-
-  const food = ALL_FOODS.find(f => f.id === foodId);
-  if (!food) return;
-
-  const ratio = grams / 100;
-  document.getElementById('foodTitleRes').textContent = `${food.name} (${grams} جرام):`;
-  document.getElementById('resKcal').textContent = Math.round(food.kcal * ratio);
-  document.getElementById('resProt').textContent = (food.prot * ratio).toFixed(1) + 'g';
-  document.getElementById('resCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
-  document.getElementById('resFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
-
-  box.classList.add('show');
-}
-
-// حساب الحاسبة اليدوية
 function calculateManual() {
   const kcal100 = parseFloat(document.getElementById('manualKcal100').value);
   const grams = parseFloat(document.getElementById('manualGrams').value);
@@ -285,9 +127,6 @@ function calculateManual() {
   document.getElementById('manualTotalKcal').textContent = total + ' سعرة حرارية';
   box.classList.add('show');
 }
-
-// التشغيل الأولي
-populateSelect(ALL_FOODS);
 </script>
 
 </body>
