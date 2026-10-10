@@ -5,15 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>الحاسبة اليدوية | Coach Anis</title>
 <meta name="description" content="حاسبة سعرات يدوية احترافية من Coach Anis — احسب السعرات والماكروز بدقة من القيم الغذائية لكل 100 جرام.">
-<meta name="theme-color" content="#0A0A0A">
+<meta name="theme-color" content="#0A0A0A" id="themeColorMeta">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="512x512" href="icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root {
+  :root, [data-theme="dark"] {
     --bg: #0A0A0A;
     --bg-secondary: #111111;
     --card: #151515;
@@ -34,6 +34,32 @@
     --radius-sm: 10px;
     --shadow: 0 8px 32px rgba(0,0,0,0.45);
     --transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    --header-bg: rgba(10, 10, 10, 0.92);
+    --result-gradient: linear-gradient(145deg, rgba(212,175,87,0.1), rgba(212,175,87,0.04));
+    --result-border: rgba(212, 175, 87, 0.28);
+  }
+
+  [data-theme="light"] {
+    --bg: #F5F4F1;
+    --bg-secondary: #FFFFFF;
+    --card: #FFFFFF;
+    --elevated: #F8F7F4;
+    --border: #E5E2DB;
+    --border-subtle: #EDEAE4;
+    --gold: #B8963E;
+    --gold-light: #C9A84B;
+    --gold-dim: rgba(184, 150, 62, 0.12);
+    --text: #1A1A1A;
+    --text-secondary: #5C5C5C;
+    --text-muted: #8A8A8A;
+    --protein: #D06A2E;
+    --carbs: #3A8BC4;
+    --fat: #B04A4A;
+    --success: #3D9A6A;
+    --shadow: 0 8px 32px rgba(0,0,0,0.08);
+    --header-bg: rgba(245, 244, 241, 0.92);
+    --result-gradient: linear-gradient(145deg, rgba(184,150,62,0.12), rgba(184,150,62,0.04));
+    --result-border: rgba(184, 150, 62, 0.3);
   }
 
   *, *::before, *::after {
@@ -55,6 +81,12 @@
     min-height: 100dvh;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  body[data-lang="en"],
+  body[data-lang="fr"] {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   /* ─── Header ─── */
@@ -62,7 +94,7 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(10, 10, 10, 0.92);
+    background: var(--header-bg);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border-bottom: 1px solid var(--border-subtle);
@@ -70,12 +102,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
+    transition: background var(--transition), border-color var(--transition);
   }
 
   .brand {
     display: flex;
     flex-direction: column;
     gap: 1px;
+    flex-shrink: 0;
   }
 
   .brand-name {
@@ -94,6 +129,12 @@
     text-transform: uppercase;
   }
 
+  .header-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
   .header-badge {
     font-size: 11px;
     font-weight: 600;
@@ -102,6 +143,78 @@
     border: 1px solid rgba(212, 175, 87, 0.25);
     padding: 5px 12px;
     border-radius: 20px;
+    white-space: nowrap;
+  }
+
+  [data-theme="light"] .header-badge {
+    border-color: rgba(184, 150, 62, 0.3);
+  }
+
+  /* Theme & Lang toggles */
+  .ctrl-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    flex-shrink: 0;
+  }
+
+  .ctrl-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: var(--gold-dim);
+  }
+
+  .ctrl-btn svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .lang-select {
+    appearance: none;
+    -webkit-appearance: none;
+    height: 36px;
+    padding: 0 28px 0 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--bg-secondary);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    outline: none;
+    transition: all var(--transition);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23929292' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 8px center;
+  }
+
+  [dir="rtl"] .lang-select {
+    padding: 0 12px 0 28px;
+    background-position: left 8px center;
+  }
+
+  .lang-select:hover,
+  .lang-select:focus {
+    border-color: var(--gold);
+  }
+
+  .lang-select option {
+    background: var(--card);
+    color: var(--text);
   }
 
   /* ─── Main Layout ─── */
@@ -137,6 +250,7 @@
     border-radius: var(--radius);
     padding: 24px 20px;
     box-shadow: var(--shadow);
+    transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
   }
 
   .card-header {
@@ -259,7 +373,6 @@
 
   .input-unit {
     position: absolute;
-    left: 14px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 12px;
@@ -268,8 +381,20 @@
     pointer-events: none;
   }
 
-  input.has-unit {
+  [dir="rtl"] .input-unit {
+    left: 14px;
+  }
+
+  [dir="ltr"] .input-unit {
+    right: 14px;
+  }
+
+  [dir="rtl"] input.has-unit {
     padding-left: 42px;
+  }
+
+  [dir="ltr"] input.has-unit {
+    padding-right: 42px;
   }
 
   /* ─── Results ─── */
@@ -293,8 +418,8 @@
   }
 
   .result-primary {
-    background: linear-gradient(145deg, rgba(212,175,87,0.1), rgba(212,175,87,0.04));
-    border: 1px solid rgba(212, 175, 87, 0.28);
+    background: var(--result-gradient);
+    border: 1px solid var(--result-border);
     border-radius: var(--radius);
     padding: 20px;
     text-align: center;
@@ -320,7 +445,7 @@
     font-size: 14px;
     font-weight: 500;
     color: var(--gold-light);
-    margin-right: 4px;
+    margin-inline-start: 4px;
   }
 
   .macros-grid {
@@ -430,6 +555,7 @@
     .form-grid { gap: 10px; }
     .result-primary-value { font-size: 28px; }
     .macro-value { font-size: 16px; }
+    .header-badge { display: none; }
   }
 
   @media (min-width: 520px) {
@@ -438,20 +564,31 @@
   }
 </style>
 </head>
-<body>
+<body data-theme="dark" data-lang="ar">
 
 <header class="site-header">
   <div class="brand">
     <div class="brand-name">COACH ANIS</div>
     <div class="brand-sub">Sports Nutrition</div>
   </div>
-  <div class="header-badge">حاسبة يدوية</div>
+  <div class="header-controls">
+    <div class="header-badge" data-i18n="badge">حاسبة يدوية</div>
+    <select class="lang-select" id="langSelect" aria-label="Language" onchange="setLanguage(this.value)">
+      <option value="ar">العربية</option>
+      <option value="fr">Français</option>
+      <option value="en">English</option>
+    </select>
+    <button class="ctrl-btn" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle theme" title="Theme">
+      <svg id="iconSun" viewBox="0 0 24 24" style="display:none"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+      <svg id="iconMoon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+    </button>
+  </div>
 </header>
 
 <main class="page">
   <section class="hero">
-    <h1 class="hero-title">الحاسبة اليدوية المخصصة</h1>
-    <p class="hero-desc">أدخل القيم الغذائية لكل 100 جرام والكمية المستهلكة لحساب السعرات والماكروز بدقة.</p>
+    <h1 class="hero-title" data-i18n="heroTitle">الحاسبة اليدوية المخصصة</h1>
+    <p class="hero-desc" data-i18n="heroDesc">أدخل القيم الغذائية لكل 100 جرام والكمية المستهلكة لحساب السعرات والماكروز بدقة.</p>
   </section>
 
   <section class="card">
@@ -460,39 +597,39 @@
         <svg viewBox="0 0 24 24"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="4"/></svg>
       </div>
       <div>
-        <div class="card-title">حساب السعرات والماكروز</div>
-        <div class="card-subtitle">من القيم المرجعية لكل 100 جرام</div>
+        <div class="card-title" data-i18n="cardTitle">حساب السعرات والماكروز</div>
+        <div class="card-subtitle" data-i18n="cardSubtitle">من القيم المرجعية لكل 100 جرام</div>
       </div>
     </div>
 
     <!-- Reference values (per 100 g) -->
-    <div class="section-label">القيم لكل 100 جرام</div>
+    <div class="section-label" data-i18n="sectionRef">القيم لكل 100 جرام</div>
     <div class="form-grid">
       <div class="form-group">
-        <label class="form-label" for="manualKcal100">السعرات</label>
+        <label class="form-label" for="manualKcal100" data-i18n="labelKcal">السعرات</label>
         <div class="input-wrap">
-          <input type="number" id="manualKcal100" placeholder="مثال: 130" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <input type="number" id="manualKcal100" data-i18n-placeholder="phKcal" placeholder="مثال: 130" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
           <span class="input-unit">kcal</span>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="manualProtein100">البروتين</label>
+        <label class="form-label" for="manualProtein100" data-i18n="labelProtein">البروتين</label>
         <div class="input-wrap">
-          <input type="number" id="manualProtein100" placeholder="مثال: 25" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <input type="number" id="manualProtein100" data-i18n-placeholder="phProtein" placeholder="مثال: 25" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
           <span class="input-unit">g</span>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="manualCarbs100">الكربوهيدرات</label>
+        <label class="form-label" for="manualCarbs100" data-i18n="labelCarbs">الكربوهيدرات</label>
         <div class="input-wrap">
-          <input type="number" id="manualCarbs100" placeholder="مثال: 5" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <input type="number" id="manualCarbs100" data-i18n-placeholder="phCarbs" placeholder="مثال: 5" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
           <span class="input-unit">g</span>
         </div>
       </div>
       <div class="form-group">
-        <label class="form-label" for="manualFat100">الدهون</label>
+        <label class="form-label" for="manualFat100" data-i18n="labelFat">الدهون</label>
         <div class="input-wrap">
-          <input type="number" id="manualFat100" placeholder="مثال: 3" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+          <input type="number" id="manualFat100" data-i18n-placeholder="phFat" placeholder="مثال: 3" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
           <span class="input-unit">g</span>
         </div>
       </div>
@@ -501,11 +638,11 @@
     <div class="divider"></div>
 
     <!-- Consumed quantity -->
-    <div class="section-label">الكمية المستهلكة</div>
+    <div class="section-label" data-i18n="sectionQty">الكمية المستهلكة</div>
     <div class="form-group full" style="margin-bottom: 0;">
-      <label class="form-label" for="manualGrams">الوزن بالجرام</label>
+      <label class="form-label" for="manualGrams" data-i18n="labelGrams">الوزن بالجرام</label>
       <div class="input-wrap">
-        <input type="number" id="manualGrams" class="has-unit" placeholder="مثال: 200" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
+        <input type="number" id="manualGrams" class="has-unit" data-i18n-placeholder="phGrams" placeholder="مثال: 200" min="0" step="any" oninput="calculateManual()" inputmode="decimal">
         <span class="input-unit">g</span>
       </div>
     </div>
@@ -513,24 +650,24 @@
     <!-- Results -->
     <div class="result-box" id="manualResultBox">
       <div class="result-primary">
-        <div class="result-primary-label">إجمالي السعرات الحرارية</div>
+        <div class="result-primary-label" data-i18n="resultLabel">إجمالي السعرات الحرارية</div>
         <div class="result-primary-value">
           <span id="manualTotalKcal">0</span>
-          <span class="result-primary-unit">سعرة</span>
+          <span class="result-primary-unit" data-i18n="kcalUnit">سعرة</span>
         </div>
       </div>
 
       <div class="macros-grid">
         <div class="macro-card macro-protein">
-          <div class="macro-label">بروتين</div>
+          <div class="macro-label" data-i18n="macroProtein">بروتين</div>
           <div class="macro-value"><span id="manualTotalProtein">0</span> <span class="macro-unit">g</span></div>
         </div>
         <div class="macro-card macro-carbs">
-          <div class="macro-label">كارب</div>
+          <div class="macro-label" data-i18n="macroCarbs">كارب</div>
           <div class="macro-value"><span id="manualTotalCarbs">0</span> <span class="macro-unit">g</span></div>
         </div>
         <div class="macro-card macro-fat">
-          <div class="macro-label">دهون</div>
+          <div class="macro-label" data-i18n="macroFat">دهون</div>
           <div class="macro-value"><span id="manualTotalFat">0</span> <span class="macro-unit">g</span></div>
         </div>
       </div>
@@ -540,17 +677,152 @@
       <div class="tip-icon">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
       </div>
-      <p class="tip-text">أدخل القيم الغذائية المكتوبة على العبوة (لكل 100 جرام) ثم الكمية التي تناولتها. الحاسبة تحولها تلقائياً.</p>
+      <p class="tip-text" data-i18n="tipText">أدخل القيم الغذائية المكتوبة على العبوة (لكل 100 جرام) ثم الكمية التي تناولتها. الحاسبة تحولها تلقائياً.</p>
     </div>
   </section>
 </main>
 
 <footer class="site-footer">
   <div class="footer-brand">COACH <span>ANIS</span> — Sports Nutrition</div>
-  <div class="footer-note">أداة دقيقة لحساب السعرات والماكروز</div>
+  <div class="footer-note" data-i18n="footerNote">أداة دقيقة لحساب السعرات والماكروز</div>
 </footer>
 
 <script>
+const i18n = {
+  ar: {
+    dir: 'rtl',
+    title: 'الحاسبة اليدوية | Coach Anis',
+    badge: 'حاسبة يدوية',
+    heroTitle: 'الحاسبة اليدوية المخصصة',
+    heroDesc: 'أدخل القيم الغذائية لكل 100 جرام والكمية المستهلكة لحساب السعرات والماكروز بدقة.',
+    cardTitle: 'حساب السعرات والماكروز',
+    cardSubtitle: 'من القيم المرجعية لكل 100 جرام',
+    sectionRef: 'القيم لكل 100 جرام',
+    labelKcal: 'السعرات',
+    labelProtein: 'البروتين',
+    labelCarbs: 'الكربوهيدرات',
+    labelFat: 'الدهون',
+    sectionQty: 'الكمية المستهلكة',
+    labelGrams: 'الوزن بالجرام',
+    resultLabel: 'إجمالي السعرات الحرارية',
+    kcalUnit: 'سعرة',
+    macroProtein: 'بروتين',
+    macroCarbs: 'كارب',
+    macroFat: 'دهون',
+    tipText: 'أدخل القيم الغذائية المكتوبة على العبوة (لكل 100 جرام) ثم الكمية التي تناولتها. الحاسبة تحولها تلقائياً.',
+    footerNote: 'أداة دقيقة لحساب السعرات والماكروز',
+    phKcal: 'مثال: 130',
+    phProtein: 'مثال: 25',
+    phCarbs: 'مثال: 5',
+    phFat: 'مثال: 3',
+    phGrams: 'مثال: 200'
+  },
+  fr: {
+    dir: 'ltr',
+    title: 'Calculateur Manuel | Coach Anis',
+    badge: 'Calculateur',
+    heroTitle: 'Calculateur manuel personnalisé',
+    heroDesc: 'Entrez les valeurs nutritionnelles pour 100 g et la quantité consommée pour calculer précisément les calories et macros.',
+    cardTitle: 'Calcul calories & macros',
+    cardSubtitle: 'À partir des valeurs de référence pour 100 g',
+    sectionRef: 'Valeurs pour 100 g',
+    labelKcal: 'Calories',
+    labelProtein: 'Protéines',
+    labelCarbs: 'Glucides',
+    labelFat: 'Lipides',
+    sectionQty: 'Quantité consommée',
+    labelGrams: 'Poids en grammes',
+    resultLabel: 'Calories totales',
+    kcalUnit: 'kcal',
+    macroProtein: 'Protéines',
+    macroCarbs: 'Glucides',
+    macroFat: 'Lipides',
+    tipText: 'Entrez les valeurs nutritionnelles indiquées sur l\'emballage (pour 100 g) puis la quantité consommée. Le calculateur convertit automatiquement.',
+    footerNote: 'Outil précis pour calculer calories et macros',
+    phKcal: 'ex: 130',
+    phProtein: 'ex: 25',
+    phCarbs: 'ex: 5',
+    phFat: 'ex: 3',
+    phGrams: 'ex: 200'
+  },
+  en: {
+    dir: 'ltr',
+    title: 'Manual Calculator | Coach Anis',
+    badge: 'Manual Calc',
+    heroTitle: 'Custom Manual Calculator',
+    heroDesc: 'Enter the nutritional values per 100 g and the amount consumed to accurately calculate calories and macros.',
+    cardTitle: 'Calories & Macros Calculator',
+    cardSubtitle: 'From reference values per 100 g',
+    sectionRef: 'Values per 100 g',
+    labelKcal: 'Calories',
+    labelProtein: 'Protein',
+    labelCarbs: 'Carbs',
+    labelFat: 'Fat',
+    sectionQty: 'Amount consumed',
+    labelGrams: 'Weight in grams',
+    resultLabel: 'Total Calories',
+    kcalUnit: 'kcal',
+    macroProtein: 'Protein',
+    macroCarbs: 'Carbs',
+    macroFat: 'Fat',
+    tipText: 'Enter the nutritional values listed on the package (per 100 g) then the amount you ate. The calculator converts them automatically.',
+    footerNote: 'Precise tool for calculating calories and macros',
+    phKcal: 'e.g. 130',
+    phProtein: 'e.g. 25',
+    phCarbs: 'e.g. 5',
+    phFat: 'e.g. 3',
+    phGrams: 'e.g. 200'
+  }
+};
+
+function setLanguage(lang) {
+  const t = i18n[lang] || i18n.ar;
+  document.documentElement.lang = lang;
+  document.documentElement.dir = t.dir;
+  document.body.dataset.lang = lang;
+  document.title = t.title;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (t[key] !== undefined) el.textContent = t[key];
+  });
+
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key = el.getAttribute('data-i18n-placeholder');
+    if (t[key] !== undefined) el.placeholder = t[key];
+  });
+
+  const select = document.getElementById('langSelect');
+  if (select) select.value = lang;
+
+  try { localStorage.setItem('calories-lang', lang); } catch (e) {}
+}
+
+function setTheme(theme) {
+  document.body.dataset.theme = theme;
+  document.documentElement.setAttribute('data-theme', theme);
+
+  const meta = document.getElementById('themeColorMeta');
+  if (meta) meta.content = theme === 'light' ? '#F5F4F1' : '#0A0A0A';
+
+  const sun = document.getElementById('iconSun');
+  const moon = document.getElementById('iconMoon');
+  if (theme === 'light') {
+    if (sun) sun.style.display = 'none';
+    if (moon) moon.style.display = 'block';
+  } else {
+    if (sun) sun.style.display = 'block';
+    if (moon) moon.style.display = 'none';
+  }
+
+  try { localStorage.setItem('calories-theme', theme); } catch (e) {}
+}
+
+function toggleTheme() {
+  const current = document.body.dataset.theme || 'dark';
+  setTheme(current === 'dark' ? 'light' : 'dark');
+}
+
 function calculateManual() {
   const kcal100 = parseFloat(document.getElementById('manualKcal100').value);
   const protein100 = parseFloat(document.getElementById('manualProtein100').value) || 0;
@@ -559,7 +831,6 @@ function calculateManual() {
   const grams = parseFloat(document.getElementById('manualGrams').value);
   const box = document.getElementById('manualResultBox');
 
-  // Original logic preserved: require positive kcal and grams
   if (!kcal100 || !grams || kcal100 <= 0 || grams <= 0) {
     box.classList.remove('show');
     return;
@@ -578,6 +849,23 @@ function calculateManual() {
 
   box.classList.add('show');
 }
+
+// Init from localStorage or system preference
+(function init() {
+  let theme = 'dark';
+  let lang = 'ar';
+  try {
+    theme = localStorage.getItem('calories-theme') || theme;
+    lang = localStorage.getItem('calories-lang') || lang;
+  } catch (e) {}
+
+  if (!localStorage.getItem('calories-theme') && window.matchMedia) {
+    if (window.matchMedia('(prefers-color-scheme: light)').matches) theme = 'light';
+  }
+
+  setTheme(theme);
+  setLanguage(lang);
+})();
 </script>
 
 </body>
