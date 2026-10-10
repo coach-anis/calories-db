@@ -2,21 +2,21 @@
   "name": "Calories DB - Coach Anis",
   "short_name": "Calories DB",
   "description": "قاعدة بيانات السعرات الحرارية",
-  "start_url": "/calories-db/",
-  "scope": "/calories-db/",
+  "start_url": "./",
+  "scope": "./",
   "display": "standalone",
   "background_color": "#0A0A0A",
   "theme_color": "#0A0A0A",
   "orientation": "portrait",
   "icons": [
     {
-      "src": "/calories-db/apple-touch-icon.png",
+      "src": "apple-touch-icon.png",
       "sizes": "180x180",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/calories-db/icon.png",
+      "src": "icon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
