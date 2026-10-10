@@ -2,1209 +2,407 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>قاعدة بيانات السعرات | Coach Anis</title>
-<meta name="description" content="قاعدة بيانات غذائية لسعرات وماكرو المكونات — بيانات من USDA FoodData Central ومصادر علمية موثوقة">
-
-<!-- Open Graph (Facebook / WhatsApp / LinkedIn) -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://coach-anis.github.io/calories-db/">
-<meta property="og:title" content="قاعدة بيانات السعرات الحرارية | Coach Anis">
-<meta property="og:description" content="مكوّنات غذائية · سعرات · بروتين · كارب · دهون — USDA FoodData Central ومصادر موثوقة">
-<meta property="og:image" content="https://coach-anis.github.io/calories-db/preview.png">
-<meta property="og:image:width" content="1400">
-<meta property="og:image:height" content="700">
-<meta property="og:image:alt" content="Calories Database - Coach Anis">
-<meta property="og:locale" content="ar_AR">
-<meta property="og:site_name" content="Coach Anis">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:site" content="@coach__anis">
-<meta name="twitter:title" content="قاعدة بيانات السعرات الحرارية | Coach Anis">
-<meta name="twitter:description" content="مكوّنات غذائية موثّقة · سعرات · بروتين · كارب · دهون">
-<meta name="twitter:image" content="https://coach-anis.github.io/calories-db/preview.png">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Calories DB">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="theme-color" content="#0A0A0A">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="manifest" href="/calories-db/manifest.json">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<meta name="description" content="قاعدة بيانات غذائية لسعرات وماكرو المكونات — USDA FoodData Central">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 
 <style>
 :root {
- --gold: #C9A84C;
- --gold-light: #E8C97A;
- --gold-dim: rgba(201,168,76,0.15);
- --bg: #0A0A0A;
- --bg2: #111111;
- --bg3: #181818;
- --bg4: #202020;
- --border: rgba(201,168,76,0.18);
- --text: #F0EDE8;
- --text-muted: #888;
- --prot: #E8A87A;
- --carb: #7AB8E8;
- --fat: #E87A7A;
- --green: #7AC87A;
- --radius: 14px;
- --shadow: 0 8px 40px rgba(0,0,0,0.6);
+  --fire: #FF5F1F;
+  --fire2: #FF8C42;
+  --gold: #F5C842;
+  --gold2: #FFE17A;
+  --teal: #00D4AA;
+  --teal2: #00F5C4;
+  --blue: #4DA6FF;
+  --red: #FF4D6D;
+  --bg: #06060A;
+  --bg2: #0E0E16;
+  --bg3: #15151F;
+  --bg4: #1C1C28;
+  --text: #F0F0F8;
+  --muted: #5A5A72;
+  --border: rgba(255,255,255,0.06);
+  --border-fire: rgba(255,95,31,0.2);
+  --border-gold: rgba(245,200,66,0.2);
+  --border-teal: rgba(0,212,170,0.2);
+  --radius: 18px;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
 
-html{scroll-behavior:smooth;}
-
-body{
- background:var(--bg);
- font-family:'Cairo',sans-serif;
- color:var(--text);
- min-height:100vh;
- overflow-x:hidden;
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-/* SCROLLBAR */
-::-webkit-scrollbar{width:6px;}
-::-webkit-scrollbar-track{background:#111;}
-::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+/* Background Mesh */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0;
+  background:
+    radial-gradient(ellipse 55% 30% at 15% 0%, rgba(255,95,31,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 45% 25% at 85% 5%, rgba(0,212,170,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 20% at 50% 100%, rgba(245,200,66,0.03) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
 
 /* NAVBAR */
-.nav{
- position:sticky;top:0;z-index:100;
- background:rgba(10,10,10,0.92);
- backdrop-filter:blur(20px);
- border-bottom:1px solid var(--border);
- padding:14px 24px;
- display:flex;align-items:center;gap:16px;
- flex-wrap:wrap;
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(6,6,10,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 14px;
+  max-width: 640px; margin: 0 auto;
 }
 
-.nav-brand{
- font-family:'Bebas Neue',sans-serif;
- font-size:22px;letter-spacing:4px;
- color:var(--gold);flex-shrink:0;
+.nav-brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem; font-weight: 800;
+  color: var(--text); flex-shrink: 0;
+  letter-spacing: -0.5px;
 }
-.nav-brand span{color:rgba(255,255,255,0.4);font-size:11px;letter-spacing:2px;display:block;margin-top:-4px;}
-
-.nav-search{
- flex:1;min-width:180px;max-width:340px;
- position:relative;display:flex;align-items:center;
- background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.08);
- border-radius:10px;overflow:hidden;
- transition:border-color .2s;
-}
-.nav-search:focus-within{border-color:var(--gold);}
-.nav-search-icon{padding:0 10px;font-size:14px;color:var(--text-muted);}
-.nav-search input{
- background:transparent;border:none;outline:none;
- color:var(--text);font-family:'Cairo',sans-serif;
- font-size:13px;padding:9px 0;flex:1;direction:rtl;
-}
-.nav-search input::placeholder{color:#444;}
-.nav-search-clear{
- background:none;border:none;color:#555;cursor:pointer;
- padding:0 10px;font-size:14px;display:none;transition:color .2s;
-}
-.nav-search-clear:hover{color:var(--gold);}
-.nav-search-clear.show{display:block;}
-
-.nav-calc-btn{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:10px;
- padding:9px 18px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:900;cursor:pointer;
- transition:all .2s;white-space:nowrap;flex-shrink:0;
- display:flex;align-items:center;gap:6px;
-}
-.nav-calc-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
-
-/* FILTERS */
-.filters-bar{
- background:var(--bg2);
- border-bottom:1px solid var(--border);
- padding:10px 24px;
- display:flex;gap:8px;flex-wrap:nowrap;align-items:center;
- overflow-x:auto;
- -webkit-overflow-scrolling:touch;
- scrollbar-width:none;
-}
-.filters-bar::-webkit-scrollbar{display:none;}
-.filter-btn{
- background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.08);
- border-radius:20px;padding:6px 14px;
- font-family:'Cairo',sans-serif;font-size:12px;
- color:var(--text-muted);cursor:pointer;transition:all .2s;
- white-space:nowrap;
-}
-.filter-btn:hover{border-color:var(--gold);color:var(--text);}
-.filter-btn.on{background:var(--gold-dim);border-color:var(--gold);color:var(--gold);font-weight:700;}
-
-.filters-count{
- margin-right:auto;
- font-family:'Bebas Neue',sans-serif;
- font-size:13px;letter-spacing:2px;color:var(--text-muted);
+.nav-brand span {
+  color: var(--muted); font-size: 9px; font-weight: 700;
+  letter-spacing: 1.5px; display: block; text-transform: uppercase;
+  font-family: 'Cairo', sans-serif; margin-top: 1px;
 }
 
-/* HERO STATS */
-.hero{
- padding:48px 24px 32px;
- text-align:center;
- position:relative;overflow:hidden;
+.nav-search {
+  flex: 1; min-width: 150px;
+  position: relative; display: flex; align-items: center;
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: border-color .2s, box-shadow .2s;
 }
-.hero::before{
- content:'';position:absolute;inset:0;
- background:radial-gradient(ellipse 70% 50% at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 70%);
- pointer-events:none;
+.nav-search:focus-within {
+  border-color: rgba(255,95,31,0.4);
+  box-shadow: 0 0 0 3px rgba(255,95,31,0.08);
 }
-.hero-badge{
- font-family:'Bebas Neue',sans-serif;
- letter-spacing:5px;font-size:11px;
- color:var(--gold);opacity:.8;
- border:1px solid var(--border);
- padding:5px 18px;border-radius:20px;
- display:inline-block;margin-bottom:20px;
+.nav-search-icon { padding: 0 10px; font-size: 13px; color: var(--muted); }
+.nav-search input {
+  background: transparent; border: none; outline: none;
+  color: var(--text); font-family: 'Cairo', sans-serif;
+  font-size: 0.85rem; padding: 10px 0; flex: 1; direction: rtl;
 }
-.hero-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:clamp(42px,8vw,76px);
- line-height:.9;color:var(--text);
- letter-spacing:2px;margin-bottom:12px;
+.nav-search input::placeholder { color: rgba(255,255,255,0.15); }
+.nav-search-clear {
+  background: none; border: none; color: var(--muted); cursor: pointer;
+  padding: 0 10px; font-size: 13px; display: none; transition: color .2s;
 }
-.hero-title span{color:var(--gold);}
-.hero-sub{
- font-size:14px;color:var(--text-muted);
- max-width:420px;margin:0 auto 32px;line-height:1.8;
-}
-.hero-stats{
- display:inline-flex;gap:40px;
- border:1px solid var(--border);
- border-radius:16px;padding:18px 36px;
- background:rgba(255,255,255,0.02);
-}
-.hero-stat-n{
- font-family:'Bebas Neue',sans-serif;
- font-size:36px;color:var(--gold);line-height:1;
-}
-.hero-stat-l{font-size:10px;color:var(--text-muted);letter-spacing:2px;margin-top:3px;}
-.hero-stat{text-align:center;}
-.hero-divider{width:1px;background:var(--border);}
+.nav-search-clear.show { display: block; }
+.nav-search-clear:hover { color: var(--text); }
 
-.source-tag{
- display:inline-flex;align-items:center;gap:8px;
- background:rgba(122,200,122,0.08);
- border:1px solid rgba(122,200,122,0.2);
- border-radius:8px;padding:6px 14px;
- font-size:11px;color:var(--green);
- margin-top:16px;
+/* FILTERS BAR */
+.filters-bar {
+  background: transparent;
+  padding: 12px 16px;
+  display: flex; gap: 8px; align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  max-width: 640px; margin: 0 auto;
 }
-.source-tag::before{content:'';font-weight:900;}
+.filters-bar::-webkit-scrollbar { display: none; }
+.filter-btn {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 8px 14px;
+  font-family: 'Cairo', sans-serif; font-size: 0.8rem; font-weight: 700;
+  color: var(--muted); cursor: pointer; transition: all .25s;
+  white-space: nowrap; flex-shrink: 0;
+}
+.filter-btn:hover { border-color: rgba(255,95,31,0.3); color: var(--text); }
+.filter-btn.on {
+  background: rgba(255,95,31,0.1);
+  border-color: rgba(255,95,31,0.35);
+  color: var(--fire2);
+  box-shadow: 0 0 20px rgba(255,95,31,0.1);
+}
 
-/* CALCULATOR */
-.calc-section{
- padding:0 24px 32px;
- max-width:900px;margin:0 auto;
+.filters-count {
+  margin-right: auto;
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700;
+  color: var(--muted); letter-spacing: 1px;
 }
-.calc-card{
- background:linear-gradient(135deg,#141210,#0e0e0e);
- border:1px solid var(--border);
- border-radius:20px;padding:28px 32px;
- position:relative;overflow:hidden;
-}
-.calc-card::before{
- content:'';position:absolute;top:0;left:0;right:0;height:2px;
- background:linear-gradient(90deg,transparent,var(--gold),transparent);
-}
-.calc-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:3px;
- color:var(--gold);margin-bottom:20px;
- display:flex;align-items:center;gap:10px;
-}
-.calc-row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;}
 
-.calc-field{flex:1;min-width:160px;}
-.calc-field label{
- display:block;font-size:11px;color:var(--text-muted);
- letter-spacing:1px;margin-bottom:8px;
+/* CALCULATOR SECTION */
+.calc-section {
+  padding: 0 16px 16px;
+  max-width: 640px; margin: 0 auto;
 }
-.calc-field select,.calc-field input{
- width:100%;background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.1);
- border-radius:10px;padding:12px 14px;
- font-family:'Cairo',sans-serif;font-size:13px;
- color:var(--text);outline:none;
- transition:border-color .2s;
- appearance:none;
+.calc-card {
+  background: var(--bg2);
+  border: 1px solid var(--border-fire);
+  border-radius: var(--radius); padding: 18px;
+  position: relative; overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
-.calc-field select:focus,.calc-field input:focus{border-color:var(--gold);}
-.calc-field select option{background:#111;color:#fff;}
+.calc-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--fire), var(--fire2));
+}
+.calc-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.95rem; font-weight: 800;
+  color: var(--fire2); margin-bottom: 14px;
+  letter-spacing: -0.3px;
+}
+.calc-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
+.calc-field { flex: 1; min-width: 140px; }
+.calc-field label {
+  display: block; font-size: 9px; font-weight: 700; color: var(--muted);
+  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
+}
+.calc-field select, .calc-field input {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 11px 12px;
+  font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+  color: var(--text); outline: none;
+  transition: border-color .2s, box-shadow .2s;
+  appearance: none; -webkit-appearance: none;
+}
+.calc-field select:focus, .calc-field input:focus {
+  border-color: rgba(255,95,31,0.5);
+  box-shadow: 0 0 0 3px rgba(255,95,31,0.08);
+}
+.calc-field select option { background: var(--bg3); color: #fff; }
 
-.calc-btn-go{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:10px;
- padding:12px 28px;font-family:'Cairo',sans-serif;
- font-size:14px;font-weight:900;cursor:pointer;
- transition:all .2s;white-space:nowrap;
- align-self:flex-end;
+.calc-result {
+  margin-top: 14px; display: none;
+  animation: fadeUp .3s ease both;
 }
-.calc-btn-go:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
+.calc-result.show { display: block; }
+.calc-result-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+}
 
-.calc-result{
- margin-top:20px;
- display:none;
- animation:fadeUp .3s ease;
+.calc-res-cell {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 12px; padding: 12px 8px;
+  text-align: center; position: relative; overflow: hidden;
 }
-.calc-result.show{display:block;}
-.calc-result-grid{
- display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
-}
-@media(max-width:500px){.calc-result-grid{grid-template-columns:repeat(2,1fr);}}
+.calc-res-cell::before { content: ''; display: block; height: 2px; margin-bottom: 8px; border-radius: 1px; }
+.calc-res-cell.k::before { background: var(--fire); }
+.calc-res-cell.p::before { background: var(--gold); }
+.calc-res-cell.c::before { background: var(--teal); }
+.calc-res-cell.f::before { background: var(--blue); }
 
-.calc-res-cell{
- background:rgba(255,255,255,0.03);
- border:1px solid rgba(255,255,255,0.07);
- border-radius:12px;padding:14px 10px;
- text-align:center;
+.calc-res-val {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.25rem; font-weight: 800; line-height: 1;
+  letter-spacing: -0.5px;
 }
-.calc-res-cell::before{content:'';display:block;height:2px;margin-bottom:10px;border-radius:1px;}
-.calc-res-cell.k::before{background:var(--gold);}
-.calc-res-cell.p::before{background:var(--prot);}
-.calc-res-cell.c::before{background:var(--carb);}
-.calc-res-cell.f::before{background:var(--fat);}
-.calc-res-val{
- font-family:'Bebas Neue',sans-serif;
- font-size:28px;line-height:1;
+.calc-res-cell.k .calc-res-val { color: var(--fire2); }
+.calc-res-cell.p .calc-res-val { color: var(--gold); }
+.calc-res-cell.c .calc-res-val { color: var(--teal2); }
+.calc-res-cell.f .calc-res-val { color: var(--blue); }
+.calc-res-lbl { font-size: 8px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+
+.calc-food-name { margin-bottom: 10px; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
+.calc-food-name strong { color: var(--text); font-size: 0.95rem; font-family: 'Syne', sans-serif; }
+.calc-food-tip {
+  margin-top: 10px; padding: 10px 12px;
+  background: rgba(255,95,31,0.04);
+  border: 1px solid var(--border-fire);
+  border-radius: 10px; font-size: 0.78rem; color: var(--muted);
+  display: none; align-items: center; gap: 8px; font-weight: 600;
 }
-.calc-res-cell.k .calc-res-val{color:var(--gold);}
-.calc-res-cell.p .calc-res-val{color:var(--prot);}
-.calc-res-cell.c .calc-res-val{color:var(--carb);}
-.calc-res-cell.f .calc-res-val{color:var(--fat);}
-.calc-res-lbl{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:4px;}
-.calc-food-name{
- margin-bottom:12px;
- font-size:13px;color:var(--text-muted);
-}
-.calc-food-name strong{color:var(--text);font-size:15px;}
-.calc-food-tip{
- margin-top:14px;
- padding:10px 14px;
- background:rgba(201,168,76,0.06);
- border:1px solid var(--border);
- border-radius:10px;
- font-size:12px;color:var(--text-muted);
- display:none;align-items:center;gap:8px;
-}
-.calc-food-tip.show{display:flex;}
-.calc-food-tip::before{content:'💡';font-size:13px;}
+.calc-food-tip.show { display: flex; }
 
 /* FOOD GRID */
-.grid-section{padding:0 24px 80px;}
-.section-header{
- display:flex;align-items:center;gap:16px;
- padding:24px 0 16px;
- border-bottom:1px solid rgba(255,255,255,0.06);
- margin-bottom:20px;
+.grid-section { padding: 0 16px 80px; max-width: 640px; margin: 0 auto; }
+.section-header {
+  display: flex; align-items: center; gap: 10px;
+  padding: 16px 0 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 12px;
 }
-.section-label{
- font-family:'Bebas Neue',sans-serif;
- font-size:14px;letter-spacing:3px;
- padding:6px 14px;border-radius:8px;
- font-weight:400;
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px;
+  padding: 5px 12px; border-radius: 20px; text-transform: uppercase;
 }
-.section-count{
- font-family:'Bebas Neue',sans-serif;
- font-size:12px;letter-spacing:2px;color:var(--text-muted);
- margin-right:auto;
-}
-
-.food-grid{
- display:grid;
- grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
- gap:14px;
- margin-bottom:40px;
+.section-count {
+  font-family: 'Syne', sans-serif;
+  font-size: 11px; font-weight: 700; color: var(--muted);
+  margin-right: auto; letter-spacing: 1px;
 }
 
-.food-card{
- background:var(--bg2);
- border:1px solid rgba(255,255,255,0.06);
- border-radius:var(--radius);
- padding:0;overflow:hidden;
- transition:transform .2s,border-color .2s,box-shadow .2s;
- cursor:pointer;
- position:relative;
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
 }
-.food-card:hover{
- transform:translateY(-3px);
- border-color:rgba(201,168,76,0.3);
- box-shadow:0 12px 40px rgba(0,0,0,0.5);
-}
-.food-card-accent{height:3px;width:100%;}
+@media(max-width:400px) { .food-grid { grid-template-columns: 1fr; } }
 
-.food-card-body{padding:16px;}
+.food-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px; overflow: hidden;
+  transition: transform .2s, border-color .2s, box-shadow .2s;
+  cursor: pointer; position: relative;
+}
+.food-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,95,31,0.3);
+  box-shadow: 0 6px 24px rgba(255,95,31,0.06);
+}
+.food-card-top {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; margin-bottom: 8px;
+}
+.food-kcal {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.35rem; font-weight: 800; color: var(--fire2); line-height: 1;
+  letter-spacing: -0.5px;
+}
+.food-kcal-sub { font-size: 8px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+.food-name { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.food-name-en { font-size: 0.72rem; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
 
-.food-card-top{
- display:flex;justify-content:space-between;
- align-items:flex-start;margin-bottom:12px;
+.food-macros-row {
+  display: flex; gap: 8px; font-size: 10px; font-weight: 700; color: var(--muted);
 }
-.food-emoji{font-size:28px;line-height:1;}
-.food-kcal{
- font-family:'Bebas Neue',sans-serif;
- font-size:32px;color:var(--gold);line-height:1;
-}
-.food-kcal-sub{font-size:9px;color:var(--text-muted);letter-spacing:1px;text-align:left;}
-
-.food-name{
- font-size:15px;font-weight:700;color:var(--text);
- margin-bottom:3px;
-}
-.food-name-en{font-size:11px;color:var(--text-muted);margin-bottom:12px;}
+.food-macros-row span { font-family: 'Syne', sans-serif; font-size: 11px; }
 
 /* EMPTY STATE */
-.empty-state{
- text-align:center;padding:80px 20px;color:var(--text-muted);
- display:none;
+.empty-state {
+  text-align: center; padding: 60px 20px; color: var(--muted);
+  display: none; font-weight: 600; font-size: 0.85rem;
 }
-.empty-state.show{display:block;}
-.empty-state div:first-child{font-size:48px;margin-bottom:16px;}
+.empty-state.show { display: block; }
+.empty-state div:first-child { font-size: 38px; margin-bottom: 10px; opacity: 0.4; }
 
-/* CTA SECTION */
-.cta-section{
- background:linear-gradient(135deg,#0d0b08,#080808);
- border-top:1px solid var(--border);
- padding:80px 24px;
- text-align:center;
- position:relative;overflow:hidden;
+/* MODAL */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(6,6,10,0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 16px; opacity: 0; pointer-events: none;
+  transition: opacity .3s;
 }
-.cta-section::before{
- content:'';position:absolute;inset:0;
- background:radial-gradient(ellipse 60% 70% at 50% 50%, rgba(201,168,76,0.07) 0%, transparent 70%);
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  width: 100%; max-width: 380px;
+  overflow: hidden;
+  transform: scale(.95) translateY(12px);
+  transition: transform .3s;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
 }
-.cta-grid-bg{
- position:absolute;inset:0;
- background-image:
- repeating-linear-gradient(0deg,transparent,transparent 40px,rgba(201,168,76,0.02) 40px,rgba(201,168,76,0.02) 41px),
- repeating-linear-gradient(90deg,transparent,transparent 40px,rgba(201,168,76,0.02) 40px,rgba(201,168,76,0.02) 41px);
+.modal-overlay.open .modal-card { transform: scale(1) translateY(0); }
+.modal-body { padding: 22px; }
+.modal-close {
+  float: left; background: none; border: none;
+  color: var(--muted); cursor: pointer; font-size: 1rem;
+  transition: color .2s;
 }
-.cta-inner{position:relative;z-index:1;max-width:540px;margin:0 auto;}
-.cta-eyebrow{
- font-family:'Bebas Neue',sans-serif;
- letter-spacing:5px;font-size:11px;
- color:var(--gold);opacity:.7;
- border:1px solid var(--border);
- padding:5px 16px;border-radius:20px;
- display:inline-block;margin-bottom:24px;
-}
-.cta-title{
- font-size:clamp(22px,5vw,34px);
- font-weight:900;color:var(--text);
- line-height:1.4;margin-bottom:12px;
-}
-.cta-title span{color:var(--gold);}
-.cta-divider{
- width:60px;height:2px;
- background:linear-gradient(90deg,transparent,var(--gold),transparent);
- margin:20px auto;
-}
-.cta-body{
- font-size:14px;color:rgba(255,255,255,.5);
- line-height:2;margin-bottom:32px;
-}
-.cta-highlights{
- display:flex;flex-direction:column;gap:10px;
- margin-bottom:36px;text-align:right;
- max-width:320px;margin-left:auto;margin-right:auto;
-}
-.cta-item{
- display:flex;align-items:center;gap:12px;
- font-size:13px;color:rgba(255,255,255,.7);
-}
-.cta-item-dot{
- width:6px;height:6px;
- background:var(--gold);border-radius:50%;flex-shrink:0;
-}
-.cta-btn{
- display:inline-flex;align-items:center;gap:10px;
- background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--gold));
- background-size:200% 200%;
- color:#000;border:none;border-radius:14px;
- padding:16px 36px;font-family:'Cairo',sans-serif;
- font-size:15px;font-weight:900;cursor:pointer;
- transition:all .3s;text-decoration:none;
- letter-spacing:.5px;
-}
-.cta-btn:hover{
- background-position:right center;
- transform:translateY(-3px);
- box-shadow:0 12px 40px rgba(201,168,76,.5);
-}
-.cta-btn-icon{font-size:18px;}
-.cta-note{
- margin-top:16px;font-size:11px;
- color:rgba(255,255,255,.25);letter-spacing:1px;
-}
+.modal-close:hover { color: var(--text); }
+.modal-name { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
+.modal-name-en { font-size: 0.75rem; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
+.modal-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
+.modal-cell { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; text-align: center; }
+.modal-val { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; line-height: 1; }
+.modal-lbl { font-size: 8px; font-weight: 700; color: var(--muted); margin-top: 3px; text-transform: uppercase; }
 
-/* FOOTER */
-.site-footer{
- background:#050505;
- border-top:1px solid rgba(255,255,255,0.04);
- padding:24px;
- display:flex;justify-content:space-between;align-items:center;
- flex-wrap:wrap;gap:12px;
+.modal-calc-input {
+  width: 100%; background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px;
+  font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
+  color: var(--text); outline: none; margin-top: 6px;
+  transition: border-color .2s;
 }
-.footer-brand{
- font-family:'Bebas Neue',sans-serif;
- font-size:18px;letter-spacing:4px;color:var(--gold);opacity:.6;
+.modal-calc-input:focus { border-color: rgba(255,95,31,0.5); }
+.modal-result-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 12px; background: var(--bg3);
+  border-radius: 10px; margin-top: 10px; font-size: 0.82rem; font-weight: 600;
 }
-.footer-source{
- font-size:10px;color:rgba(255,255,255,.2);
- letter-spacing:1px;text-align:center;
-}
-.footer-source a{color:rgba(201,168,76,.4);text-decoration:none;}
-.footer-source a:hover{color:var(--gold);}
-.footer-copy{
- font-size:10px;color:rgba(255,255,255,.2);
- letter-spacing:1px;
-}
-
-/* MODAL / DETAIL */
-.modal-overlay{
- position:fixed;inset:0;z-index:500;
- background:rgba(0,0,0,0.85);
- display:flex;align-items:center;justify-content:center;
- padding:20px;opacity:0;pointer-events:none;
- transition:opacity .3s;
-}
-.modal-overlay.open{opacity:1;pointer-events:all;}
-.modal-card{
- background:var(--bg2);
- border:1px solid var(--border);
- border-radius:20px;
- width:100%;max-width:440px;
- overflow:hidden;
- transform:scale(.95) translateY(20px);
- transition:transform .3s;
-}
-.modal-overlay.open .modal-card{transform:scale(1) translateY(0);}
-.modal-top{height:4px;}
-.modal-body{padding:28px;}
-.modal-close{
- float:left;background:none;border:none;
- color:var(--text-muted);cursor:pointer;font-size:18px;
- transition:color .2s;padding:0;
-}
-.modal-close:hover{color:var(--text);}
-.modal-emoji{font-size:44px;margin-bottom:12px;display:block;}
-.modal-name{font-size:22px;font-weight:900;color:var(--text);margin-bottom:4px;}
-.modal-name-en{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
-.modal-per{font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:14px;}
-.modal-macros{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px;}
-.modal-cell{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:12px 8px;text-align:center;}
-.modal-cell::before{content:'';display:block;height:2px;border-radius:1px;margin-bottom:8px;}
-.modal-cell.mk::before{background:var(--gold);}
-.modal-cell.mp::before{background:var(--prot);}
-.modal-cell.mc::before{background:var(--carb);}
-.modal-cell.mf::before{background:var(--fat);}
-.modal-val{font-family:'Bebas Neue',sans-serif;font-size:22px;line-height:1;}
-.modal-cell.mk .modal-val{color:var(--gold);}
-.modal-cell.mp .modal-val{color:var(--prot);}
-.modal-cell.mc .modal-val{color:var(--carb);}
-.modal-cell.mf .modal-val{color:var(--fat);}
-.modal-lbl{font-size:8px;color:var(--text-muted);letter-spacing:1px;margin-top:3px;}
-
-.modal-calc{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,0.06);}
-.modal-calc-label{font-size:11px;color:var(--text-muted);margin-bottom:8px;letter-spacing:1px;}
-.modal-calc-row{display:flex;gap:8px;}
-.modal-calc-input{
- flex:1;background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.1);
- border-radius:8px;padding:10px 12px;
- font-family:'Cairo',sans-serif;font-size:14px;
- color:var(--text);outline:none;
- transition:border-color .2s;
-}
-.modal-calc-input:focus{border-color:var(--gold);}
-.modal-calc-go{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:8px;
- padding:10px 18px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:900;cursor:pointer;
- white-space:nowrap;transition:all .2s;
-}
-.modal-calc-go:hover{box-shadow:0 4px 16px rgba(201,168,76,.3);}
-.modal-result-row{
- display:flex;justify-content:space-between;
- padding:10px 12px;background:rgba(255,255,255,0.03);
- border-radius:8px;margin-top:10px;
- font-size:12px;
-}
-.modal-result-row.hide{display:none;}
-
-.modal-source{
- font-size:10px;color:rgba(255,255,255,.2);
- margin-top:14px;letter-spacing:.5px;
-}
-
-/* COMPARE BUTTON */
-.food-card-compare{
- position:absolute;top:10px;left:10px;
- background:rgba(201,168,76,0.12);
- border:1px solid rgba(201,168,76,0.25);
- border-radius:6px;padding:3px 8px;
- font-size:9px;color:var(--gold);
- cursor:pointer;transition:all .2s;
- font-family:'Cairo',sans-serif;
- opacity:0;pointer-events:none;
- letter-spacing:.5px;
-}
-.food-card:hover .food-card-compare{opacity:1;pointer-events:all;}
-.food-card-compare.added{
- background:var(--gold-dim);
- border-color:var(--gold);
- opacity:1;pointer-events:all;
-}
-
-/* COMPARE BAR */
-.compare-bar{
- position:fixed;bottom:0;left:0;right:0;z-index:200;
- background:linear-gradient(135deg,#141210,#0e0c0a);
- border-top:1px solid var(--border);
- padding:12px 24px;
- display:flex;align-items:center;gap:16px;flex-wrap:wrap;
- transform:translateY(100%);transition:transform .3s;
-}
-.compare-bar.show{transform:translateY(0);}
-.compare-bar-label{
- font-family:'Bebas Neue',sans-serif;
- font-size:13px;letter-spacing:2px;color:var(--gold);
- flex-shrink:0;
-}
-.compare-items{display:flex;gap:10px;flex:1;flex-wrap:wrap;}
-.compare-chip{
- background:var(--gold-dim);border:1px solid var(--border);
- border-radius:20px;padding:5px 12px;
- font-size:11px;color:var(--text);
- display:flex;align-items:center;gap:8px;
-}
-.compare-chip-remove{
- background:none;border:none;color:#888;
- cursor:pointer;font-size:12px;padding:0;line-height:1;
-}
-.compare-chip-remove:hover{color:var(--text);}
-.compare-btn-go{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:10px;
- padding:9px 20px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:900;cursor:pointer;
- transition:all .2s;white-space:nowrap;flex-shrink:0;
-}
-.compare-btn-go:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);}
-.compare-btn-clear{
- background:none;border:1px solid rgba(255,255,255,0.1);
- color:var(--text-muted);border-radius:10px;
- padding:9px 16px;font-family:'Cairo',sans-serif;
- font-size:11px;cursor:pointer;transition:all .2s;flex-shrink:0;
-}
-.compare-btn-clear:hover{border-color:var(--gold);color:var(--text);}
-
-/* COMPARE MODAL */
-.compare-modal-overlay{
- position:fixed;inset:0;z-index:600;
- background:rgba(0,0,0,0.9);
- display:flex;align-items:center;justify-content:center;
- padding:20px;opacity:0;pointer-events:none;
- transition:opacity .3s;overflow-y:auto;
-}
-.compare-modal-overlay.open{opacity:1;pointer-events:all;}
-.compare-modal-card{
- background:var(--bg2);
- border:1px solid var(--border);
- border-radius:20px;
- width:100%;max-width:700px;
- overflow:hidden;
- transform:scale(.95) translateY(20px);
- transition:transform .3s;
-}
-.compare-modal-overlay.open .compare-modal-card{transform:scale(1) translateY(0);}
-.compare-modal-header{
- padding:24px 28px 0;
- display:flex;justify-content:space-between;align-items:center;
-}
-.compare-modal-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:3px;color:var(--gold);
-}
-.compare-table{width:100%;border-collapse:collapse;margin-top:20px;}
-.compare-table th{
- background:rgba(255,255,255,0.03);
- padding:12px 16px;
- font-family:'Bebas Neue',sans-serif;
- font-size:14px;letter-spacing:2px;
- color:var(--text-muted);text-align:center;
- border-bottom:1px solid rgba(255,255,255,0.07);
-}
-.compare-table th:first-child{text-align:right;}
-.compare-table td{
- padding:12px 16px;font-size:13px;
- border-bottom:1px solid rgba(255,255,255,0.04);
- text-align:center;
-}
-.compare-table td:first-child{text-align:right;color:var(--text-muted);font-size:11px;letter-spacing:.5px;}
-.compare-table tr:hover td{background:rgba(255,255,255,0.02);}
-.compare-table .best-val{color:var(--green);font-weight:900;}
-.compare-modal-body{padding:0 28px 28px;overflow-x:auto;}
-
-/* MEAL CALC */
-.meal-calc-section{
- padding:0 24px 32px;max-width:900px;margin:0 auto;
-}
-.meal-calc-card{
- background:linear-gradient(135deg,#0f0d0b,#0a0a0a);
- border:1px solid var(--border);
- border-radius:20px;padding:28px 32px;
- position:relative;overflow:hidden;
-}
-.meal-calc-card::before{
- content:'';position:absolute;top:0;left:0;right:0;height:2px;
- background:linear-gradient(90deg,transparent,var(--gold-light),transparent);
-}
-.meal-calc-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:3px;
- color:var(--gold);margin-bottom:6px;
- display:flex;align-items:center;gap:10px;
-}
-.meal-calc-sub{font-size:12px;color:var(--text-muted);margin-bottom:20px;}
-.meal-add-row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px;}
-.meal-add-field{flex:1;min-width:160px;}
-.meal-add-field label{display:block;font-size:11px;color:var(--text-muted);letter-spacing:1px;margin-bottom:8px;}
-.meal-add-field select,.meal-add-field input{
- width:100%;background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.1);
- border-radius:10px;padding:12px 14px;
- font-family:'Cairo',sans-serif;font-size:13px;
- color:var(--text);outline:none;transition:border-color .2s;appearance:none;
-}
-.meal-add-field select:focus,.meal-add-field input:focus{border-color:var(--gold);}
-.meal-add-btn{
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;border:none;border-radius:10px;
- padding:12px 22px;font-family:'Cairo',sans-serif;
- font-size:13px;font-weight:900;cursor:pointer;
- transition:all .2s;white-space:nowrap;align-self:flex-end;
-}
-.meal-add-btn:hover{box-shadow:0 4px 20px rgba(201,168,76,.4);transform:translateY(-1px);}
-.meal-items-list{margin-bottom:16px;}
-.meal-item-row{
- display:flex;align-items:center;gap:10px;
- padding:10px 14px;background:rgba(255,255,255,0.03);
- border:1px solid rgba(255,255,255,0.06);
- border-radius:10px;margin-bottom:8px;
- font-size:13px;
-}
-.meal-item-name{flex:1;color:var(--text);}
-.meal-item-macros{
- display:flex;gap:14px;font-size:11px;
- color:var(--text-muted);flex-shrink:0;
-}
-.meal-item-macros span{font-family:'Bebas Neue',sans-serif;font-size:13px;}
-.meal-item-macros .mp{color:var(--prot);}
-.meal-item-macros .mc{color:var(--carb);}
-.meal-item-macros .mf{color:var(--fat);}
-.meal-item-macros .mk{color:var(--gold);}
-.meal-item-remove{
- background:none;border:none;color:#555;
- cursor:pointer;font-size:14px;transition:color .2s;padding:0 4px;
-}
-.meal-item-remove:hover{color:#E87A7A;}
-.meal-total-row{
- display:grid;grid-template-columns:repeat(4,1fr);gap:10px;
- padding-top:16px;border-top:1px solid rgba(255,255,255,0.08);
-}
-.meal-total-cell{
- background:rgba(255,255,255,0.03);
- border:1px solid rgba(255,255,255,0.07);
- border-radius:12px;padding:14px 10px;text-align:center;
-}
-.meal-total-cell::before{content:'';display:block;height:2px;margin-bottom:10px;border-radius:1px;}
-.meal-total-cell.k::before{background:var(--gold);}
-.meal-total-cell.p::before{background:var(--prot);}
-.meal-total-cell.c::before{background:var(--carb);}
-.meal-total-cell.f::before{background:var(--fat);}
-.meal-total-val{font-family:'Bebas Neue',sans-serif;font-size:28px;line-height:1;}
-.meal-total-cell.k .meal-total-val{color:var(--gold);}
-.meal-total-cell.p .meal-total-val{color:var(--prot);}
-.meal-total-cell.c .meal-total-val{color:var(--carb);}
-.meal-total-cell.f .meal-total-val{color:var(--fat);}
-.meal-total-lbl{font-size:9px;color:var(--text-muted);letter-spacing:1px;margin-top:4px;}
-.meal-empty{text-align:center;padding:24px;color:var(--text-muted);font-size:13px;}
-.meal-clear-btn{
- background:none;border:1px solid rgba(255,255,255,0.08);
- color:var(--text-muted);border-radius:8px;
- padding:6px 14px;font-family:'Cairo',sans-serif;
- font-size:11px;cursor:pointer;transition:all .2s;
- margin-top:10px;
-}
-.meal-clear-btn:hover{border-color:var(--gold);color:var(--text);}
-
-/* SHARE BUTTON */
-.food-card-share{
- position:absolute;top:10px;right:10px;
- background:rgba(255,255,255,0.05);
- border:1px solid rgba(255,255,255,0.1);
- border-radius:6px;padding:3px 7px;
- font-size:10px;cursor:pointer;transition:all .2s;
- opacity:0;pointer-events:none;
-}
-.food-card:hover .food-card-share{opacity:1;pointer-events:all;}
-.food-card-share:hover{border-color:var(--gold);background:var(--gold-dim);}
+.modal-result-row.hide { display: none; }
 
 /* TOAST */
-.toast{
- position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
- background:#1a1a1a;border:1px solid var(--border);
- border-radius:10px;padding:10px 20px;
- font-size:12px;color:var(--text);
- z-index:800;opacity:0;transition:all .3s;
- pointer-events:none;white-space:nowrap;
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--bg4); border: 1px solid var(--border);
+  border-radius: 30px; padding: 10px 20px;
+  font-size: 0.82rem; color: var(--fire2); font-weight: 700;
+  z-index: 800; opacity: 0; transition: all .3s;
+  pointer-events: none; white-space: nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
 }
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-@keyframes fadeUp{
- from{opacity:0;transform:translateY(16px);}
- to{opacity:1;transform:translateY(0);}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.food-card{animation:fadeUp .4s ease both;}
-
-/* Stagger for visible cards */
-.food-card:nth-child(1){animation-delay:.05s;}
-.food-card:nth-child(2){animation-delay:.08s;}
-.food-card:nth-child(3){animation-delay:.11s;}
-.food-card:nth-child(4){animation-delay:.14s;}
-.food-card:nth-child(5){animation-delay:.17s;}
-.food-card:nth-child(6){animation-delay:.20s;}
-
-/* RESPONSIVE */
-@media(max-width:600px){
- .hero{padding:32px 16px 24px;}
- .hero-stats{gap:24px;padding:14px 20px;}
- .hero-stat-n{font-size:28px;}
- .calc-card{padding:20px;}
- .grid-section{padding:0 12px 60px;}
- .food-grid{grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;}
- .filters-bar{padding:8px 12px;}
- .nav{padding:10px 14px;}
- .cta-section{padding:60px 16px;}
- .site-footer{justify-content:center;text-align:center;}
-}
-/* WELCOME OVERLAY */
-.welcome-overlay{
- position:fixed;inset:0;z-index:1000;
- background:#0A0A0A;
- display:flex;align-items:center;justify-content:center;
- flex-direction:column;gap:16px;
- animation:wFadeIn .3s ease both;
- pointer-events:none;
-}
-.welcome-overlay.hide{animation:wFadeOut .5s ease both;}
-@keyframes wFadeIn{from{opacity:0;}to{opacity:1;}}
-@keyframes wFadeOut{from{opacity:1;}to{opacity:0;}}
-.welcome-box{
- text-align:center;
- animation:wPop .5s cubic-bezier(.34,1.56,.64,1) .1s both;
-}
-@keyframes wPop{
- from{opacity:0;transform:scale(0.85) translateY(12px);}
- to{opacity:1;transform:scale(1) translateY(0);}
-}
-.welcome-emoji{font-size:56px;display:block;margin-bottom:14px;}
-.welcome-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:2rem;letter-spacing:4px;
- color:var(--gold);margin-bottom:6px;
-}
-.welcome-sub{font-size:0.82rem;color:var(--text-muted);letter-spacing:1px;}
-.welcome-line{
- width:0;height:3px;border-radius:2px;
- background:linear-gradient(90deg,transparent,var(--gold),transparent);
- margin:14px auto 0;
- animation:wLine .6s ease .3s both;
-}
-@keyframes wLine{from{width:0;opacity:0;}to{width:80px;opacity:1;}}
-
-/* PWA TOAST */
-.pwa-toast{
- position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
- z-index:900;background:#1a1a1a;
- border:1px solid rgba(201,168,76,0.3);
- border-radius:40px;padding:10px 22px;
- font-size:0.82rem;font-weight:700;color:var(--gold);
- white-space:nowrap;opacity:0;transition:opacity .3s;pointer-events:none;
-}
-.pwa-toast.show{opacity:1;}
-
-/* PWA INSTALL BANNER */
-.pwa-banner{
- position:fixed;bottom:20px;left:16px;right:16px;z-index:800;
- background:#111;border:1px solid rgba(201,168,76,0.25);
- border-radius:18px;padding:14px 18px;
- display:flex;align-items:center;gap:12px;
- box-shadow:0 8px 32px rgba(0,0,0,0.5);
- animation:slideUp .4s cubic-bezier(.34,1.56,.64,1) both;
-}
-@keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.pwa-banner.hidden{display:none;}
-.pwa-icon{font-size:26px;flex-shrink:0;}
-.pwa-text{flex:1;}
-.pwa-title{font-size:0.85rem;font-weight:700;color:var(--text);}
-.pwa-sub{font-size:0.72rem;color:var(--text-muted);margin-top:2px;}
-.pwa-actions{display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0;}
-.btn-pwa-install{
- padding:8px 16px;border-radius:10px;border:none;
- background:linear-gradient(135deg,var(--gold),var(--gold-light));
- color:#000;font-family:'Cairo',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;
-}
-.btn-pwa-dismiss{
- background:none;border:none;color:var(--text-muted);
- font-size:0.75rem;cursor:pointer;font-family:'Cairo',sans-serif;font-weight:600;
-}
-
-/* ADVANCED MACRO FILTERS */
-.adv-filter-toggle{
- display:flex;align-items:center;gap:8px;
- padding:8px 24px;background:rgba(201,168,76,0.04);
- border-bottom:1px solid rgba(255,255,255,0.04);
- cursor:pointer;transition:background .2s;
-}
-.adv-filter-toggle:hover{background:rgba(201,168,76,0.08);}
-.adv-filter-toggle-label{
- font-size:11px;color:var(--text-muted);letter-spacing:1px;
- font-family:'Bebas Neue',sans-serif;
-}
-.adv-filter-toggle-icon{font-size:10px;color:var(--gold);margin-right:auto;transition:transform .2s;}
-.adv-filter-toggle-icon.open{transform:rotate(180deg);}
-.adv-filter-panel{
- display:none;padding:16px 24px;
- background:rgba(255,255,255,0.01);
- border-bottom:1px solid rgba(255,255,255,0.04);
- animation:fadeUp .2s ease;
-}
-.adv-filter-panel.show{display:block;}
-.adv-filter-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;}
-.adv-filter-item label{
- display:flex;justify-content:space-between;
- font-size:10px;color:var(--text-muted);letter-spacing:.5px;margin-bottom:6px;
-}
-.adv-filter-item label span{color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:12px;}
-.adv-filter-range{
- width:100%;-webkit-appearance:none;appearance:none;
- height:4px;border-radius:2px;outline:none;cursor:pointer;
- background:linear-gradient(to right,var(--gold) 0%,var(--gold) var(--pct,50%),rgba(255,255,255,0.1) var(--pct,50%));
-}
-.adv-filter-range::-webkit-slider-thumb{
- -webkit-appearance:none;width:14px;height:14px;
- border-radius:50%;background:var(--gold);cursor:pointer;
-}
-.adv-filter-reset{
- background:none;border:1px solid rgba(255,255,255,0.1);
- color:var(--text-muted);border-radius:8px;
- padding:5px 14px;font-family:'Cairo',sans-serif;
- font-size:11px;cursor:pointer;transition:all .2s;margin-top:8px;
-}
-.adv-filter-reset:hover{border-color:var(--gold);color:var(--text);}
-
-/* MEAL HISTORY */
-.meal-action-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center;}
-.meal-save-btn{
- background:linear-gradient(135deg,var(--green),#5aaa5a);
- color:#000;border:none;border-radius:8px;
- padding:8px 16px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:900;cursor:pointer;transition:all .2s;
-}
-.meal-save-btn:hover{box-shadow:0 4px 16px rgba(122,200,122,.4);transform:translateY(-1px);}
-.meal-export-btn{
- background:rgba(122,184,232,0.12);border:1px solid rgba(122,184,232,0.3);
- color:var(--carb);border-radius:8px;
- padding:8px 16px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
-}
-.meal-export-btn:hover{background:rgba(122,184,232,0.22);}
-.history-modal-overlay{
- position:fixed;inset:0;z-index:600;
- background:rgba(0,0,0,0.9);
- display:flex;align-items:center;justify-content:center;
- padding:20px;opacity:0;pointer-events:none;
- transition:opacity .3s;overflow-y:auto;
-}
-.history-modal-overlay.open{opacity:1;pointer-events:all;}
-.history-modal-card{
- background:var(--bg2);border:1px solid var(--border);
- border-radius:20px;width:100%;max-width:620px;
- overflow:hidden;
- transform:scale(.95) translateY(20px);transition:transform .3s;
- max-height:80vh;display:flex;flex-direction:column;
-}
-.history-modal-overlay.open .history-modal-card{transform:scale(1) translateY(0);}
-.history-modal-header{
- padding:22px 26px 0;
- display:flex;justify-content:space-between;align-items:center;
- flex-shrink:0;
-}
-.history-modal-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:3px;color:var(--gold);
-}
-.history-modal-body{padding:16px 26px 26px;overflow-y:auto;}
-.history-empty{text-align:center;padding:40px;color:var(--text-muted);font-size:13px;}
-.history-item{
- background:rgba(255,255,255,0.02);
- border:1px solid rgba(255,255,255,0.06);
- border-radius:12px;padding:14px 16px;margin-bottom:10px;
-}
-.history-item-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
-.history-item-name{font-size:13px;font-weight:700;color:var(--text);}
-.history-item-date{font-size:10px;color:var(--text-muted);}
-.history-item-macros{display:flex;gap:14px;font-size:11px;}
-.history-item-macros span{font-family:'Bebas Neue',sans-serif;font-size:13px;}
-.history-item-delete{
- background:none;border:none;color:#555;cursor:pointer;
- font-size:13px;transition:color .2s;padding:0;
-}
-.history-item-delete:hover{color:#E87A7A;}
-.history-load-btn{
- background:var(--gold-dim);border:1px solid var(--border);
- color:var(--gold);border-radius:6px;
- padding:4px 10px;font-family:'Cairo',sans-serif;
- font-size:10px;cursor:pointer;transition:all .2s;margin-right:8px;
-}
-.history-load-btn:hover{background:rgba(201,168,76,0.25);}
-
-/* CUSTOM FOOD MODAL */
-.custom-food-btn{
- background:rgba(212,169,122,0.1);border:1px solid rgba(212,169,122,0.25);
- color:#D4A97A;border-radius:8px;
- padding:8px 14px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
- white-space:nowrap;
-}
-.custom-food-btn:hover{background:rgba(212,169,122,0.2);}
-.custom-modal-overlay{
- position:fixed;inset:0;z-index:700;
- background:rgba(0,0,0,0.9);
- display:flex;align-items:center;justify-content:center;
- padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;
-}
-.custom-modal-overlay.open{opacity:1;pointer-events:all;}
-.custom-modal-card{
- background:var(--bg2);border:1px solid var(--border);
- border-radius:20px;width:100%;max-width:480px;
- padding:28px;
- transform:scale(.95) translateY(20px);transition:transform .3s;
-}
-.custom-modal-overlay.open .custom-modal-card{transform:scale(1) translateY(0);}
-.custom-modal-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:3px;color:#D4A97A;
- margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;
-}
-.custom-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
-.custom-modal-field label{display:block;font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:6px;}
-.custom-modal-field input{
- width:100%;background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.1);
- border-radius:10px;padding:10px 12px;
- font-family:'Cairo',sans-serif;font-size:13px;
- color:var(--text);outline:none;transition:border-color .2s;
-}
-.custom-modal-field input:focus{border-color:var(--gold);}
-.custom-modal-field.full{grid-column:1/-1;}
-.custom-modal-add{
- width:100%;background:linear-gradient(135deg,#D4A97A,#E8C4A0);
- color:#000;border:none;border-radius:10px;
- padding:12px;font-family:'Cairo',sans-serif;
- font-size:14px;font-weight:900;cursor:pointer;transition:all .2s;
-}
-.custom-modal-add:hover{box-shadow:0 4px 20px rgba(212,169,122,.4);}
-
-/* AI IMAGE ANALYSIS */
-.ai-image-section{
- border-top:1px solid rgba(255,255,255,0.06);
- margin-top:16px;padding-top:16px;
-}
-.ai-image-title{
- font-size:12px;color:var(--text-muted);margin-bottom:10px;
- display:flex;align-items:center;gap:8px;
-}
-.ai-image-title::before{content:'';font-size:14px;}
-.ai-upload-btn{
- background:linear-gradient(135deg,rgba(83,74,183,0.2),rgba(83,74,183,0.1));
- border:1px dashed rgba(83,74,183,0.4);
- color:#9B8EDD;border-radius:10px;
- padding:12px 20px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
- display:flex;align-items:center;gap:8px;width:100%;justify-content:center;
-}
-.ai-upload-btn:hover{border-color:rgba(83,74,183,0.7);background:rgba(83,74,183,0.25);}
-.ai-analyzing{
- display:none;text-align:center;padding:14px;
- font-size:12px;color:var(--text-muted);
-}
-.ai-analyzing.show{display:block;}
-.ai-result-box{
- display:none;background:rgba(83,74,183,0.08);
- border:1px solid rgba(83,74,183,0.25);
- border-radius:10px;padding:14px;margin-top:10px;
-}
-.ai-result-box.show{display:block;}
-.ai-result-title{font-size:11px;color:#9B8EDD;margin-bottom:8px;letter-spacing:.5px;}
-.ai-result-items{display:flex;flex-direction:column;gap:6px;}
-.ai-result-item{
- display:flex;align-items:center;gap:8px;
- padding:8px 10px;background:rgba(255,255,255,0.03);
- border-radius:8px;font-size:12px;
-}
-.ai-result-item-name{flex:1;color:var(--text);}
-.ai-result-item-info{font-size:10px;color:var(--text-muted);}
-.ai-add-all-btn{
- margin-top:10px;width:100%;
- background:rgba(83,74,183,0.2);border:1px solid rgba(83,74,183,0.4);
- color:#9B8EDD;border-radius:8px;
- padding:9px;font-family:'Cairo',sans-serif;
- font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;
-}
-.ai-add-all-btn:hover{background:rgba(83,74,183,0.35);}
-
-/* COMPARE CHARTS */
-.compare-charts-wrap{padding:0 28px 20px;}
-.compare-chart-title{
- font-size:10px;color:var(--text-muted);
- letter-spacing:1px;margin-bottom:10px;
- font-family:'Bebas Neue',sans-serif;
-}
-.compare-chart-canvas{height:160px;margin-bottom:16px;}
-
-/* NAV HISTORY BTN */
-.nav-history-btn{
- background:rgba(255,255,255,0.04);
- border:1px solid rgba(255,255,255,0.09);
- color:var(--text-muted);border-radius:10px;
- padding:9px 14px;font-family:'Cairo',sans-serif;
- font-size:12px;cursor:pointer;transition:all .2s;white-space:nowrap;flex-shrink:0;
- display:flex;align-items:center;gap:6px;
-}
-.nav-history-btn:hover{border-color:var(--green);color:var(--green);}
-
-/* HERO SLIM */
-.hero-slim{
- padding:12px 24px;
- display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
- background:linear-gradient(135deg,rgba(201,168,76,0.05),transparent);
- border-bottom:1px solid var(--border);
-}
-.hero-slim-title{
- font-family:'Bebas Neue',sans-serif;
- font-size:20px;letter-spacing:2px;color:var(--text);
-}
-.hero-slim-title span{color:var(--gold);}
-.hero-slim-stats{
- display:flex;align-items:center;gap:10px;
- font-size:12px;color:var(--text-muted);
-}
-.hero-slim-stats strong{color:var(--gold);}
-.hs-dot{width:3px;height:3px;background:var(--border);border-radius:50%;display:inline-block;}
-
-/* TABS */
-.tab-bar{
- display:flex;
- background:var(--bg2);
- border-bottom:1px solid var(--border);
- padding:0 16px;
- gap:4px;
- position:sticky;top:52px;z-index:90;
-}
-@media(max-width:480px){
- .nav{padding:10px 16px;gap:10px;}
- .nav-brand{font-size:18px;letter-spacing:3px;}
- .meal-calc-card{padding:18px 16px;}
- .meal-calc-title{font-size:16px;}
- .meal-add-row{flex-direction:column;gap:8px;}
- .meal-add-field{min-width:unset;width:100%;}
- .meal-add-btn,.custom-food-btn{width:100%;padding:12px;}
- .calc-card{padding:18px 16px;}
- .tab-btn{padding:12px 14px;font-size:12px;}
- .modal-card{border-radius:16px;}
- .modal-body{padding:20px 16px;}
-}
-.tab-btn{
- background:none;border:none;
- padding:14px 20px;
- font-family:'Cairo',sans-serif;font-size:13px;font-weight:600;
- color:var(--text-muted);cursor:pointer;
- border-bottom:2px solid transparent;
- transition:all .2s;white-space:nowrap;
-}
-.tab-btn:hover{color:var(--text);}
-.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);}
-.tab-panel{display:none;}
-.tab-panel.active{display:block;}
-
-/* Remove bottom padding from grid since compare bar is fixed */
-.grid-section{padding:0 24px 24px;}
+.food-card { animation: fadeUp .35s ease both; }
 </style>
 </head>
 <body>
-
-<!-- WELCOME OVERLAY -->
-<div class="welcome-overlay" id="welcome-overlay">
- <div class="welcome-box">
- <span class="welcome-emoji"></span>
- <div class="welcome-title">Coach Anis</div>
- <div class="welcome-sub">قاعدة بيانات السعرات الحرارية</div>
- <div class="welcome-line"></div>
- </div>
-</div>
-
-<!-- PWA INSTALL BANNER -->
-<div class="pwa-banner hidden" id="pwa-banner">
- <div class="pwa-icon"></div>
- <div class="pwa-text">
- <div class="pwa-title">ثبّت التطبيق على هاتفك</div>
- <div class="pwa-sub">يعمل بدون إنترنت · أسرع · مثل تطبيق حقيقي</div>
- </div>
- <div class="pwa-actions">
- <button class="btn-pwa-install" id="btn-pwa-install">تثبيت</button>
- <button class="btn-pwa-dismiss" id="btn-pwa-dismiss">لاحقاً</button>
- </div>
-</div>
-
-<!-- PWA TOAST -->
-<div class="pwa-toast" id="pwa-toast"></div>
 
 <!-- NAVBAR -->
 <nav class="nav">
  <div class="nav-brand">
  COACH ANIS
- <span>حاسبة السعرات الحرارية</span>
+ <span>قاعدة بيانات السعرات</span>
+ </div>
+ <div class="nav-search">
+ <span class="nav-search-icon">🔍</span>
+ <input type="text" id="searchInput" placeholder="ابحث عن مكوّن..." oninput="handleSearch(this.value)">
+ <button class="nav-search-clear" id="searchClear" onclick="clearSearch()">✕</button>
  </div>
 </nav>
 
-<section class="calc-section" id="calcSection">
+<!-- FILTERS -->
+<div class="filters-bar" id="filtersBar">
+ <button class="filter-btn on" data-cat="all" onclick="setFilter(this)">الكل</button>
+ <button class="filter-btn" data-cat="protein" onclick="setFilter(this)">🥩 بروتينات</button>
+ <button class="filter-btn" data-cat="grain" onclick="setFilter(this)">🌾 حبوب وكارب</button>
+ <button class="filter-btn" data-cat="fruit" onclick="setFilter(this)">🍎 فواكه</button>
+ <button class="filter-btn" data-cat="veg" onclick="setFilter(this)">🥦 خضروات</button>
+ <button class="filter-btn" data-cat="dairy" onclick="setFilter(this)">🧀 ألبان</button>
+ <button class="filter-btn" data-cat="nut" onclick="setFilter(this)">🥜 مكسرات</button>
+ <button class="filter-btn" data-cat="fat" onclick="setFilter(this)">🫒 دهون</button>
+ <span class="filters-count" id="filterCount">0 مكوّن</span>
+</div>
+
+<!-- CALCULATOR -->
+<section class="calc-section">
  <div class="calc-card">
- <div class="calc-title">حاسبة السعرات الحرارية</div>
+ <div class="calc-title">⚡ حاسبة سريعة للكميات</div>
  <div class="calc-row">
  <div class="calc-field">
  <label>اختر المكوّن</label>
  <select id="calcSelect"><option value="">— اختر مكوّناً —</option></select>
  </div>
- <div class="calc-field" style="max-width:130px">
- <label>الكمية (بالجرام)</label>
- <input type="number" id="calcGrams" placeholder="مثال: 150" min="1" max="2000" oninput="calcResult()">
+ <div class="calc-field" style="max-width:110px">
+ <label>الكمية (g)</label>
+ <input type="number" id="calcGrams" placeholder="100" min="1" max="2000" oninput="calcResult()">
  </div>
  </div>
  <div class="calc-result" id="calcResult">
@@ -1220,383 +418,87 @@ body{
  </div>
 </section>
 
-<section class="calc-section" id="manualCalcSection">
- <div class="calc-card">
- <div class="calc-title">حاسبة يدوية (لمكوّن غير موجود في القائمة)</div>
- <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px;">النتيجة تعتمد على القيمة المرجعية التي أدخلتها وليست بالضرورة معتمدة من قاعدة البيانات.</div>
- <div class="calc-row">
- <div class="calc-field">
- <label>السعرات لكل 100g (المرجع)</label>
- <input type="number" id="manualRef" placeholder="مثال: 300" min="0" oninput="manualCalc()">
- </div>
- <div class="calc-field" style="max-width:130px">
- <label>الكمية عندك (بالجرام)</label>
- <input type="number" id="manualGrams" placeholder="مثال: 38" min="0" oninput="manualCalc()">
- </div>
- </div>
- <div class="calc-result" id="manualResult">
- <div class="calc-result-grid" style="grid-template-columns:1fr;">
- <div class="calc-res-cell k"><div class="calc-res-val" id="manualKcal">—</div><div class="calc-res-lbl">KCAL</div></div>
- </div>
- </div>
+<!-- GRID SECTION -->
+<section class="grid-section" id="gridSection">
+ <div class="empty-state" id="emptyState">
+ <div>🔍</div>
+ <div>لا توجد نتائج مطابقة لـ "<span id="emptyTerm"></span>"</div>
  </div>
 </section>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modal" onclick="closeModal(event)">
  <div class="modal-card">
- <div class="modal-top" id="modalAccent"></div>
  <div class="modal-body">
- <button class="modal-close" onclick="closeModal()"></button>
- <span class="modal-emoji" id="mEmoji"></span>
+ <button class="modal-close" onclick="closeModal()">✕</button>
  <div class="modal-name" id="mName"></div>
  <div class="modal-name-en" id="mNameEn"></div>
- <div class="modal-per">القيم الغذائية لكل 100g</div>
+ <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">القيم الغذائية لكل 100 جرام</div>
  <div class="modal-macros">
- <div class="modal-cell mk"><div class="modal-val" id="mKcal"></div><div class="modal-lbl">KCAL</div></div>
- <div class="modal-cell mp"><div class="modal-val" id="mProt"></div><div class="modal-lbl">بروتين</div></div>
- <div class="modal-cell mc"><div class="modal-val" id="mCarb"></div><div class="modal-lbl">كارب</div></div>
- <div class="modal-cell mf"><div class="modal-val" id="mFat"></div><div class="modal-lbl">دهون</div></div>
+ <div class="modal-cell"><div class="modal-val" id="mKcal" style="color:var(--fire2)"></div><div class="modal-lbl">KCAL</div></div>
+ <div class="modal-cell"><div class="modal-val" id="mProt" style="color:var(--gold)"></div><div class="modal-lbl">بروتين</div></div>
+ <div class="modal-cell"><div class="modal-val" id="mCarb" style="color:var(--teal2)"></div><div class="modal-lbl">كارب</div></div>
+ <div class="modal-cell"><div class="modal-val" id="mFat" style="color:var(--blue)"></div><div class="modal-lbl">دهون</div></div>
  </div>
- <div class="modal-calc">
- <div class="modal-calc-label">احسب حسب الكمية الخاصة بك</div>
- <div class="modal-calc-row">
- <input type="number" class="modal-calc-input" id="modalGrams" placeholder="أدخل الكمية بالجرام..." min="1">
- <button class="modal-calc-go" onclick="modalCalc()">احسب</button>
- </div>
+ <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">حساب الكمية الخاصة بك:</div>
+ <input type="number" class="modal-calc-input" id="modalGrams" placeholder="أدخل الكمية بالجرام..." oninput="modalCalc()">
  <div class="modal-result-row hide" id="modalResultRow">
  <span id="modalResText"></span>
- <span id="modalResKcal" style="color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px;"></span>
+ <span id="modalResKcal" style="color:var(--fire2);font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;"></span>
  </div>
- </div>
- <div class="modal-source" id="mSource"></div>
  </div>
  </div>
 </div>
 
-<!-- COMPARE BAR -->
-<div class="compare-bar" id="compareBar">
- <div class="compare-bar-label"> مقارنة:</div>
- <div class="compare-items" id="compareItems"></div>
- <button class="compare-btn-go" onclick="openCompareModal()">قارن الآن</button>
- <button class="compare-btn-clear" onclick="clearCompare()">مسح</button>
-</div>
-
-<!-- COMPARE MODAL -->
-<div class="compare-modal-overlay" id="compareModal" onclick="closeCompareModal(event)">
- <div class="compare-modal-card">
- <div class="compare-modal-header">
- <div class="compare-modal-title"> مقارنة المكونات</div>
- <button class="modal-close" onclick="closeCompareModal({target:document.getElementById('compareModal')})"></button>
- </div>
- <div class="compare-modal-body">
- <table class="compare-table" id="compareTable"></table>
- </div>
- <div class="compare-charts-wrap" id="compareChartsWrap">
- <div class="compare-chart-title">مقارنة مرئية — رسم بياني</div>
- <canvas id="compareChart" class="compare-chart-canvas"></canvas>
- </div>
- </div>
-</div>
-
-
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<!-- FOOTER -->
-<footer class="site-footer">
- <div class="footer-brand">COACH ANIS</div>
- <div class="footer-source">
- <a href="https://fdc.nal.usda.gov" target="_blank">USDA FoodData Central</a> ·
- مصادر علمية أخرى عند الحاجة · جميع القيم لكل 100g حسب الـbasis المحدد
- </div>
- <div class="footer-copy">© 2025 Coach Anis</div>
-</footer>
-
-<!-- 
- JAVASCRIPT — DATA + LOGIC
- -->
 <script>
-/*
- DATA SOURCE: USDA FoodData Central (fdc.nal.usda.gov)
- All values per 100g of raw/uncooked food unless noted.
- Cooked items are explicitly labeled.
- Last verified: 2025
-*/
-
 const FOODS = [
- {id:'f01',cat:'fruit',emoji:'',name:'موز',nameEn:'Banana',basis:'raw',kcal:89.0,prot:1.1,carb:22.8,fat:0.3,note:'مصدر ممتاز للبوتاسيوم وفيتامين B6',sourceType:'USDA FoodData Central',sourceId:'173944',source:'USDA FoodData Central FDC #173944'},
- {id:'f02',cat:'fruit',emoji:'',name:'تفاحة',nameEn:'Apple',basis:'raw',kcal:52.0,prot:0.3,carb:13.8,fat:0.2,note:'غني بمضادات الأكسدة والألياف القابلة للذوبان',sourceType:'USDA FoodData Central',sourceId:'171688',source:'USDA FoodData Central FDC #171688'},
- {id:'f03',cat:'fruit',emoji:'',name:'برتقال',nameEn:'Orange',basis:'raw',kcal:47.0,prot:0.9,carb:11.8,fat:0.1,note:'100g تغطي 89% من الاحتياج اليومي لفيتامين C',sourceType:'USDA FoodData Central',sourceId:'169097',source:'USDA FoodData Central FDC #169097'},
- {id:'f04',cat:'fruit',emoji:'',name:'ليمون',nameEn:'Lemon',basis:'raw',kcal:29.0,prot:1.1,carb:9.3,fat:0.3,note:'مضادات أكسدة قوية + فيتامين C عالي',sourceType:'USDA FoodData Central',sourceId:'167746',source:'USDA FoodData Central FDC #167746'},
- {id:'f05',cat:'fruit',emoji:'',name:'عنب',nameEn:'Grapes',basis:'raw',kcal:69.0,prot:0.7,carb:18.1,fat:0.2,note:'يحتوي على الريسفيراترول مضاد التأكسد',sourceType:'USDA FoodData Central',sourceId:'174683',source:'USDA FoodData Central FDC #174683'},
- {id:'f06',cat:'fruit',emoji:'',name:'فراولة',nameEn:'Strawberry',basis:'raw',kcal:32.0,prot:0.7,carb:7.7,fat:0.3,note:'منخفض السعرات جداً مع فيتامين C عالٍ',sourceType:'USDA FoodData Central',sourceId:'167762',source:'USDA FoodData Central FDC #167762'},
- {id:'f07',cat:'fruit',emoji:'',name:'مشمش',nameEn:'Apricot',basis:'raw',kcal:48.0,prot:1.4,carb:11.1,fat:0.4,note:'غني بالبيتا كاروتين وفيتامين A',sourceType:'USDA FoodData Central',sourceId:'171697',source:'USDA FoodData Central FDC #171697'},
- {id:'f08',cat:'fruit',emoji:'',name:'بطيخ',nameEn:'Watermelon',basis:'raw',kcal:30.0,prot:0.6,carb:7.6,fat:0.2,note:'فاكهة طازجة أو مجففة حسب التسمية.',sourceType:'USDA FoodData Central',sourceId:'167765',source:'USDA FoodData Central FDC #167765'},
- {id:'f09',cat:'fruit',emoji:'',name:'تمر',nameEn:'Dates',basis:'raw',kcal:277.0,prot:1.8,carb:74.9,fat:0.2,note:'مصدر كربوهيدرات سريعة وكثافة طاقة عالية.',sourceType:'USDA FoodData Central',sourceId:'168191',source:'USDA FoodData Central FDC #168191'},
- {id:'f10',cat:'fruit',emoji:'',name:'كمثرى',nameEn:'Pear',basis:'raw',kcal:57.0,prot:0.4,carb:15.2,fat:0.1,note:'غني بالألياف والفلافونويد',sourceType:'USDA FoodData Central',sourceId:'169118',source:'USDA FoodData Central FDC #169118'},
- {id:'f11',cat:'fruit',emoji:'',name:'رمان',nameEn:'Pomegranate',basis:'raw',kcal:83.0,prot:1.7,carb:18.7,fat:1.2,note:'من أعلى الفواكه بمضادات الأكسدة',sourceType:'USDA FoodData Central',sourceId:'169134',source:'USDA FoodData Central FDC #169134'},
- {id:'f12',cat:'fruit',emoji:'',name:'تين طازج',nameEn:'Fig (fresh)',basis:'raw',kcal:74.0,prot:0.8,carb:19.2,fat:0.3,note:'مصدر جيد للكالسيوم والبوتاسيوم',sourceType:'USDA FoodData Central',sourceId:'169910',source:'USDA FoodData Central FDC #169910'},
- {id:'v01',cat:'veg',emoji:'',name:'طماطم',nameEn:'Tomato',basis:'raw',kcal:18.0,prot:0.9,carb:3.9,fat:0.2,note:'مصدر الليكوبين — مضاد أكسدة يقلل الالتهابات',sourceType:'USDA FoodData Central',sourceId:'170457',source:'USDA FoodData Central FDC #170457'},
- {id:'v02',cat:'veg',emoji:'',name:'بصل',nameEn:'Onion',basis:'raw',kcal:40.0,prot:1.1,carb:9.3,fat:0.1,note:'يحتوي الكيرسيتين المضاد للالتهابات',sourceType:'USDA FoodData Central',sourceId:'170000',source:'USDA FoodData Central FDC #170000'},
- {id:'v03',cat:'veg',emoji:'',name:'ثوم',nameEn:'Garlic',basis:'raw',kcal:149.0,prot:6.4,carb:33.1,fat:0.5,note:'يحتوي على مركبات كبريتية مثل الأليسين.',sourceType:'USDA FoodData Central',sourceId:'169230',source:'USDA FoodData Central FDC #169230'},
- {id:'v04',cat:'veg',emoji:'',name:'جزرة',nameEn:'Carrot',basis:'raw',kcal:41.0,prot:0.9,carb:9.6,fat:0.2,note:'المصدر الأغنى بالبيتا كاروتين (فيتامين A)',sourceType:'USDA FoodData Central',sourceId:'170393',source:'USDA FoodData Central FDC #170393'},
- {id:'v05',cat:'veg',emoji:'',name:'بطاطا',nameEn:'Potato',basis:'raw',kcal:77.0,prot:2.0,carb:17.5,fat:0.1,note:'كارب معقد + بوتاسيوم — ممتاز بعد التمرين',sourceType:'USDA FoodData Central',sourceId:'170026',source:'USDA FoodData Central FDC #170026'},
- {id:'v06',cat:'veg',emoji:'',name:'فلفل أحمر',nameEn:'Red Bell Pepper',basis:'raw',kcal:31.0,prot:1.0,carb:6.0,fat:0.3,note:'أغنى من البرتقال بفيتامين C — 128mg/100g',sourceType:'USDA FoodData Central',sourceId:'170108',source:'USDA FoodData Central FDC #170108'},
- {id:'v07',cat:'veg',emoji:'',name:'فلفل أخضر',nameEn:'Green Bell Pepper',basis:'raw',kcal:20.0,prot:0.9,carb:4.6,fat:0.2,note:'منخفض السعرات جداً — مضادات أكسدة قوية',sourceType:'USDA FoodData Central',sourceId:'170109',source:'USDA FoodData Central FDC #170109'},
- {id:'v08',cat:'veg',emoji:'',name:'خيار',nameEn:'Cucumber',basis:'raw',kcal:16.0,prot:0.7,carb:3.6,fat:0.1,note:'نسبة ماء 96% — مرطّب ومنخفض السعرات',sourceType:'USDA FoodData Central',sourceId:'168409',source:'USDA FoodData Central FDC #168409'},
- {id:'v09',cat:'veg',emoji:'',name:'بروكلي',nameEn:'Broccoli',basis:'raw',kcal:34.0,prot:2.8,carb:6.6,fat:0.4,note:'يحتوي على glucosinolates ومركبات bioactive مثل سلائف الـsulforaphane.',sourceType:'USDA FoodData Central',sourceId:'170379',source:'USDA FoodData Central FDC #170379'},
- {id:'v10',cat:'veg',emoji:'',name:'سبانخ',nameEn:'Spinach',basis:'raw',kcal:23.0,prot:2.9,carb:3.6,fat:0.4,note:'مصدر جيد للحديد والمغنيسيوم وفيتامين K.',sourceType:'USDA FoodData Central',sourceId:'168462',source:'USDA FoodData Central FDC #168462'},
- {id:'v11',cat:'veg',emoji:'',name:'بطاطا حلوة',nameEn:'Sweet Potato',basis:'raw',kcal:86.0,prot:1.6,carb:20.1,fat:0.1,note:'مؤشر جلايسيمي أقل من البطاطا العادية',sourceType:'USDA FoodData Central',sourceId:'168482',source:'USDA FoodData Central FDC #168482'},
- {id:'v12',cat:'veg',emoji:'',name:'كوسة',nameEn:'Zucchini',basis:'raw',kcal:17.0,prot:1.2,carb:3.1,fat:0.3,note:'منخفض السعرات — مصدر جيد لفيتامين C وB6',sourceType:'USDA FoodData Central',sourceId:'169291',source:'USDA FoodData Central FDC #169291'},
- {id:'v13',cat:'veg',emoji:'',name:'باذنجان',nameEn:'Eggplant',basis:'raw',kcal:25.0,prot:1.0,carb:5.9,fat:0.2,note:'مصدر بروتين عالي الجودة البيولوجية.',sourceType:'USDA FoodData Central',sourceId:'169228',source:'USDA FoodData Central FDC #169228'},
- {id:'v14',cat:'veg',emoji:'',name:'خس',nameEn:'Lettuce',basis:'raw',kcal:15.0,prot:1.4,carb:2.9,fat:0.2,note:'منخفض جداً — مصدر فيتامين K وحمض الفوليك',sourceType:'USDA FoodData Central',sourceId:'169247',source:'USDA FoodData Central FDC #169247'},
- {id:'v15',cat:'veg',emoji:'',name:'ملفوف',nameEn:'Cabbage',basis:'raw',kcal:25.0,prot:1.3,carb:5.8,fat:0.1,note:'غني بفيتامين K وC مع سعرات منخفضة جداً',sourceType:'USDA FoodData Central',sourceId:'169975',source:'USDA FoodData Central FDC #169975'},
- {id:'p01',cat:'protein',emoji:'',name:'صدر دجاج (نيء)',nameEn:'Chicken Breast (raw)',basis:'raw',kcal:120,prot:22.5,carb:0,fat:2.6,note:'لحم أبيض قليل الدهن — قيم نيئة.',sourceType:'USDA FoodData Central',sourceId:'171232',source:'USDA FoodData Central FDC #171232'},
- {id:'p02',cat:'protein',emoji:'',name:'أفخاذ الدجاج (نيء)',nameEn:'Chicken Thighs (raw)',basis:'raw',kcal:161,prot:19.7,carb:0,fat:9.0,note:'أفخاذ نيئة — دهون أعلى من الصدر.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical SR values'},
- {id:'p03',cat:'protein',emoji:'',name:'بيض كامل',nameEn:'Whole Egg',basis:'raw',kcal:155.0,prot:13.0,carb:1.1,fat:11.0,note:'مصدر بروتين عالي الجودة البيولوجية.',sourceType:'USDA FoodData Central',sourceId:'171287',source:'USDA FoodData Central FDC #171287'},
- {id:'p04',cat:'protein',emoji:'',name:'بياض بيض',nameEn:'Egg White',basis:'raw',kcal:52.0,prot:11.0,carb:0.7,fat:0.2,note:'مصدر بروتين عالي الجودة البيولوجية.',sourceType:'USDA FoodData Central',sourceId:'172183',source:'USDA FoodData Central FDC #172183'},
- {id:'p05',cat:'protein',emoji:'',name:'تونة في الماء',nameEn:'Tuna (canned in water)',basis:'canned',kcal:116.0,prot:25.5,carb:0.0,fat:1.0,note:'مصدر بروتين.',sourceType:'USDA FoodData Central',sourceId:'171986',source:'USDA FoodData Central FDC #171986'},
- {id:'p06',cat:'protein',emoji:'',name:'سردين (معلب)',nameEn:'Sardines (canned)',basis:'canned',kcal:208.0,prot:24.6,carb:0.0,fat:11.5,note:'أوميغا 3 عالي + كالسيوم ممتاز من العظام',sourceType:'USDA FoodData Central',sourceId:'175139',source:'USDA FoodData Central FDC #175139'},
- {id:'p07',cat:'protein',emoji:'',name:'لحم بقر مفروم (10% دهن، نيء)',nameEn:'Ground Beef (10% fat, raw)',basis:'raw',kcal:176,prot:20.0,carb:0,fat:10.0,note:'لحم مفروم نيء بنسبة دهن تقريبية 10%.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p08',cat:'protein',emoji:'',name:'كبدة الدجاج (نيئة)',nameEn:'Chicken Liver (raw)',basis:'raw',kcal:119,prot:16.9,carb:0.7,fat:4.8,note:'كبدة دجاج نيئة — غنية بفيتامينات B والحديد.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'g01',cat:'grain',emoji:'',name:'رز أبيض (مطبوخ)',nameEn:'White Rice (cooked)',basis:'cooked',kcal:130.0,prot:2.7,carb:28.2,fat:0.3,note:'مصدر كربوهيدرات.',sourceType:'USDA FoodData Central',sourceId:'168879',source:'USDA FoodData Central FDC #168879'},
- {id:'g02',cat:'grain',emoji:'',name:'رز بني (مطبوخ)',nameEn:'Brown Rice (cooked)',basis:'cooked',kcal:123.0,prot:2.6,carb:25.6,fat:1.0,note:'مؤشر جلايسيمي أقل + ألياف أكثر من الأبيض',sourceType:'USDA FoodData Central',sourceId:'168882',source:'USDA FoodData Central FDC #168882'},
- {id:'g03',cat:'grain',emoji:'',name:'معكرونة (مطبوخة)',nameEn:'Pasta (cooked)',basis:'cooked',kcal:131.0,prot:5.0,carb:25.0,fat:1.1,note:'كارب معقد + بروتين معتدل — وجبة متوازنة',sourceType:'USDA FoodData Central',sourceId:'168936',source:'USDA FoodData Central FDC #168936'},
- {id:'g04',cat:'grain',emoji:'',name:'شوفان (جاف)',nameEn:'Oats (dry)',basis:'dry',kcal:389.0,prot:16.9,carb:66.3,fat:6.9,note:'يحتوي على بيتا-جلوكان.',sourceType:'USDA FoodData Central',sourceId:'173904',source:'USDA FoodData Central FDC #173904'},
- {id:'g05',cat:'grain',emoji:'',name:'خبز أبيض',nameEn:'White Bread',basis:'as_consumed',kcal:265.0,prot:9.0,carb:49.0,fat:3.2,note:'مؤشر جلايسيمي مرتفع نسبيًا.',sourceType:'USDA FoodData Central',sourceId:'172687',source:'USDA FoodData Central FDC #172687'},
- {id:'g06',cat:'grain',emoji:'',name:'خبز بر كامل',nameEn:'Whole Wheat Bread',basis:'as_consumed',kcal:247.0,prot:13.0,carb:41.0,fat:4.2,note:'ألياف أعلى وتأثير أبطأ على سكر الدم',sourceType:'USDA FoodData Central',sourceId:'172684',source:'USDA FoodData Central FDC #172684'},
- {id:'g07',cat:'grain',emoji:'',name:'كسكس (مطبوخ)',nameEn:'Couscous (cooked)',basis:'cooked',kcal:112.0,prot:3.8,carb:23.2,fat:0.2,note:'سريع التحضير وجيد للاسترداد بعد التمرين',sourceType:'USDA FoodData Central',sourceId:'169700',source:'USDA FoodData Central FDC #169700'},
- {id:'g08',cat:'grain',emoji:'',name:'دقيق أبيض',nameEn:'All-Purpose Flour',basis:'dry',kcal:364.0,prot:10.0,carb:76.0,fat:1.0,note:'مرجع للخبز والطهي — مؤشر جلايسيمي مرتفع',sourceType:'USDA FoodData Central',sourceId:'169761',source:'USDA FoodData Central FDC #169761'},
- {id:'g09',cat:'grain',emoji:'',name:'دقيق الشوفان',nameEn:'Oat Flour',basis:'dry',kcal:404.0,prot:14.7,carb:65.7,fat:9.1,note:'أفضل من الدقيق الأبيض — ألياف أعلى بكثير',sourceType:'USDA FoodData Central',sourceId:'173905',source:'USDA FoodData Central FDC #173905'},
- {id:'d01',cat:'dairy',emoji:'',name:'حليب كامل',nameEn:'Whole Milk',basis:'as_consumed',kcal:61.0,prot:3.2,carb:4.8,fat:3.3,note:'كالسيوم + فيتامين D — بروتين كازين بطيء الهضم',sourceType:'USDA FoodData Central',sourceId:'171265',source:'USDA FoodData Central FDC #171265'},
- {id:'d02',cat:'dairy',emoji:'',name:'حليب خالي الدسم',nameEn:'Skim Milk',basis:'as_consumed',kcal:35.0,prot:3.4,carb:5.0,fat:0.2,note:'نفس البروتين والكالسيوم مع سعرات أقل',sourceType:'USDA FoodData Central',sourceId:'171268',source:'USDA FoodData Central FDC #171268'},
- {id:'d03',cat:'dairy',emoji:'',name:'زبادي طبيعي',nameEn:'Plain Yogurt',basis:'as_consumed',kcal:59.0,prot:3.5,carb:5.0,fat:3.3,note:'بروبيوتيك + كالسيوم — يحسن صحة الأمعاء',sourceType:'USDA FoodData Central',sourceId:'170886',source:'USDA FoodData Central FDC #170886'},
- {id:'d04',cat:'dairy',emoji:'',name:'زبادي يوناني 0%',nameEn:'Greek Yogurt 0%',basis:'as_consumed',kcal:59.0,prot:10.0,carb:3.6,fat:0.4,note:'محتوى بروتين أعلى من الزبادي العادي في كثير من المنتجات.',sourceType:'USDA FoodData Central',sourceId:'170903',source:'USDA FoodData Central FDC #170903'},
- {id:'d05',cat:'dairy',emoji:'',name:'جبن كريمي',nameEn:'Cream Cheese',basis:'as_consumed',kcal:342.0,prot:6.0,carb:4.1,fat:34.0,note:'عالي الدهون — استخدمه بكميات صغيرة فقط',sourceType:'USDA FoodData Central',sourceId:'172179',source:'USDA FoodData Central FDC #172179'},
- {id:'d06',cat:'dairy',emoji:'',name:'جبن شيدر',nameEn:'Cheddar Cheese',basis:'as_consumed',kcal:402.0,prot:25.0,carb:1.3,fat:33.0,note:'بروتين + كالسيوم عالٍ — محتوى دهون مرتفع',sourceType:'USDA FoodData Central',sourceId:'173414',source:'USDA FoodData Central FDC #173414'},
- {id:'d07',cat:'dairy',emoji:'',name:'زبدة',nameEn:'Butter',basis:'as_consumed',kcal:717.0,prot:0.9,carb:0.1,fat:81.0,note:'دهون مشبعة — استخدم بحذر وبكميات قليلة',sourceType:'USDA FoodData Central',sourceId:'173410',source:'USDA FoodData Central FDC #173410'},
- {id:'d08',cat:'dairy',emoji:'',name:'جبن قريش',nameEn:'Cottage Cheese',basis:'as_consumed',kcal:98.0,prot:11.1,carb:3.4,fat:4.3,note:'مصدر بروتين كازين.',sourceType:'USDA FoodData Central',sourceId:'173418',source:'USDA FoodData Central FDC #173418'},
- {id:'l01',cat:'legume',emoji:'',name:'عدس أحمر (جاف)',nameEn:'Red Lentils (dry)',basis:'dry',kcal:358,prot:24.6,carb:63.1,fat:1.1,note:'عدس أحمر جاف — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l02',cat:'legume',emoji:'',name:'حمص (جاف)',nameEn:'Chickpeas (dry)',basis:'dry',kcal:378,prot:20.5,carb:63.0,fat:6.0,note:'حمص جاف — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l03',cat:'legume',emoji:'',name:'فول (جاف)',nameEn:'Fava Beans (dry)',basis:'dry',kcal:341,prot:26.1,carb:58.3,fat:1.5,note:'فول جاف — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l04',cat:'legume',emoji:'',name:'فاصوليا بيضاء (جافة)',nameEn:'White Beans (dry)',basis:'dry',kcal:333,prot:23.4,carb:60.3,fat:0.9,note:'فاصوليا بيضاء جافة — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l05',cat:'legume',emoji:'',name:'فول سوداني (كامل)',nameEn:'Peanuts (raw)',basis:'raw',kcal:567.0,prot:25.8,carb:16.1,fat:49.2,note:'دهون غير مشبعة + بروتين عالٍ + فيتامين E',sourceType:'USDA FoodData Central',sourceId:'172430',source:'USDA FoodData Central FDC #172430'},
- {id:'o01',cat:'fat',emoji:'',name:'زيت زيتون',nameEn:'Olive Oil',basis:'pure',kcal:884.0,prot:0.0,carb:0.0,fat:100.0,note:'غني بحمض الأوليك (دهن أحادي غير مشبع).',sourceType:'USDA FoodData Central',sourceId:'171413',source:'USDA FoodData Central FDC #171413'},
- {id:'o02',cat:'fat',emoji:'',name:'زيت عباد الشمس',nameEn:'Sunflower Oil',basis:'pure',kcal:884.0,prot:0.0,carb:0.0,fat:100.0,note:'أوميغا 6 عالٍ — يُستخدم للطبخ على حرارة عالية',sourceType:'USDA FoodData Central',sourceId:'172336',source:'USDA FoodData Central FDC #172336'},
- {id:'o03',cat:'fat',emoji:'',name:'زيت جوز الهند',nameEn:'Coconut Oil',basis:'pure',kcal:862.0,prot:0.0,carb:0.0,fat:100.0,note:'يحتوي على نسبة من الأحماض الدهنية متوسطة السلسلة، لكنه ليس مرادفًا لزيت MCT المركز.',sourceType:'USDA FoodData Central',sourceId:'173573',source:'USDA FoodData Central FDC #173573'},
- {id:'o04',cat:'fat',emoji:'',name:'زبدة الفول السوداني',nameEn:'Peanut Butter',basis:'pure',kcal:588.0,prot:25.0,carb:20.0,fat:50.0,note:'بروتين + دهون صحية — الأكثر اقتصادية',sourceType:'USDA FoodData Central',sourceId:'172470',source:'USDA FoodData Central FDC #172470'},
- {id:'o05',cat:'fat',emoji:'',name:'عسل طبيعي',nameEn:'Honey',basis:'as_consumed',kcal:304.0,prot:0.3,carb:82.4,fat:0.0,note:'سكر طبيعي — بديل صحي للسكر الأبيض بكميات معتدلة',sourceType:'USDA FoodData Central',sourceId:'169640',source:'USDA FoodData Central FDC #169640'},
- {id:'o06',cat:'fat',emoji:'',name:'أفوكادو',nameEn:'Avocado',basis:'as_consumed',kcal:160.0,prot:2.0,carb:8.5,fat:14.7,note:'مصدر للدهون الأحادية غير المشبعة والبوتاسيوم.',sourceType:'USDA FoodData Central',sourceId:'171705',source:'USDA FoodData Central FDC #171705'},
- {id:'n01',cat:'nut',emoji:'',name:'لوز',nameEn:'Almonds',basis:'raw',kcal:579.0,prot:21.2,carb:21.6,fat:49.9,note:'أعلى المكسرات بفيتامين E + مغنيسيوم ممتاز',sourceType:'USDA FoodData Central',sourceId:'170567',source:'USDA FoodData Central FDC #170567'},
- {id:'n02',cat:'nut',emoji:'',name:'جوز',nameEn:'Walnuts',basis:'raw',kcal:654.0,prot:15.2,carb:13.7,fat:65.2,note:'المصدر النباتي الأغنى بأوميغا 3 (ALA)',sourceType:'USDA FoodData Central',sourceId:'170187',source:'USDA FoodData Central FDC #170187'},
- {id:'n03',cat:'nut',emoji:'',name:'بذور السمسم',nameEn:'Sesame Seeds',basis:'raw',kcal:573.0,prot:17.7,carb:23.4,fat:49.7,note:'كالسيوم عالٍ جداً + ليغنان مضاد للأكسدة',sourceType:'USDA FoodData Central',sourceId:'170150',source:'USDA FoodData Central FDC #170150'},
- {id:'n04',cat:'nut',emoji:'',name:'بذور الشيا',nameEn:'Chia Seeds',basis:'raw',kcal:486.0,prot:16.5,carb:42.1,fat:30.7,note:'غني بالألياف وأوميغا-3 النباتي (ALA).',sourceType:'USDA FoodData Central',sourceId:'170554',source:'USDA FoodData Central FDC #170554'},
- {id:'n05',cat:'nut',emoji:'',name:'فول سوداني محمص',nameEn:'Peanuts (roasted)',basis:'cooked',kcal:585.0,prot:23.7,carb:21.5,fat:49.7,note:'نفس القيمة الغذائية مع نكهة أقوى',sourceType:'USDA FoodData Central',sourceId:'172434',source:'USDA FoodData Central FDC #172434'},
- {id:'n06',cat:'nut',emoji:'',name:'بذور الكتان',nameEn:'Flaxseed',basis:'raw',kcal:534.0,prot:18.3,carb:28.9,fat:42.2,note:'مصدر ليغنان وأوميغا-3 النباتي (ALA).',sourceType:'USDA FoodData Central',sourceId:'169414',source:'USDA FoodData Central FDC #169414'},
- {id:'n07',cat:'nut',emoji:'',name:'فستق حلبي',nameEn:'Pistachios',basis:'raw',kcal:560.0,prot:20.2,carb:27.2,fat:45.3,note:'من أقل المكسرات سعراتٍ وأغناها باللوتين والزياكسانثين',sourceType:'USDA FoodData Central',sourceId:'170184',source:'USDA FoodData Central FDC #170184'},
- {id:'n08',cat:'nut',emoji:'',name:'كاجو',nameEn:'Cashews',basis:'raw',kcal:553.0,prot:18.2,carb:30.2,fat:43.8,note:'غني بالمغنيسيوم والنحاس — مناسب لصحة العظام',sourceType:'USDA FoodData Central',sourceId:'170162',source:'USDA FoodData Central FDC #170162'},
- {id:'n09',cat:'nut',emoji:'',name:'بندق',nameEn:'Hazelnuts',basis:'raw',kcal:628.0,prot:15.0,carb:16.7,fat:60.7,note:'أعلى المكسرات بفيتامين E + مضادات الأكسدة',sourceType:'USDA FoodData Central',sourceId:'170581',source:'USDA FoodData Central FDC #170581'},
- {id:'n10',cat:'nut',emoji:'',name:'صنوبر',nameEn:'Pine Nuts',basis:'raw',kcal:673.0,prot:13.7,carb:13.1,fat:68.4,note:'زيت بينولينيك فريد — يحسن الشبع ويثبط الشهية',sourceType:'USDA FoodData Central',sourceId:'170591',source:'USDA FoodData Central FDC #170591'},
- {id:'n11',cat:'nut',emoji:'',name:'بذور عباد الشمس',nameEn:'Sunflower Seeds',basis:'raw',kcal:584.0,prot:20.8,carb:20.0,fat:51.5,note:'فيتامين E وسيلينيوم عاليان — قوة مناعية',sourceType:'USDA FoodData Central',sourceId:'170562',source:'USDA FoodData Central FDC #170562'},
- {id:'n12',cat:'nut',emoji:'',name:'بذور القرع',nameEn:'Pumpkin Seeds',basis:'raw',kcal:559.0,prot:30.2,carb:10.7,fat:49.1,note:'مصدر جيد للزنك والمغنيسيوم.',sourceType:'USDA FoodData Central',sourceId:'170557',source:'USDA FoodData Central FDC #170557'},
- {id:'n13',cat:'nut',emoji:'',name:'ماكاديميا',nameEn:'Macadamia Nuts',basis:'raw',kcal:718.0,prot:7.9,carb:13.8,fat:75.8,note:'أعلى المكسرات بالدهون — غني بأوميغا 7 النادر',sourceType:'USDA FoodData Central',sourceId:'170178',source:'USDA FoodData Central FDC #170178'},
- {id:'f13',cat:'fruit',emoji:'',name:'مانغو',nameEn:'Mango',basis:'raw',kcal:60.0,prot:0.8,carb:15.0,fat:0.4,note:'فيتامين C وA عاليان + إنزيمات هاضمة طبيعية',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'f14',cat:'fruit',emoji:'',name:'خوخ',nameEn:'Peach',basis:'raw',kcal:39.0,prot:0.9,carb:9.5,fat:0.3,note:'منخفض السعرات — غني بالبيتا كاروتين وفيتامين C',sourceType:'USDA FoodData Central',sourceId:'169928',source:'USDA FoodData Central FDC #169928'},
- {id:'f15',cat:'fruit',emoji:'',name:'أناناس',nameEn:'Pineapple',basis:'raw',kcal:50.0,prot:0.5,carb:13.1,fat:0.1,note:'البروميلين — إنزيم مضاد للالتهاب يساعد على الهضم',sourceType:'USDA FoodData Central',sourceId:'169949',source:'USDA FoodData Central FDC #169949'},
- {id:'f16',cat:'fruit',emoji:'',name:'كيوي',nameEn:'Kiwi',basis:'raw',kcal:61.0,prot:1.1,carb:14.7,fat:0.5,note:'أغنى من البرتقال بفيتامين C — يحسن جودة النوم',sourceType:'USDA FoodData Central',sourceId:'168153',source:'USDA FoodData Central FDC #168153'},
- {id:'f17',cat:'fruit',emoji:'',name:'كرز',nameEn:'Cherries',basis:'raw',kcal:63.0,prot:1.1,carb:16.0,fat:0.2,note:'مضادات أكسدة قوية + تقليل التهاب العضلات بعد التمرين',sourceType:'USDA FoodData Central',sourceId:'171719',source:'USDA FoodData Central FDC #171719'},
- {id:'f18',cat:'fruit',emoji:'',name:'شمام',nameEn:'Cantaloupe',basis:'raw',kcal:34.0,prot:0.8,carb:8.2,fat:0.2,note:'بيتا كاروتين عالٍ + نسبة ماء 90% — مرطّب ممتاز',sourceType:'USDA FoodData Central',sourceId:'169092',source:'USDA FoodData Central FDC #169092'},
- {id:'f19',cat:'fruit',emoji:'',name:'برقوق',nameEn:'Plum',basis:'raw',kcal:46.0,prot:0.7,carb:11.4,fat:0.3,note:'يحتوي السوربيتول المحسّن للهضم + فيتامين K',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'f20',cat:'fruit',emoji:'',name:'جوافة',nameEn:'Guava',basis:'raw',kcal:68.0,prot:2.6,carb:14.3,fat:1.0,note:'أعلى فاكهة بفيتامين C — 228mg لكل 100g',sourceType:'USDA FoodData Central',sourceId:'173044',source:'USDA FoodData Central FDC #173044'},
- {id:'f21',cat:'fruit',emoji:'',name:'توت أزرق',nameEn:'Blueberries',basis:'raw',kcal:57.0,prot:0.7,carb:14.5,fat:0.3,note:'فاكهة طازجة أو مجففة حسب التسمية.',sourceType:'USDA FoodData Central',sourceId:'171711',source:'USDA FoodData Central FDC #171711'},
- {id:'f22',cat:'fruit',emoji:'',name:'تين مجفف',nameEn:'Dried Figs',basis:'dried',kcal:249.0,prot:3.3,carb:63.9,fat:0.9,note:'كارب عالٍ + كالسيوم وحديد — طاقة مركّزة',sourceType:'USDA FoodData Central',sourceId:'168000',source:'USDA FoodData Central FDC #168000'},
- {id:'f23',cat:'fruit',emoji:'',name:'يوسفي / ماندارين',nameEn:'Mandarin',basis:'raw',kcal:53.0,prot:0.8,carb:13.3,fat:0.3,note:'فيتامين C + فلافونويد يقلل الكوليسترول',sourceType:'USDA FoodData Central',sourceId:'169105',source:'USDA FoodData Central FDC #169105'},
- {id:'f24',cat:'fruit',emoji:'',name:'توت أرضي / راسبيري',nameEn:'Raspberries',basis:'raw',kcal:52.0,prot:1.2,carb:11.9,fat:0.7,note:'ألياف عالية جداً + مضادات أكسدة ممتازة',sourceType:'USDA FoodData Central',sourceId:'167755',source:'USDA FoodData Central FDC #167755'},
- {id:'v16',cat:'veg',emoji:'',name:'فطر',nameEn:'Mushrooms',basis:'raw',kcal:22.0,prot:3.1,carb:3.3,fat:0.3,note:'بعض أنواع الفطر المعرضة للأشعة فوق البنفسجية يمكن أن تحتوي على vitamin D2.',sourceType:'USDA FoodData Central',sourceId:'169251',source:'USDA FoodData Central FDC #169251'},
- {id:'v17',cat:'veg',emoji:'',name:'ذرة صفراء',nameEn:'Sweet Corn',basis:'raw',kcal:86.0,prot:3.2,carb:19.0,fat:1.2,note:'لوتين وزياكسانثين لصحة العيون + ألياف معتدلة',sourceType:'USDA FoodData Central',sourceId:'170416',source:'USDA FoodData Central FDC #170416'},
- {id:'v18',cat:'veg',emoji:'',name:'بازلاء خضراء',nameEn:'Green Peas',basis:'raw',kcal:81.0,prot:5.4,carb:14.5,fat:0.4,note:'بروتين نباتي معتدل + ألياف + فيتامين K',sourceType:'USDA FoodData Central',sourceId:'170420',source:'USDA FoodData Central FDC #170420'},
- {id:'v19',cat:'veg',emoji:'',name:'قرنبيط',nameEn:'Cauliflower',basis:'raw',kcal:25.0,prot:1.9,carb:5.0,fat:0.3,note:'بديل الكارب المنخفض السعرات — سلفورافان مضاد السرطان',sourceType:'USDA FoodData Central',sourceId:'169986',source:'USDA FoodData Central FDC #169986'},
- {id:'v20',cat:'veg',emoji:'',name:'فاصوليا خضراء',nameEn:'Green Beans',basis:'raw',kcal:31.0,prot:1.8,carb:7.0,fat:0.1,note:'فيتامين K وC عاليان — منخفض السعرات جداً',sourceType:'USDA FoodData Central',sourceId:'169961',source:'USDA FoodData Central FDC #169961'},
- {id:'v21',cat:'veg',emoji:'',name:'كرفس',nameEn:'Celery',basis:'raw',kcal:16.0,prot:0.7,carb:3.0,fat:0.2,note:'منخفض السعرات وغني بالماء.',sourceType:'USDA FoodData Central',sourceId:'169988',source:'USDA FoodData Central FDC #169988'},
- {id:'v22',cat:'veg',emoji:'',name:'شمندر',nameEn:'Beetroot',basis:'raw',kcal:43.0,prot:1.6,carb:9.6,fat:0.2,note:'النيترات تحسن أداء التحمل وتخفض ضغط الدم',sourceType:'USDA FoodData Central',sourceId:'169145',source:'USDA FoodData Central FDC #169145'},
- {id:'v23',cat:'veg',emoji:'',name:'هليون',nameEn:'Asparagus',basis:'raw',kcal:20.0,prot:2.2,carb:3.9,fat:0.1,note:'حمض الفوليك عالٍ + مدرّ طبيعي للبول',sourceType:'USDA FoodData Central',sourceId:'168390',source:'USDA FoodData Central FDC #168390'},
- {id:'v24',cat:'veg',emoji:'',name:'كراث',nameEn:'Leek',basis:'raw',kcal:61.0,prot:1.5,carb:14.2,fat:0.3,note:'فلافونويد قوي + بريبيوتيك يغذي بكتيريا الأمعاء النافعة',sourceType:'USDA FoodData Central',sourceId:'169246',source:'USDA FoodData Central FDC #169246'},
- {id:'v25',cat:'veg',emoji:'',name:'لفت',nameEn:'Turnip',basis:'raw',kcal:28.0,prot:0.9,carb:6.4,fat:0.1,note:'منخفض جداً + جلوكوزينولات مضادة للسرطان',sourceType:'USDA FoodData Central',sourceId:'170465',source:'USDA FoodData Central FDC #170465'},
- {id:'v26',cat:'veg',emoji:'',name:'قرع عسلي',nameEn:'Butternut Squash',basis:'raw',kcal:45.0,prot:1.0,carb:11.7,fat:0.1,note:'بيتا كاروتين وفيتامين A عاليان + بوتاسيوم',sourceType:'USDA FoodData Central',sourceId:'169296',source:'USDA FoodData Central FDC #169296'},
- {id:'v27',cat:'veg',emoji:'',name:'بروكلي رومي (قرنبيط خضر)',nameEn:'Broccolini',basis:'raw',kcal:35.0,prot:3.7,carb:5.8,fat:0.4,note:'يحتوي على glucosinolates ومركبات bioactive مثل سلائف الـsulforaphane.',sourceType:'USDA FoodData Central',sourceId:'170381',source:'USDA FoodData Central FDC #170381'},
- {id:'v28',cat:'veg',emoji:'',name:'زيتون',nameEn:'Olives',basis:'raw',kcal:145.0,prot:1.0,carb:3.8,fat:15.3,note:'دهون أحادية غير مشبعة + مضادات أكسدة فينولية قوية',sourceType:'USDA FoodData Central',sourceId:'169094',source:'USDA FoodData Central FDC #169094'},
- {id:'p09',cat:'protein',emoji:'',name:'سلمون (نيء)',nameEn:'Salmon (raw)',basis:'raw',kcal:208,prot:20.4,carb:0,fat:13.4,note:'سمك سلمون نيء — مصدر أوميغا-3.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p10',cat:'protein',emoji:'',name:'جمبري (نيء)',nameEn:'Shrimp (raw)',basis:'raw',kcal:85,prot:20.1,carb:0.9,fat:0.5,note:'جمبري نيء — بروتين عالٍ وسعرات منخفضة.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p11',cat:'protein',emoji:'',name:'صدر ديك رومي (نيء)',nameEn:'Turkey Breast (raw)',basis:'raw',kcal:114,prot:23.7,carb:0,fat:1.5,note:'صدر ديك رومي نيء — قليل الدهن.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p12',cat:'protein',emoji:'',name:'ستيك بقر (نيء)',nameEn:'Beef Steak (raw)',basis:'raw',kcal:271,prot:25.4,carb:0,fat:18.0,note:'ستيك بقر نيء — القيم تختلف حسب القطعة ونسبة الدهن.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p13',cat:'protein',emoji:'',name:'لحم غنم (نيء)',nameEn:'Lamb (raw)',basis:'raw',kcal:294,prot:16.6,carb:0,fat:24.6,note:'لحم غنم نيء — نسبة الدهن تختلف حسب القطعة.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p14',cat:'protein',emoji:'',name:'ماكريل (نيء)',nameEn:'Mackerel (raw)',basis:'raw',kcal:205,prot:18.6,carb:0,fat:13.9,note:'ماكريل نيء — غني بأوميغا-3.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p15',cat:'protein',emoji:'',name:'تيلابيا (نيء)',nameEn:'Tilapia (raw)',basis:'raw',kcal:96,prot:20.1,carb:0,fat:1.7,note:'تيلابيا نيئة — بروتين مرتفع ودهون منخفضة.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p16',cat:'protein',emoji:'',name:'كبدة بقر (نيئة)',nameEn:'Beef Liver (raw)',basis:'raw',kcal:135,prot:20.4,carb:3.9,fat:3.6,note:'كبدة بقر نيئة — غنية بفيتامين A وB12 والحديد.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p17',cat:'protein',emoji:'',name:'بروتين مصل اللبن (واي)',nameEn:'Whey Protein Powder',basis:'dry',kcal:375.0,prot:78.0,carb:8.0,fat:4.0,note:'مصدر بروتين سريع الامتصاص وغني بالأحماض الأمينية الأساسية.',sourceType:'USDA FoodData Central',sourceId:'173178',source:'USDA FoodData Central FDC #173178'},
- {id:'p18',cat:'protein',emoji:'',name:'سلمون معلب',nameEn:'Canned Salmon',basis:'canned',kcal:153.0,prot:22.7,carb:0.0,fat:6.9,note:'مصدر غني بأوميغا-3 (EPA و DHA).',sourceType:'USDA FoodData Central',sourceId:'175168',source:'USDA FoodData Central FDC #175168'},
- {id:'p19',cat:'protein',emoji:'',name:'لحم جمل (نيء)',nameEn:'Camel Meat (raw)',basis:'raw',kcal:160,prot:20.8,carb:0,fat:8.0,note:'لحم جمل نيء — مصدر تقريبي من بيانات غذائية إقليمية.',sourceType:'FAO/INRAE',sourceId:'',source:'FAO/INRAE approximate'},
- {id:'p20',cat:'protein',emoji:'',name:'لحم أرنب (نيء)',nameEn:'Rabbit (raw)',basis:'raw',kcal:136,prot:20.0,carb:0,fat:5.6,note:'لحم أرنب نيء — قليل الدهن نسبيًا.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'g10',cat:'grain',emoji:'',name:'كينوا (مطبوخة)',nameEn:'Quinoa (cooked)',basis:'cooked',kcal:120.0,prot:4.4,carb:21.3,fat:1.9,note:'يحتوي على جميع الأحماض الأمينية الأساسية ويُعد مصدرًا نباتيًا عالي الجودة نسبيًا للبروتين.',sourceType:'USDA FoodData Central',sourceId:'168917',source:'USDA FoodData Central FDC #168917'},
- {id:'g11',cat:'grain',emoji:'',name:'برغل (مطبوخ)',nameEn:'Bulgur (cooked)',basis:'cooked',kcal:83.0,prot:3.1,carb:18.6,fat:0.2,note:'مصدر كربوهيدرات.',sourceType:'USDA FoodData Central',sourceId:'169718',source:'USDA FoodData Central FDC #169718'},
- {id:'g12',cat:'grain',emoji:'',name:'سميد',nameEn:'Semolina',basis:'as_consumed',kcal:360.0,prot:12.7,carb:72.8,fat:1.1,note:'أساس الكسكس والبسبوسة — كارب معقد بامتصاص معتدل',sourceType:'USDA FoodData Central',sourceId:'169746',source:'USDA FoodData Central FDC #169746'},
- {id:'g13',cat:'grain',emoji:'',name:'شعير (مطبوخ)',nameEn:'Barley (cooked)',basis:'cooked',kcal:123.0,prot:2.3,carb:28.2,fat:0.4,note:'بيتا جلوكان يخفض الكوليسترول ويحسن حساسية الإنسولين',sourceType:'USDA FoodData Central',sourceId:'170283',source:'USDA FoodData Central FDC #170283'},
- {id:'g14',cat:'grain',emoji:'',name:'دقيق الذرة',nameEn:'Cornmeal',basis:'dry',kcal:362.0,prot:8.1,carb:76.9,fat:3.6,note:'خالٍ من الجلوتين + يحتوي اللوتين لصحة العيون',sourceType:'USDA FoodData Central',sourceId:'169721',source:'USDA FoodData Central FDC #169721'},
- {id:'g15',cat:'grain',emoji:'',name:'معكرونة قمح كامل (مطبوخة)',nameEn:'Whole Wheat Pasta (cooked)',basis:'cooked',kcal:124.0,prot:5.3,carb:26.5,fat:0.5,note:'ألياف أعلى ومؤشر جلايسيمي أقل من المعكرونة البيضاء',sourceType:'USDA FoodData Central',sourceId:'168933',source:'USDA FoodData Central FDC #168933'},
- {id:'g16',cat:'grain',emoji:'',name:'أرز بسمتي (مطبوخ)',nameEn:'Basmati Rice (cooked)',basis:'cooked',kcal:121.0,prot:3.5,carb:25.2,fat:0.4,note:'مؤشر جلايسيمي أقل من الأرز العادي — رائحة ونكهة مميزة',sourceType:'USDA FoodData Central',sourceId:'168880',source:'USDA FoodData Central FDC #168880'},
- {id:'g17',cat:'grain',emoji:'',name:'دخن (مطبوخ)',nameEn:'Millet (cooked)',basis:'cooked',kcal:119.0,prot:3.5,carb:23.7,fat:1.0,note:'خالٍ من الجلوتين + مغنيسيوم وفوسفور عاليان',sourceType:'USDA FoodData Central',sourceId:'169702',source:'USDA FoodData Central FDC #169702'},
- {id:'d09',cat:'dairy',emoji:'',name:'موزاريلا',nameEn:'Mozzarella',basis:'as_consumed',kcal:280.0,prot:28.1,carb:2.2,fat:17.1,note:'أعلى الأجبان ببروتين الكازين وأقلها دهوناً — ممتاز للرياضيين',sourceType:'USDA FoodData Central',sourceId:'170851',source:'USDA FoodData Central FDC #170851'},
- {id:'d10',cat:'dairy',emoji:'',name:'جبن فيتا',nameEn:'Feta Cheese',basis:'as_consumed',kcal:264.0,prot:14.2,carb:4.1,fat:21.3,note:'بروبيوتيك طبيعي + كالسيوم عالٍ — منخفض نسبياً بالسعرات',sourceType:'USDA FoodData Central',sourceId:'173420',source:'USDA FoodData Central FDC #173420'},
- {id:'d11',cat:'dairy',emoji:'',name:'لبنة',nameEn:'Labneh',basis:'as_consumed',kcal:180.0,prot:9.0,carb:4.5,fat:14.0,note:'زبادي مصفى — بروتين أعلى وبروبيوتيك + يدوم أطول',sourceType:'FAO/INRAE',sourceId:'',source:'INRAE/FAO'},
- {id:'d12',cat:'dairy',emoji:'',name:'بروتين الشرش (مسحوق)',nameEn:'Skyr / Casein Powder',basis:'dry',kcal:370.0,prot:80.0,carb:3.5,fat:2.5,note:'منتج ألبان.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'d13',cat:'dairy',emoji:'',name:'جبن بارميزان',nameEn:'Parmesan',basis:'as_consumed',kcal:431.0,prot:38.5,carb:3.2,fat:29.0,note:'أعلى الأجبان ببروتين الكازين + كالسيوم هائل',sourceType:'USDA FoodData Central',sourceId:'170848',source:'USDA FoodData Central FDC #170848'},
- {id:'d14',cat:'dairy',emoji:'',name:'حليب كامل مجفف',nameEn:'Whole Milk Powder',basis:'dry',kcal:496.0,prot:26.3,carb:38.4,fat:26.7,note:'مركّز — 3 أضعاف مغذيات الحليب العادي لكل 100g',sourceType:'USDA FoodData Central',sourceId:'171278',source:'USDA FoodData Central FDC #171278'},
- {id:'l06',cat:'legume',emoji:'',name:'عدس أخضر (جاف)',nameEn:'Green Lentils (dry)',basis:'dry',kcal:352,prot:24.6,carb:63.4,fat:1.1,note:'عدس أخضر جاف — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l07',cat:'legume',emoji:'',name:'فاصوليا حمراء (جافة)',nameEn:'Kidney Beans (dry)',basis:'dry',kcal:333,prot:23.6,carb:60.0,fat:0.8,note:'فاصوليا حمراء جافة — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l08',cat:'legume',emoji:'',name:'فاصوليا سوداء (جافة)',nameEn:'Black Beans (dry)',basis:'dry',kcal:341,prot:21.6,carb:62.4,fat:1.4,note:'فاصوليا سوداء جافة — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l09',cat:'legume',emoji:'',name:'فول الصويا (جاف)',nameEn:'Soybeans (dry)',basis:'dry',kcal:446,prot:36.5,carb:30.2,fat:19.9,note:'فول الصويا جاف — يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l10',cat:'legume',emoji:'',name:'توفو',nameEn:'Tofu (firm)',basis:'as_consumed',kcal:76.0,prot:8.1,carb:1.9,fat:4.8,note:'بروتين نباتي كامل + كالسيوم — مرونة عالية في الطهي',sourceType:'USDA FoodData Central',sourceId:'172475',source:'USDA FoodData Central FDC #172475'},
- {id:'l11',cat:'legume',emoji:'',name:'إيداممي (صويا خضراء)',nameEn:'Edamame',basis:'as_consumed',kcal:121.0,prot:11.9,carb:8.9,fat:5.2,note:'أحماض أمينية كاملة + BCAA طبيعي من مصدر نباتي',sourceType:'USDA FoodData Central',sourceId:'168411',source:'USDA FoodData Central FDC #168411'},
- {id:'o07',cat:'fat',emoji:'',name:'طحينية',nameEn:'Tahini',basis:'pure',kcal:595.0,prot:17.0,carb:21.2,fat:53.8,note:'كالسيوم عالٍ + دهون غير مشبعة + مثبط طبيعي للشهية',sourceType:'USDA FoodData Central',sourceId:'168604',source:'USDA FoodData Central FDC #168604'},
- {id:'o08',cat:'fat',emoji:'',name:'سمن بلدي',nameEn:'Ghee (Clarified Butter)',basis:'pure',kcal:876.0,prot:0.3,carb:0.0,fat:99.5,note:'CLA ودهون مشبعة قصيرة السلسلة — أفضل للقلي من الزبدة',sourceType:'USDA FoodData Central',sourceId:'173430',source:'USDA FoodData Central FDC #173430'},
- {id:'o09',cat:'fat',emoji:'',name:'مايونيز',nameEn:'Mayonnaise',basis:'pure',kcal:680.0,prot:1.0,carb:0.6,fat:75.0,note:'عالي السعرات — يُستخدم بكميات صغيرة جداً',sourceType:'USDA FoodData Central',sourceId:'173429',source:'USDA FoodData Central FDC #173429'},
- {id:'o10',cat:'fat',emoji:'',name:'شوكولاتة داكنة 85%',nameEn:'Dark Chocolate 85%',basis:'as_consumed',kcal:598.0,prot:8.1,carb:45.9,fat:42.6,note:'غني بالفلافونولات والمغنيسيوم.',sourceType:'USDA FoodData Central',sourceId:'170273',source:'USDA FoodData Central FDC #170273'},
- {id:'o11',cat:'fat',emoji:'',name:'جوز الهند (لحم طازج)',nameEn:'Coconut Flesh',basis:'raw',kcal:354.0,prot:3.3,carb:15.2,fat:33.5,note:'MCT طبيعي + ألياف عالية — طاقة سريعة وشبع مديد',sourceType:'USDA FoodData Central',sourceId:'169908',source:'USDA FoodData Central FDC #169908'},
- {id:'o12',cat:'fat',emoji:'',name:'زبدة اللوز',nameEn:'Almond Butter',basis:'pure',kcal:614.0,prot:20.8,carb:18.8,fat:55.5,note:'فيتامين E أعلى من زبدة الفول السوداني + مغنيسيوم ممتاز',sourceType:'USDA FoodData Central',sourceId:'168588',source:'USDA FoodData Central FDC #168588'},
- {id:'f25',cat:'fruit',emoji:'',name:'جريب فروت',nameEn:'Grapefruit',basis:'raw',kcal:42.0,prot:0.8,carb:10.7,fat:0.1,note:'غني بفيتامين C ومضادات الأكسدة — منخفض جداً بالسعرات',sourceType:'USDA FoodData Central',sourceId:'169098',source:'USDA FoodData Central FDC #169098'},
- {id:'f26',cat:'fruit',emoji:'',name:'بابايا',nameEn:'Papaya',basis:'raw',kcal:43.0,prot:0.5,carb:10.8,fat:0.3,note:'يحتوي إنزيم الباباين المساعد على هضم البروتين',sourceType:'USDA FoodData Central',sourceId:'169926',source:'USDA FoodData Central FDC #169926'},
- {id:'f28',cat:'fruit',emoji:'',name:'زبيب',nameEn:'Raisins',basis:'raw',kcal:299.0,prot:3.1,carb:79.2,fat:0.5,note:'كارب مركّز وسريع الامتصاص — كمية صغيرة تكفي كوجبة قبل التمرين',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'f29',cat:'fruit',emoji:'',name:'مشمش مجفف',nameEn:'Dried Apricot',basis:'dried',kcal:241.0,prot:3.4,carb:62.6,fat:0.5,note:'مصدر ممتاز للحديد والبوتاسيوم والألياف',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'v29',cat:'veg',emoji:'',name:'فجل',nameEn:'Radish',basis:'raw',kcal:16.0,prot:0.7,carb:3.4,fat:0.1,note:'منخفض جداً بالسعرات — مدر طبيعي ومفيد للهضم',sourceType:'USDA FoodData Central',sourceId:'169279',source:'USDA FoodData Central FDC #169279'},
- {id:'v30',cat:'veg',emoji:'',name:'بامية',nameEn:'Okra',basis:'raw',kcal:33.0,prot:1.9,carb:7.5,fat:0.2,note:'غني بالألياف القابلة للذوبان — يحسّن استجابة سكر الدم',sourceType:'USDA FoodData Central',sourceId:'169244',source:'USDA FoodData Central FDC #169244'},
- {id:'v31',cat:'veg',emoji:'',name:'خرشوف',nameEn:'Artichoke',basis:'raw',kcal:47.0,prot:3.3,carb:10.5,fat:0.3,note:'غني بالإينولين — ألياف بروبيوتيك تدعم البكتيريا النافعة',sourceType:'USDA FoodData Central',sourceId:'169205',source:'USDA FoodData Central FDC #169205'},
- {id:'v32',cat:'veg',emoji:'',name:'بقدونس',nameEn:'Parsley',basis:'raw',kcal:36.0,prot:3.0,carb:6.3,fat:0.8,note:'من أعلى الأعشاب بفيتامين K وفيتامين C',sourceType:'USDA FoodData Central',sourceId:'172229',source:'USDA FoodData Central FDC #172229'},
- {id:'v33',cat:'veg',emoji:'',name:'كزبرة',nameEn:'Cilantro (Coriander Leaves)',basis:'raw',kcal:23.0,prot:2.1,carb:3.7,fat:0.5,note:'غني بمضادات الأكسدة — يُستخدم طازجاً كتوابل ونكهة',sourceType:'USDA FoodData Central',sourceId:'172233',source:'USDA FoodData Central FDC #172233'},
- {id:'v34',cat:'veg',emoji:'',name:'نعناع طازج',nameEn:'Fresh Mint',basis:'raw',kcal:44.0,prot:3.3,carb:8.4,fat:0.7,note:'غني بفيتامين A والحديد — أساسي في أتاي/الشاي بالنعناع',sourceType:'USDA FoodData Central',sourceId:'173475',source:'USDA FoodData Central FDC #173475'},
- {id:'v35',cat:'veg',emoji:'',name:'جرجير',nameEn:'Arugula (Rocket)',basis:'raw',kcal:25.0,prot:2.6,carb:3.6,fat:0.7,note:'من أغنى الخضر الورقية بالنترات الطبيعية وفيتامين K',sourceType:'USDA FoodData Central',sourceId:'168421',source:'USDA FoodData Central FDC #168421'},
- {id:'v36',cat:'veg',emoji:'',name:'سلق (سلق سويسري)',nameEn:'Swiss Chard',basis:'raw',kcal:19.0,prot:1.8,carb:3.7,fat:0.2,note:'غني بالمغنيسيوم وفيتامين K وفيتامين A',sourceType:'USDA FoodData Central',sourceId:'169991',source:'USDA FoodData Central FDC #169991'},
- {id:'v37',cat:'veg',emoji:'',name:'يقطين (قرع)',nameEn:'Pumpkin',basis:'raw',kcal:26.0,prot:1.0,carb:6.5,fat:0.1,note:'غني بالبيتا كاروتين ومنخفض جداً بالسعرات',sourceType:'USDA FoodData Central',sourceId:'169301',source:'USDA FoodData Central FDC #169301'},
- {id:'v38',cat:'veg',emoji:'',name:'فلفل حار (شطة خضراء)',nameEn:'Hot Chili Pepper',basis:'raw',kcal:40.0,prot:1.9,carb:8.8,fat:0.4,note:'الكابسيسين يرفع معدل الحرق مؤقتاً ويحسّن الشبع',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'v39',cat:'veg',emoji:'',name:'طماطم مجففة بالشمس',nameEn:'Sun-Dried Tomato',basis:'dried',kcal:258.0,prot:14.1,carb:55.8,fat:3.0,note:'نكهة ومغذيات مركّزة — استخدم كمية صغيرة لارتفاع سعراتها',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'p21',cat:'protein',emoji:'',name:'سمك القد (نيء)',nameEn:'Cod (raw)',basis:'raw',kcal:82,prot:17.8,carb:0,fat:0.7,note:'سمك قد نيء — بروتين نقي وقليل الدهن.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p22',cat:'protein',emoji:'',name:'سلمون مرقط / تراوت (نيء)',nameEn:'Trout (raw)',basis:'raw',kcal:148,prot:20.8,carb:0,fat:6.6,note:'تراوت نيء — مصدر أوميغا-3.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p23',cat:'protein',emoji:'',name:'حبار / كاليماري (نيء)',nameEn:'Squid (raw)',basis:'raw',kcal:92,prot:15.6,carb:3.1,fat:1.4,note:'حبار نيء.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p24',cat:'protein',emoji:'',name:'أخطبوط (نيء)',nameEn:'Octopus (raw)',basis:'raw',kcal:82,prot:14.9,carb:2.2,fat:1.0,note:'أخطبوط نيء.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p25',cat:'protein',emoji:'',name:'محار (نيء)',nameEn:'Oysters (raw)',basis:'raw',kcal:68.0,prot:7.1,carb:3.9,fat:2.5,note:'من أغنى الأطعمة بالزنك.',sourceType:'USDA FoodData Central',sourceId:'175153',source:'USDA FoodData Central FDC #175153'},
- {id:'p26',cat:'protein',emoji:'',name:'بلح البحر / ميسيل (نيء)',nameEn:'Mussels (raw)',basis:'raw',kcal:86,prot:11.9,carb:3.7,fat:2.2,note:'بلح بحر نيء.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p27',cat:'protein',emoji:'',name:'لحم ديك رومي مفروم (نيء)',nameEn:'Ground Turkey (raw)',basis:'raw',kcal:148,prot:20.0,carb:0,fat:7.7,note:'ديك رومي مفروم نيء.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — typical values'},
- {id:'p28',cat:'protein',emoji:'',name:'بيض السمان',nameEn:'Quail Eggs',basis:'raw',kcal:158.0,prot:13.1,carb:0.4,fat:11.1,note:'مصدر بروتين عالي الجودة البيولوجية.',sourceType:'USDA FoodData Central',sourceId:'172187',source:'USDA FoodData Central FDC #172187'},
- {id:'g18',cat:'grain',emoji:'',name:'فريكة (مطبوخة)',nameEn:'Freekeh (cooked)',basis:'cooked',kcal:116.0,prot:4.5,carb:21.8,fat:1.0,note:'قمح أخضر محمّص — أعلى بروتيناً وألياف من البرغل والأرز',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'g19',cat:'grain',emoji:'',name:'نخالة القمح',nameEn:'Wheat Bran',basis:'as_consumed',kcal:216.0,prot:15.6,carb:64.5,fat:4.3,note:'من أغنى المصادر بالألياف — حوالي 43g لكل 100g',sourceType:'USDA FoodData Central',sourceId:'169728',source:'USDA FoodData Central FDC #169728'},
- {id:'g20',cat:'grain',emoji:'',name:'أرز أسود (مطبوخ)',nameEn:'Black Rice (cooked)',basis:'cooked',kcal:100.0,prot:4.0,carb:21.2,fat:0.3,note:'غني بالأنثوسيانين المضاد للأكسدة — بروتين أعلى من الأرز الأبيض',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'g21',cat:'grain',emoji:'',name:'فشار (منفوخ بالهواء)',nameEn:'Popcorn (air-popped)',basis:'as_consumed',kcal:387.0,prot:12.9,carb:78.0,fat:4.5,note:'وجبة خفيفة كاملة الحبوب — خفيفة الوزن ومنخفضة الكثافة السعرية للحصة',sourceType:'USDA FoodData Central',sourceId:'167959',source:'USDA FoodData Central FDC #167959'},
- {id:'d15',cat:'dairy',emoji:'',name:'حليب اللوز (غير محلى)',nameEn:'Almond Milk (unsweetened)',basis:'as_consumed',kcal:15.0,prot:0.6,carb:0.6,fat:1.1,note:'بديل نباتي منخفض السعرات جداً للحليب البقري',sourceType:'USDA FoodData Central',sourceId:'174832',source:'USDA FoodData Central FDC #174832'},
- {id:'d16',cat:'dairy',emoji:'',name:'حليب الصويا (غير محلى)',nameEn:'Soy Milk (unsweetened)',basis:'as_consumed',kcal:39.0,prot:3.5,carb:1.3,fat:2.1,note:'أعلى بديل نباتي بالبروتين — الأقرب للحليب البقري',sourceType:'USDA FoodData Central',sourceId:'1999630',source:'USDA FoodData Central FDC #1999630'},
- {id:'d17',cat:'dairy',emoji:'',name:'حليب جوز الهند (معلب)',nameEn:'Coconut Milk (canned)',basis:'canned',kcal:230.0,prot:2.3,carb:5.5,fat:23.8,note:'دهون مشبعة عالية — يُستخدم بكميات محدودة في الطبخ',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'d18',cat:'dairy',emoji:'',name:'قشطة / كريمة الطبخ',nameEn:'Heavy Cream',basis:'as_consumed',kcal:340.0,prot:2.1,carb:2.8,fat:36.1,note:'عالية الدهون جداً — للطبخ وليس للاستهلاك اليومي',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'d19',cat:'dairy',emoji:'',name:'جبن الماعز',nameEn:'Goat Cheese (soft)',basis:'as_consumed',kcal:364.0,prot:21.6,carb:0.1,fat:29.8,note:'أسهل هضماً من جبن البقر مع بروتين عالٍ',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'d20',cat:'dairy',emoji:'',name:'لبن رائب (باتيرميلك)',nameEn:'Buttermilk',basis:'as_consumed',kcal:40.0,prot:3.3,carb:4.8,fat:0.9,note:'منخفض الدسم وغني بالبروبيوتيك الطبيعي',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'l12',cat:'legume',emoji:'',name:'لوبيا (جافة)',nameEn:'Black-eyed Peas (dry)',basis:'dry',kcal:336,prot:23.5,carb:60.0,fat:1.3,note:'لوبيا جافة — يُنقع/يُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'l13',cat:'legume',emoji:'',name:'بازلاء صفراء مجزأة (جافة)',nameEn:'Split Peas (dry)',basis:'dry',kcal:341,prot:24.6,carb:60.4,fat:1.2,note:'بازلاء مجزأة جافة — تُطبخ قبل الاستهلاك. القيم لكل 100g جاف.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — dry legume typical values'},
- {id:'n14',cat:'nut',emoji:'',name:'كستناء (محمصة)',nameEn:'Chestnuts (roasted)',basis:'cooked',kcal:239.0,prot:4.5,carb:52.4,fat:1.2,note:'الأقل دهوناً بين المكسرات — غني بالنشا وفيتامين C',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
- {id:'n15',cat:'nut',emoji:'',name:'جوز البرازيل',nameEn:'Brazil Nuts',basis:'raw',kcal:659.0,prot:14.3,carb:11.7,fat:67.1,note:'مصدر غني بالسيلينيوم؛ المحتوى متغير جدًا حسب المصدر.',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'o13',cat:'fat',emoji:'',name:'زيت الكانولا',nameEn:'Canola Oil',basis:'pure',kcal:884.0,prot:0.0,carb:0.0,fat:100.0,note:'نسبة أوميغا 3 أفضل من معظم الزيوت النباتية الأخرى',sourceType:'USDA FoodData Central',sourceId:'171412',source:'USDA FoodData Central FDC #171412'},
- {id:'o14',cat:'fat',emoji:'',name:'زيت السمسم',nameEn:'Sesame Oil',basis:'pure',kcal:884.0,prot:0.0,carb:0.0,fat:100.0,note:'غني بمضادات الأكسدة الطبيعية (السمسامين)',sourceType:'USDA FoodData Central',sourceId:'',source:'USDA FoodData Central — exact matching record not confirmed for this item'},
- {id:'o15',cat:'fat',emoji:'',name:'مارجرين (سمن نباتي)',nameEn:'Margarine',basis:'as_consumed',kcal:717.0,prot:0.2,carb:0.7,fat:80.5,note:'التركيب يختلف حسب المنتج؛ راجع الملصق الغذائي.',sourceType:'authoritative composite',sourceId:'',source:'USDA FoodData Central'},
+ {id:'f01',cat:'fruit',name:'موز',nameEn:'Banana',kcal:89,prot:1.1,carb:22.8,fat:0.3,note:'مصدر ممتاز للبوتاسيوم والطاقة'},
+ {id:'f02',cat:'fruit',name:'تفاحة',nameEn:'Apple',kcal:52,prot:0.3,carb:13.8,fat:0.2,note:'غني بالألياف ومضادات الأكسدة'},
+ {id:'p01',cat:'protein',name:'صدر دجاج (نيء)',nameEn:'Chicken Breast',kcal:120,prot:22.5,carb:0,fat:2.6,note:'بروتين نقي قليل الدهون'},
+ {id:'p03',cat:'protein',name:'بيض كامل',nameEn:'Whole Egg',kcal:155,prot:13,carb:1.1,fat:11,note:'بروتين عالي الجودة البيولوجية'},
+ {id:'p05',cat:'protein',name:'تونة في الماء',nameEn:'Tuna',kcal:116,prot:25.5,carb:0,fat:1,note:'بروتين صافي ممتاز للدايت'},
+ {id:'g01',cat:'grain',name:'رز أبيض (مطبوخ)',nameEn:'White Rice',kcal:130,prot:2.7,carb:28.2,fat:0.3,note:'كارب سريع الهضم ومريح للمعدة'},
+ {id:'g04',cat:'grain',name:'شوفان (جاف)',nameEn:'Oats',kcal:389,prot:16.9,carb:66.3,fat:6.9,note:'ألياف بيتا جلوكان لصحة القلب'},
+ {id:'d03',cat:'dairy',name:'زبادي طبيعي',nameEn:'Yogurt',kcal:59,prot:3.5,carb:5,fat:3.3,note:'بروبيوتيك ممتاز للهضم'},
+ {id:'d04',cat:'dairy',name:'زبادي يوناني 0%',nameEn:'Greek Yogurt 0%',kcal:59,prot:10,carb:3.6,fat:0.4,note:'بروتين عالي وسعرات منخفضة'},
+ {id:'o01',cat:'fat',name:'زيت زيتون',nameEn:'Olive Oil',kcal:884,prot:0,carb:0,fat:100,note:'دهون أحادية صحية للقلب'},
+ {id:'n01',cat:'nut',name:'لوز',nameEn:'Almonds',kcal:579,prot:21.2,carb:21.6,fat:49.9,note:'فيتامين E ومغنيسيوم عالي'},
+ {id:'l10',cat:'legume',name:'توفو',nameEn:'Tofu',kcal:76,prot:8.1,carb:1.9,fat:4.8,note:'بروتين نباتي كامل'}
 ];
 
-/* CATEGORY CONFIG */
 const CATS = {
- fruit: {label:' فواكه', color:'#E87A7A', bg:'rgba(232,122,122,0.1)'},
- veg: {label:' خضروات', color:'#7AC87A', bg:'rgba(122,200,122,0.1)'},
- protein: {label:' بروتينات', color:'#E8A87A', bg:'rgba(232,168,122,0.1)'},
- grain: {label:' حبوب وكارب', color:'#7AB8E8', bg:'rgba(122,184,232,0.1)'},
- dairy: {label:' منتجات الألبان',color:'#C8C8FF', bg:'rgba(200,200,255,0.1)'},
- legume: {label:' بقوليات', color:'#A8C87A', bg:'rgba(168,200,122,0.1)'},
- fat: {label:' دهون وزيوت', color:'#C9A84C', bg:'rgba(201,168,76,0.1)'},
- nut: {label:' مكسرات وبذور', color:'#D4A97A', bg:'rgba(212,169,122,0.1)'},
+ fruit: {label:'فواكه', color:'#E87A7A'},
+ veg: {label:'خضروات', color:'#7AC87A'},
+ protein: {label:'بروتينات', color:'#F5C842'},
+ grain: {label:'حبوب وكارب', color:'#00D4AA'},
+ dairy: {label:'ألبان', color:'#C8C8FF'},
+ legume: {label:'بقوليات', color:'#A8C87A'},
+ fat: {label:'دهون', color:'#FF5F1F'},
+ nut: {label:'مكسرات', color:'#D4A97A'}
 };
 
-/* STATE */
 let activeFilter = 'all';
 let searchTerm = '';
 let currentModalFood = null;
-let compareList = [];
-let toastTimeout;
-let advFilters = { protMin:0, protMax:100, carbMin:0, carbMax:100, fatMin:0, fatMax:100, kcalMin:0, kcalMax:900 };
-let advFilterActive = false;
-let compareChartInstance = null;
-
-/* INIT */
-
-/* ========== DATABASE VALIDATION (dev only) ========== */
-function validateFoodDatabase() {
-  const issues = [];
-  const ids = new Set();
-  const sourceIds = new Map();
-  FOODS.forEach((f, i) => {
-    if (!f.id) issues.push({i, type:'missing_id', msg:'Missing id'});
-    if (ids.has(f.id)) issues.push({i, type:'dup_id', msg:'Duplicate id: '+f.id});
-    ids.add(f.id);
-    if (!f.name || !f.nameEn) issues.push({i, type:'missing_name', msg:f.id});
-    if (!f.basis) issues.push({i, type:'missing_basis', msg:f.id});
-    if (!f.sourceType) issues.push({i, type:'missing_sourceType', msg:f.id});
-    if (f.kcal < 0 || f.prot < 0 || f.carb < 0 || f.fat < 0) issues.push({i, type:'negative', msg:f.id});
-    if (!Number.isFinite(f.kcal) || !Number.isFinite(f.prot)) issues.push({i, type:'nan', msg:f.id});
-    const derived = f.prot*4 + f.carb*4 + f.fat*9;
-    if (f.kcal > 0 && Math.abs(f.kcal - derived) / f.kcal > 0.35) {
-      issues.push({i, type:'energy_discrepancy', msg:f.id+' reported='+f.kcal+' derived~'+Math.round(derived)});
-    }
-    if (f.sourceId) {
-      if (sourceIds.has(f.sourceId)) {
-        issues.push({i, type:'dup_sourceId', msg:'FDC '+f.sourceId+' also used by '+sourceIds.get(f.sourceId)});
-      } else {
-        sourceIds.set(f.sourceId, f.id);
-      }
-    }
-    if (!['fruit','veg','protein','grain','dairy','legume','fat','nut'].includes(f.cat)) {
-      issues.push({i, type:'invalid_cat', msg:f.id+' cat='+f.cat});
-    }
-  });
-  if (typeof console !== 'undefined' && console.table) {
-    console.log('%c[Food DB Validation] '+FOODS.length+' foods, '+issues.length+' issues', 'color:#C9A84C');
-    if (issues.length) console.table(issues);
-    else console.log('No structural issues detected.');
-  }
-  return issues;
-}
-
 
 function init() {
- validateFoodDatabase();
  populateCalcSelect();
+ renderGrid();
 }
 
 function populateCalcSelect() {
  const sel = document.getElementById('calcSelect');
- const byCat = {};
  FOODS.forEach(f => {
- if (!byCat[f.cat]) byCat[f.cat] = [];
- byCat[f.cat].push(f);
- });
- Object.keys(CATS).forEach(cat => {
- if (!byCat[cat]) return;
- const og = document.createElement('optgroup');
- og.label = CATS[cat].label;
- byCat[cat].forEach(f => {
  const op = document.createElement('option');
  op.value = f.id;
- op.textContent = f.name;
- og.appendChild(op);
- });
- sel.appendChild(og);
+ op.textContent = `${f.name} (${f.kcal} kcal)`;
+ sel.appendChild(op);
  });
  sel.addEventListener('change', calcResult);
 }
 
-/* FILTER */
 function setFilter(btn) {
  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
  btn.classList.add('on');
@@ -1604,21 +506,19 @@ function setFilter(btn) {
  renderGrid();
 }
 
-/* SEARCH */
 function handleSearch(val) {
  searchTerm = val.trim().toLowerCase();
  document.getElementById('searchClear').classList.toggle('show', searchTerm.length > 0);
  renderGrid();
 }
+
 function clearSearch() {
  document.getElementById('searchInput').value = '';
  searchTerm = '';
  document.getElementById('searchClear').classList.remove('show');
  renderGrid();
- document.getElementById('searchInput').focus();
 }
 
-/* RENDER GRID */
 function renderGrid() {
  const sec = document.getElementById('gridSection');
  const emptyEl = document.getElementById('emptyState');
@@ -1626,17 +526,10 @@ function renderGrid() {
  let filtered = FOODS.filter(f => {
  const catOk = activeFilter === 'all' || f.cat === activeFilter;
  const searchOk = !searchTerm || f.name.includes(searchTerm) || (f.nameEn && f.nameEn.toLowerCase().includes(searchTerm));
- let advOk = true;
- if (advFilterActive) {
- advOk = f.prot >= advFilters.protMin && f.prot <= advFilters.protMax &&
- f.carb >= advFilters.carbMin && f.carb <= advFilters.carbMax &&
- f.fat >= advFilters.fatMin && f.fat <= advFilters.fatMax &&
- f.kcal >= advFilters.kcalMin && f.kcal <= advFilters.kcalMax;
- }
- return catOk && searchOk && advOk;
+ return catOk && searchOk;
  });
 
- sec.querySelectorAll('.cat-section').forEach(el => el.remove());
+ sec.querySelectorAll('.cat-group').forEach(el => el.remove());
 
  if (filtered.length === 0) {
  emptyEl.classList.add('show');
@@ -1647,129 +540,88 @@ function renderGrid() {
  emptyEl.classList.remove('show');
  document.getElementById('filterCount').textContent = filtered.length + ' مكوّن';
 
- if (activeFilter === 'all' && !searchTerm) {
  Object.keys(CATS).forEach(cat => {
  const items = filtered.filter(f => f.cat === cat);
  if (items.length === 0) return;
- sec.appendChild(buildSection(cat, items));
- });
- } else {
- const wrapper = document.createElement('div');
- wrapper.className = 'cat-section';
- const grid = document.createElement('div');
- grid.className = 'food-grid';
- filtered.forEach(f => grid.appendChild(buildCard(f)));
- wrapper.appendChild(grid);
- sec.appendChild(wrapper);
- }
-}
 
-function buildSection(cat, items) {
- const cfg = CATS[cat];
- const wrap = document.createElement('div');
- wrap.className = 'cat-section';
-
+ const group = document.createElement('div');
+ group.className = 'cat-group';
+ 
  const header = document.createElement('div');
  header.className = 'section-header';
- header.innerHTML = `
- <div class="section-label" style="background:${cfg.bg};color:${cfg.color}">${cfg.label}</div>
- <div class="section-count">${items.length} مكوّن</div>
- `;
+ header.innerHTML = `<div class="section-label" style="background:${CATS[cat].color}15;color:${CATS[cat].color}">${CATS[cat].label}</div><div class="section-count">${items.length}</div>`;
+ group.appendChild(header);
 
  const grid = document.createElement('div');
  grid.className = 'food-grid';
  items.forEach(f => grid.appendChild(buildCard(f)));
-
- wrap.appendChild(header);
- wrap.appendChild(grid);
- return wrap;
+ group.appendChild(grid);
+ sec.appendChild(group);
+ });
 }
 
 function buildCard(f) {
- const cfg = CATS[f.cat];
  const card = document.createElement('div');
  card.className = 'food-card';
  card.onclick = () => openModal(f);
- const isInCompare = compareList.some(c => c.id === f.id);
  card.innerHTML = `
- <div class="food-card-accent" style="background:${cfg.color}"></div>
- <div class="food-card-body">
  <div class="food-card-top">
- 
  <div>
- <div class="food-kcal">${f.kcal}</div>
- <div class="food-kcal-sub">KCAL/100g</div>
- </div>
- </div>
  <div class="food-name">${f.name}</div>
  <div class="food-name-en">${f.nameEn}</div>
  </div>
- <button class="food-card-share" onclick="shareFood(event, ${JSON.stringify(f).replace(/"/g,'&quot;')})"> شارك</button>
- <button class="food-card-compare ${isInCompare ? 'added' : ''}" onclick="toggleCompare(event,'${f.id}')">${isInCompare ? ' مضاف' : ' قارن'}</button>
+ <div style="text-align:left">
+ <div class="food-kcal">${f.kcal}</div>
+ <div class="food-kcal-sub">KCAL</div>
+ </div>
+ </div>
+ <div class="food-macros-row">
+ <span>🥩 ${f.prot}g</span>
+ <span>🌾 ${f.carb}g</span>
+ <span>🥑 ${f.fat}g</span>
+ </div>
  `;
  return card;
 }
 
-/* CALCULATOR */
 function calcResult() {
  const selVal = document.getElementById('calcSelect').value;
  const grams = parseFloat(document.getElementById('calcGrams').value);
  const resultEl = document.getElementById('calcResult');
 
  if (!selVal || !grams || grams <= 0) { resultEl.classList.remove('show'); return; }
-
  const food = FOODS.find(f => f.id === selVal);
  if (!food) return;
 
- if (!Number.isFinite(grams) || grams <= 0 || grams > 5000) { resultEl.classList.remove("show"); return; }
  const ratio = grams / 100;
  document.getElementById('cKcal').textContent = Math.round(food.kcal * ratio);
  document.getElementById('cProt').textContent = (food.prot * ratio).toFixed(1) + 'g';
  document.getElementById('cCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
  document.getElementById('cFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
- document.getElementById('calcFoodName').innerHTML = `<strong>${food.emoji} ${food.name}</strong> — ${grams}g`;
+ document.getElementById('calcFoodName').innerHTML = `<strong>${food.name}</strong> — ${grams}g`;
+ 
  const tipEl = document.getElementById('calcFoodTip');
  if (food.note) { tipEl.textContent = food.note; tipEl.classList.add('show'); }
  else { tipEl.classList.remove('show'); }
  resultEl.classList.add('show');
 }
 
-/* MANUAL CALCULATOR (for items not in the database) */
-function manualCalc() {
- const ref = parseFloat(document.getElementById('manualRef').value);
- const grams = parseFloat(document.getElementById('manualGrams').value);
- const resultEl = document.getElementById('manualResult');
-
- if (!ref || ref <= 0 || !grams || grams <= 0) { resultEl.classList.remove('show'); return; }
-
- const kcal = Math.round(ref * grams / 100);
- document.getElementById('manualKcal').textContent = kcal;
- resultEl.classList.add('show');
-}
-
-/* MODAL */
 function openModal(f) {
  currentModalFood = f;
- const cfg = CATS[f.cat];
- document.getElementById('modalAccent').style.background = cfg.color;
- document.getElementById('mEmoji').textContent = '';
  document.getElementById('mName').textContent = f.name;
  document.getElementById('mNameEn').textContent = f.nameEn;
  document.getElementById('mKcal').textContent = f.kcal;
  document.getElementById('mProt').textContent = f.prot + 'g';
  document.getElementById('mCarb').textContent = f.carb + 'g';
  document.getElementById('mFat').textContent = f.fat + 'g';
- document.getElementById('mSource').textContent = 'المصدر: ' + (f.source || f.sourceType) + (f.basis ? ' · أساس: ' + f.basis : '');
  document.getElementById('modalGrams').value = '';
  document.getElementById('modalResultRow').classList.add('hide');
  document.getElementById('modal').classList.add('open');
- document.body.style.overflow = 'hidden';
 }
 
 function closeModal(e) {
  if (e && e.target !== document.getElementById('modal') && !e.target.classList.contains('modal-close')) return;
  document.getElementById('modal').classList.remove('open');
- document.body.style.overflow = '';
 }
 
 function modalCalc() {
@@ -1778,212 +630,12 @@ function modalCalc() {
  const f = currentModalFood;
  const r = g / 100;
  const row = document.getElementById('modalResultRow');
- document.getElementById('modalResText').textContent =
- `${g}g = بروتين: ${(f.prot*r).toFixed(1)}g · كارب: ${(f.carb*r).toFixed(1)}g · دهون: ${(f.fat*r).toFixed(1)}g`;
+ document.getElementById('modalResText').textContent = `${g}g: بروتين ${(f.prot*r).toFixed(1)}g · كارب ${(f.carb*r).toFixed(1)}g · دهون ${(f.fat*r).toFixed(1)}g`;
  document.getElementById('modalResKcal').textContent = Math.round(f.kcal * r) + ' kcal';
  row.classList.remove('hide');
 }
 
-document.getElementById('modalGrams').addEventListener('keydown', e => {
- if (e.key === 'Enter') modalCalc();
-});
-
-// Keyboard: Escape to close
-document.addEventListener('keydown', e => {
- if (e.key === 'Escape') closeModal({target: document.getElementById('modal')});
-});
-
 init();
-
-function toggleCompare(e, foodId) {
- e.stopPropagation();
- const food = FOODS.find(f => f.id === foodId);
- if (!food) return;
- const idx = compareList.findIndex(f => f.id === foodId);
- if (idx > -1) {
- compareList.splice(idx, 1);
- } else {
- if (compareList.length >= 4) { showToast('الحد الأقصى 4 مكونات للمقارنة'); return; }
- compareList.push(food);
- }
- updateCompareBar();
- renderGrid();
-}
-
-function updateCompareBar() {
- const bar = document.getElementById('compareBar');
- const itemsEl = document.getElementById('compareItems');
- if (compareList.length === 0) { bar.classList.remove('show'); return; }
- bar.classList.add('show');
- itemsEl.innerHTML = compareList.map(f =>
- `<div class="compare-chip">${f.name}<button class="compare-chip-remove" onclick="toggleCompare(event,'${f.id}')"></button></div>`
- ).join('');
-}
-
-function clearCompare() {
- compareList = [];
- updateCompareBar();
- renderGrid();
-}
-
-function openCompareModal() {
- if (compareList.length < 2) { showToast('اختر على الأقل مكوّنَين للمقارنة'); return; }
- const table = document.getElementById('compareTable');
- const rows = [
- { label: 'المكوّن', key: null },
- { label: 'KCAL / 100g', key: 'kcal' },
- { label: 'بروتين (g)', key: 'prot' },
- { label: 'كارب (g)', key: 'carb' },
- { label: 'دهون (g)', key: 'fat' },
- ];
-
- let html = '<thead><tr><th>القيمة</th>';
- compareList.forEach(f => { html += `<th>${f.name}</th>`; });
- html += '</tr></thead><tbody>';
-
- rows.forEach(row => {
- if (!row.key) {
- html += `<tr><td>${row.label}</td>`;
- compareList.forEach(f => { html += `<td style="font-size:11px;color:var(--text-muted)">${f.nameEn}</td>`; });
- html += '</tr>';
- return;
- }
- const vals = compareList.map(f => f[row.key]);
- const best = row.key === 'kcal' || row.key === 'fat' ? Math.min(...vals) : Math.max(...vals);
- html += `<tr><td>${row.label}</td>`;
- compareList.forEach(f => {
- const v = f[row.key];
- const isBest = v === best;
- html += `<td class="${isBest ? 'best-val' : ''}">${v}${row.key !== 'kcal' ? 'g' : ''}</td>`;
- });
- html += '</tr>';
- });
-
- html += '</tbody>';
- table.innerHTML = html;
-
- const bases = [...new Set(compareList.map(f => f.basis || 'unknown'))];
- if (bases.length > 1) {
-   const warn = document.createElement('div');
-   warn.style.cssText = 'margin:12px 0;padding:10px;background:rgba(232,122,122,0.1);border:1px solid rgba(232,122,122,0.3);border-radius:8px;font-size:12px;color:#E87A7A;';
-   warn.textContent = 'تنبيه: المكونات المقارنة لها حالات تحضير مختلفة (' + bases.join(' / ') + '). المقارنة لكل 100g قد تكون مضللة.';
-   table.parentNode.insertBefore(warn, table);
- }
-
- /* Chart.js bar chart */
- setTimeout(() => {
- if (compareChartInstance) { compareChartInstance.destroy(); compareChartInstance = null; }
- const ctx = document.getElementById('compareChart').getContext('2d');
- compareChartInstance = new Chart(ctx, {
- type: 'bar',
- data: {
- labels: compareList.map(f => f.name),
- datasets: [
- { label: 'سعرات', data: compareList.map(f=>f.kcal), backgroundColor:'rgba(201,168,76,0.7)', borderColor:'#C9A84C', borderWidth:1 },
- { label: 'بروتين', data: compareList.map(f=>f.prot), backgroundColor:'rgba(232,168,122,0.7)', borderColor:'#E8A87A', borderWidth:1 },
- { label: 'كارب', data: compareList.map(f=>f.carb), backgroundColor:'rgba(122,184,232,0.7)', borderColor:'#7AB8E8', borderWidth:1 },
- { label: 'دهون', data: compareList.map(f=>f.fat), backgroundColor:'rgba(232,122,122,0.7)', borderColor:'#E87A7A', borderWidth:1 },
- ]
- },
- options: {
- responsive: true, maintainAspectRatio: false,
- plugins: {
- legend: { labels: { color: '#888', font: { family: 'Cairo', size: 11 } } },
- },
- scales: {
- x: { ticks: { color: '#888', font: { family: 'Cairo' } }, grid: { color: 'rgba(255,255,255,0.05)' } },
- y: { ticks: { color: '#888', font: { family: 'Cairo' } }, grid: { color: 'rgba(255,255,255,0.05)' } },
- }
- }
- });
- }, 100);
-
- document.getElementById('compareModal').classList.add('open');
- document.body.style.overflow = 'hidden';
-}
-
-function closeCompareModal(e) {
- if (e && e.target !== document.getElementById('compareModal') && !e.target.classList.contains('modal-close')) return;
- document.getElementById('compareModal').classList.remove('open');
- document.body.style.overflow = '';
- if (compareChartInstance) { compareChartInstance.destroy(); compareChartInstance = null; }
-}
-
-/* SHARE CARD */
-function shareFood(e, food) {
- e.stopPropagation();
- const text = ` ${food.emoji} ${food.name} — لكل 100g:\n بروتين: ${food.prot}g\n كارب: ${food.carb}g\n دهون: ${food.fat}g\n ${food.kcal} سعرة\n\nمصدر: قاعدة بيانات Coach Anis\nhttps://coach-anis.github.io/calories-db/`;
- if (navigator.share) {
- navigator.share({ text });
- } else {
- navigator.clipboard.writeText(text).then(() => showToast(' تم نسخ البيانات'));
- }
-}
-
-/* TOAST */
-function showToast(msg) {
- const t = document.getElementById('toast');
- t.textContent = msg;
- t.classList.add('show');
- clearTimeout(toastTimeout);
- toastTimeout = setTimeout(() => t.classList.remove('show'), 2500);
-}
-
-/* MEAL CALCULATOR */
-
-/* COMPARE CHART */
-
-/* PWA */
-window.addEventListener('load', () => {
- const overlay = document.getElementById('welcome-overlay');
- setTimeout(() => {
- overlay.classList.add('hide');
- setTimeout(() => overlay.remove(), 500);
- }, 1100);
-});
-
-// Service Worker
-if ('serviceWorker' in navigator) {
- navigator.serviceWorker.register('/calories-db/sw.js').catch(() => {});
- window.addEventListener('offline', () => showPwaToast(' أنت غير متصل — يعمل أوف لاين'));
- window.addEventListener('online', () => showPwaToast(' عاد الاتصال بالإنترنت'));
-}
-
-// Install prompt
-let _deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', e => {
- e.preventDefault();
- _deferredPrompt = e;
- if (!localStorage.getItem('pwa_cal_dismissed')) {
- setTimeout(() => document.getElementById('pwa-banner').classList.remove('hidden'), 3000);
- }
-});
-document.getElementById('btn-pwa-install').addEventListener('click', () => {
- document.getElementById('pwa-banner').classList.add('hidden');
- if (_deferredPrompt) {
- _deferredPrompt.prompt();
- _deferredPrompt.userChoice.then(r => {
- if (r.outcome === 'accepted') showPwaToast(' تم تثبيت التطبيق!');
- _deferredPrompt = null;
- });
- }
-});
-document.getElementById('btn-pwa-dismiss').addEventListener('click', () => {
- document.getElementById('pwa-banner').classList.add('hidden');
- localStorage.setItem('pwa_cal_dismissed', '1');
-});
-window.addEventListener('appinstalled', () => {
- document.getElementById('pwa-banner').classList.add('hidden');
- showPwaToast(' تم تثبيت التطبيق بنجاح!');
-});
-
-function showPwaToast(msg) {
- const t = document.getElementById('pwa-toast');
- t.textContent = msg;
- t.classList.add('show');
- setTimeout(() => t.classList.remove('show'), 3000);
-}
-
 </script>
 </body>
 </html>
