@@ -2,649 +2,293 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>قاعدة بيانات السعرات | Coach Anis</title>
-<meta name="description" content="قاعدة بيانات غذائية لسعرات وماكرو المكونات — USDA FoodData Central">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>حاسبة السعرات | Coach Anis</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --fire: #FF5F1F;
-  --fire2: #FF8C42;
-  --gold: #F5C842;
-  --gold2: #FFE17A;
-  --teal: #00D4AA;
-  --teal2: #00F5C4;
-  --blue: #4DA6FF;
-  --red: #FF4D6D;
-  --bg: #06060A;
-  --bg2: #0E0E16;
-  --bg3: #15151F;
-  --bg4: #1C1C28;
-  --text: #F0F0F8;
-  --muted: #5A5A72;
-  --border: rgba(255,255,255,0.06);
-  --border-fire: rgba(255,95,31,0.2);
-  --border-gold: rgba(245,200,66,0.2);
-  --border-teal: rgba(0,212,170,0.2);
-  --radius: 18px;
+  --bg: #121216;
+  --card-bg: #1A1A22;
+  --border: #2A2A36;
+  --text: #FFFFFF;
+  --text-muted: #8E8EA0;
+  --accent: #FF5F1F;
+  --accent-light: rgba(255, 95, 31, 0.15);
+  --radius: 12px;
 }
 
-*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
-html { scroll-behavior:smooth; }
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Cairo', sans-serif; }
+body { background: var(--bg); color: var(--text); padding-bottom: 40px; }
 
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Cairo', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* Background Mesh */
-body::before {
-  content:'';
-  position:fixed; inset:0; z-index:0;
-  background:
-    radial-gradient(ellipse 55% 30% at 15% 0%, rgba(255,95,31,0.06) 0%, transparent 60%),
-    radial-gradient(ellipse 45% 25% at 85% 5%, rgba(0,212,170,0.04) 0%, transparent 55%),
-    radial-gradient(ellipse 40% 20% at 50% 100%, rgba(245,200,66,0.03) 0%, transparent 50%);
-  pointer-events:none;
-}
-
-::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
-
-/* NAVBAR */
-.nav {
-  position: sticky; top: 0; z-index: 100;
-  background: rgba(6,6,10,0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+/* الشريط العلوي */
+.navbar {
+  background: var(--card-bg);
   border-bottom: 1px solid var(--border);
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 14px;
-  max-width: 640px; margin: 0 auto;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-
-.nav-brand {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.1rem; font-weight: 800;
-  color: var(--text); flex-shrink: 0;
-  letter-spacing: -0.5px;
-}
-.nav-brand span {
-  color: var(--muted); font-size: 9px; font-weight: 700;
-  letter-spacing: 1.5px; display: block; text-transform: uppercase;
-  font-family: 'Cairo', sans-serif; margin-top: 1px;
-}
-
+.nav-brand { font-weight: 700; font-size: 16px; color: var(--accent); }
 .nav-search {
-  flex: 1; min-width: 150px;
-  position: relative; display: flex; align-items: center;
-  background: var(--bg3);
+  flex: 1;
+  max-width: 300px;
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 12px; overflow: hidden;
-  transition: border-color .2s, box-shadow .2s;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  padding: 6px 12px;
 }
-.nav-search:focus-within {
-  border-color: rgba(255,95,31,0.4);
-  box-shadow: 0 0 0 3px rgba(255,95,31,0.08);
-}
-.nav-search-icon { padding: 0 10px; font-size: 13px; color: var(--muted); }
 .nav-search input {
-  background: transparent; border: none; outline: none;
-  color: var(--text); font-family: 'Cairo', sans-serif;
-  font-size: 0.85rem; padding: 10px 0; flex: 1; direction: rtl;
-}
-.nav-search input::placeholder { color: rgba(255,255,255,0.15); }
-.nav-search-clear {
-  background: none; border: none; color: var(--muted); cursor: pointer;
-  padding: 0 10px; font-size: 13px; display: none; transition: color .2s;
-}
-.nav-search-clear.show { display: block; }
-.nav-search-clear:hover { color: var(--text); }
-
-/* FILTERS BAR */
-.filters-bar {
   background: transparent;
-  padding: 12px 16px;
-  display: flex; gap: 8px; align-items: center;
-  overflow-x: auto;
-  scrollbar-width: none;
-  max-width: 640px; margin: 0 auto;
+  border: none;
+  outline: none;
+  color: var(--text);
+  font-size: 13px;
+  width: 100%;
+  direction: rtl;
 }
-.filters-bar::-webkit-scrollbar { display: none; }
-.filter-btn {
-  background: var(--bg2);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 8px 14px;
-  font-family: 'Cairo', sans-serif; font-size: 0.8rem; font-weight: 700;
-  color: var(--muted); cursor: pointer; transition: all .25s;
-  white-space: nowrap; flex-shrink: 0;
-}
-.filter-btn:hover { border-color: rgba(255,95,31,0.3); color: var(--text); }
-.filter-btn.on {
-  background: rgba(255,95,31,0.1);
-  border-color: rgba(255,95,31,0.35);
-  color: var(--fire2);
-  box-shadow: 0 0 20px rgba(255,95,31,0.1);
+.nav-search input::placeholder { color: var(--text-muted); }
+
+/* المحتوى الرئيسي */
+.container {
+  max-width: 550px;
+  margin: 20px auto;
+  padding: 0 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.filters-count {
-  margin-right: auto;
-  font-family: 'Syne', sans-serif;
-  font-size: 11px; font-weight: 700;
-  color: var(--muted); letter-spacing: 1px;
-}
-
-/* CALCULATOR SECTION */
-.calc-section {
-  padding: 0 16px 16px;
-  max-width: 640px; margin: 0 auto;
-}
-.calc-card {
-  background: var(--bg2);
-  border: 1px solid var(--border-fire);
-  border-radius: var(--radius); padding: 18px;
-  position: relative; overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-}
-.calc-card::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-  background: linear-gradient(90deg, var(--fire), var(--fire2));
-}
-.calc-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.95rem; font-weight: 800;
-  color: var(--fire2); margin-bottom: 14px;
-  letter-spacing: -0.3px;
-}
-.calc-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: flex-end; }
-.calc-field { flex: 1; min-width: 140px; }
-.calc-field label {
-  display: block; font-size: 9px; font-weight: 700; color: var(--muted);
-  letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px;
-}
-.calc-field select, .calc-field input {
-  width: 100%; background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px; padding: 11px 12px;
-  font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
-  color: var(--text); outline: none;
-  transition: border-color .2s, box-shadow .2s;
-  appearance: none; -webkit-appearance: none;
-}
-.calc-field select:focus, .calc-field input:focus {
-  border-color: rgba(255,95,31,0.5);
-  box-shadow: 0 0 0 3px rgba(255,95,31,0.08);
-}
-.calc-field select option { background: var(--bg3); color: #fff; }
-
-.calc-result {
-  margin-top: 14px; display: none;
-  animation: fadeUp .3s ease both;
-}
-.calc-result.show { display: block; }
-.calc-result-grid {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
-}
-
-.calc-res-cell {
-  background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 12px; padding: 12px 8px;
-  text-align: center; position: relative; overflow: hidden;
-}
-.calc-res-cell::before { content: ''; display: block; height: 2px; margin-bottom: 8px; border-radius: 1px; }
-.calc-res-cell.k::before { background: var(--fire); }
-.calc-res-cell.p::before { background: var(--gold); }
-.calc-res-cell.c::before { background: var(--teal); }
-.calc-res-cell.f::before { background: var(--blue); }
-
-.calc-res-val {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.25rem; font-weight: 800; line-height: 1;
-  letter-spacing: -0.5px;
-}
-.calc-res-cell.k .calc-res-val { color: var(--fire2); }
-.calc-res-cell.p .calc-res-val { color: var(--gold); }
-.calc-res-cell.c .calc-res-val { color: var(--teal2); }
-.calc-res-cell.f .calc-res-val { color: var(--blue); }
-.calc-res-lbl { font-size: 8px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
-
-.calc-food-name { margin-bottom: 10px; font-size: 0.82rem; color: var(--muted); font-weight: 600; }
-.calc-food-name strong { color: var(--text); font-size: 0.95rem; font-family: 'Syne', sans-serif; }
-.calc-food-tip {
-  margin-top: 10px; padding: 10px 12px;
-  background: rgba(255,95,31,0.04);
-  border: 1px solid var(--border-fire);
-  border-radius: 10px; font-size: 0.78rem; color: var(--muted);
-  display: none; align-items: center; gap: 8px; font-weight: 600;
-}
-.calc-food-tip.show { display: flex; }
-
-/* FOOD GRID */
-.grid-section { padding: 0 16px 80px; max-width: 640px; margin: 0 auto; }
-.section-header {
-  display: flex; align-items: center; gap: 10px;
-  padding: 16px 0 10px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 12px;
-}
-.section-label {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.8rem; font-weight: 800; letter-spacing: 1.5px;
-  padding: 5px 12px; border-radius: 20px; text-transform: uppercase;
-}
-.section-count {
-  font-family: 'Syne', sans-serif;
-  font-size: 11px; font-weight: 700; color: var(--muted);
-  margin-right: auto; letter-spacing: 1px;
-}
-
-.food-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin-bottom: 16px;
-}
-@media(max-width:400px) { .food-grid { grid-template-columns: 1fr; } }
-
-.food-card {
-  background: var(--bg2);
+/* الكارد / الخانة */
+.card {
+  background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 14px; overflow: hidden;
-  transition: transform .2s, border-color .2s, box-shadow .2s;
-  cursor: pointer; position: relative;
+  padding: 20px;
 }
-.food-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(255,95,31,0.3);
-  box-shadow: 0 6px 24px rgba(255,95,31,0.06);
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
-.food-card-top {
-  display: flex; justify-content: space-between;
-  align-items: flex-start; margin-bottom: 8px;
-}
-.food-kcal {
-  font-family: 'Syne', sans-serif;
-  font-size: 1.35rem; font-weight: 800; color: var(--fire2); line-height: 1;
-  letter-spacing: -0.5px;
-}
-.food-kcal-sub { font-size: 8px; font-weight: 700; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-.food-name { font-size: 0.92rem; font-weight: 700; color: var(--text); margin-bottom: 2px; }
-.food-name-en { font-size: 0.72rem; color: var(--muted); margin-bottom: 10px; font-weight: 600; }
 
-.food-macros-row {
-  display: flex; gap: 8px; font-size: 10px; font-weight: 700; color: var(--muted);
+/* الحقول والأزرار */
+.form-group {
+  margin-bottom: 12px;
 }
-.food-macros-row span { font-family: 'Syne', sans-serif; font-size: 11px; }
-
-/* EMPTY STATE */
-.empty-state {
-  text-align: center; padding: 60px 20px; color: var(--muted);
-  display: none; font-weight: 600; font-size: 0.85rem;
+.form-label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 5px;
 }
-.empty-state.show { display: block; }
-.empty-state div:first-child { font-size: 38px; margin-bottom: 10px; opacity: 0.4; }
-
-/* MODAL */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: rgba(6,6,10,0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  display: flex; align-items: center; justify-content: center;
-  padding: 16px; opacity: 0; pointer-events: none;
-  transition: opacity .3s;
-}
-.modal-overlay.open { opacity: 1; pointer-events: all; }
-.modal-card {
-  background: var(--bg2);
+select, input {
+  width: 100%;
+  background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 20px;
-  width: 100%; max-width: 380px;
-  overflow: hidden;
-  transform: scale(.95) translateY(12px);
-  transition: transform .3s;
-  box-shadow: 0 16px 48px rgba(0,0,0,0.6);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
 }
-.modal-overlay.open .modal-card { transform: scale(1) translateY(0); }
-.modal-body { padding: 22px; }
-.modal-close {
-  float: left; background: none; border: none;
-  color: var(--muted); cursor: pointer; font-size: 1rem;
-  transition: color .2s;
-}
-.modal-close:hover { color: var(--text); }
-.modal-name { font-size: 1.15rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
-.modal-name-en { font-size: 0.75rem; color: var(--muted); margin-bottom: 16px; font-weight: 600; }
-.modal-macros { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 16px; }
-.modal-cell { background: var(--bg3); border: 1px solid var(--border); border-radius: 12px; padding: 10px 6px; text-align: center; }
-.modal-val { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 800; line-height: 1; }
-.modal-lbl { font-size: 8px; font-weight: 700; color: var(--muted); margin-top: 3px; text-transform: uppercase; }
+select:focus, input:focus { border-color: var(--accent); }
+select option { background: var(--card-bg); color: var(--text); }
 
-.modal-calc-input {
-  width: 100%; background: var(--bg3);
-  border: 1px solid var(--border);
-  border-radius: 10px; padding: 10px 12px;
-  font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700;
-  color: var(--text); outline: none; margin-top: 6px;
-  transition: border-color .2s;
+/* نتائج الحساب */
+.result-box {
+  margin-top: 15px;
+  background: var(--accent-light);
+  border: 1px solid rgba(255, 95, 31, 0.3);
+  border-radius: 8px;
+  padding: 12px;
+  display: none;
 }
-.modal-calc-input:focus { border-color: rgba(255,95,31,0.5); }
-.modal-result-row {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 12px; background: var(--bg3);
-  border-radius: 10px; margin-top: 10px; font-size: 0.82rem; font-weight: 600;
+.result-box.show { display: block; }
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  text-align: center;
+  margin-top: 8px;
 }
-.modal-result-row.hide { display: none; }
-
-/* TOAST */
-.toast {
-  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
-  background: var(--bg4); border: 1px solid var(--border);
-  border-radius: 30px; padding: 10px 20px;
-  font-size: 0.82rem; color: var(--fire2); font-weight: 700;
-  z-index: 800; opacity: 0; transition: all .3s;
-  pointer-events: none; white-space: nowrap;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+.res-item {
+  background: var(--bg);
+  border-radius: 6px;
+  padding: 8px 4px;
 }
-.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.food-card { animation: fadeUp .35s ease both; }
+.res-val { font-weight: 700; font-size: 15px; color: var(--accent); }
+.res-lbl { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+.food-info-text { font-size: 13px; font-weight: 600; color: var(--text); }
 </style>
 </head>
 <body>
 
-<!-- NAVBAR -->
-<nav class="nav">
- <div class="nav-brand">
- COACH ANIS
- <span>قاعدة بيانات السعرات</span>
- </div>
- <div class="nav-search">
- <span class="nav-search-icon">🔍</span>
- <input type="text" id="searchInput" placeholder="ابحث عن مكوّن..." oninput="handleSearch(this.value)">
- <button class="nav-search-clear" id="searchClear" onclick="clearSearch()">✕</button>
- </div>
-</nav>
+<!-- الشريط العلوي مع البحث -->
+<header class="navbar">
+  <div class="nav-brand">COACH ANIS</div>
+  <div class="nav-search">
+    <input type="text" id="mainSearch" placeholder="بحث سريع عن مكوّن..." oninput="filterDropdown(this.value)">
+  </div>
+</header>
 
-<!-- FILTERS -->
-<div class="filters-bar" id="filtersBar">
- <button class="filter-btn on" data-cat="all" onclick="setFilter(this)">الكل</button>
- <button class="filter-btn" data-cat="protein" onclick="setFilter(this)">🥩 بروتينات</button>
- <button class="filter-btn" data-cat="grain" onclick="setFilter(this)">🌾 حبوب وكارب</button>
- <button class="filter-btn" data-cat="fruit" onclick="setFilter(this)">🍎 فواكه</button>
- <button class="filter-btn" data-cat="veg" onclick="setFilter(this)">🥦 خضروات</button>
- <button class="filter-btn" data-cat="dairy" onclick="setFilter(this)">🧀 ألبان</button>
- <button class="filter-btn" data-cat="nut" onclick="setFilter(this)">🥜 مكسرات</button>
- <button class="filter-btn" data-cat="fat" onclick="setFilter(this)">🫒 دهون</button>
- <span class="filters-count" id="filterCount">0 مكوّن</span>
-</div>
+<main class="container">
 
-<!-- CALCULATOR -->
-<section class="calc-section">
- <div class="calc-card">
- <div class="calc-title">⚡ حاسبة سريعة للكميات</div>
- <div class="calc-row">
- <div class="calc-field">
- <label>اختر المكوّن</label>
- <select id="calcSelect"><option value="">— اختر مكوّناً —</option></select>
- </div>
- <div class="calc-field" style="max-width:110px">
- <label>الكمية (g)</label>
- <input type="number" id="calcGrams" placeholder="100" min="1" max="2000" oninput="calcResult()">
- </div>
- </div>
- <div class="calc-result" id="calcResult">
- <div class="calc-food-name" id="calcFoodName"></div>
- <div class="calc-result-grid">
- <div class="calc-res-cell k"><div class="calc-res-val" id="cKcal">—</div><div class="calc-res-lbl">KCAL</div></div>
- <div class="calc-res-cell p"><div class="calc-res-val" id="cProt">—</div><div class="calc-res-lbl">بروتين</div></div>
- <div class="calc-res-cell c"><div class="calc-res-val" id="cCarb">—</div><div class="calc-res-lbl">كارب</div></div>
- <div class="calc-res-cell f"><div class="calc-res-val" id="cFat">—</div><div class="calc-res-lbl">دهون</div></div>
- </div>
- <div class="calc-food-tip" id="calcFoodTip"></div>
- </div>
- </div>
-</section>
+  <!-- الخانة الأولى: حاسبة السعرات (تحتوي على جميع المكونات) -->
+  <section class="card">
+    <div class="card-title">🍎 حاسبة سعرات المكونات</div>
+    <div class="form-group">
+      <label class="form-label">اختر المكوّن (شامل جميع الأطعمة)</label>
+      <select id="foodSelect" onchange="calculateFood()">
+        <option value="">-- اختر مكوّناً --</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">الكمية (بالجرام)</label>
+      <input type="number" id="foodGrams" placeholder="مثال: 150" min="1" oninput="calculateFood()">
+    </div>
+    
+    <div class="result-box" id="foodResultBox">
+      <div class="food-info-text" id="foodTitleRes"></div>
+      <div class="result-grid">
+        <div class="res-item">
+          <div class="res-val" id="resKcal">0</div>
+          <div class="res-lbl">سعرات</div>
+        </div>
+        <div class="res-item">
+          <div class="res-val" id="resProt">0</div>
+          <div class="res-lbl">بروتين</div>
+        </div>
+        <div class="res-item">
+          <div class="res-val" id="resCarb">0</div>
+          <div class="res-lbl">كارب</div>
+        </div>
+        <div class="res-item">
+          <div class="res-val" id="resFat">0</div>
+          <div class="res-lbl">دهون</div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-<!-- GRID SECTION -->
-<section class="grid-section" id="gridSection">
- <div class="empty-state" id="emptyState">
- <div>🔍</div>
- <div>لا توجد نتائج مطابقة لـ "<span id="emptyTerm"></span>"</div>
- </div>
-</section>
+  <!-- الخانة الثانية: الحاسبة اليدوية -->
+  <section class="card">
+    <div class="card-title">⚖️ الحاسبة اليدوية المخصصة</div>
+    <div class="form-group">
+      <label class="form-label">السعرات في كل 100 جرام</label>
+      <input type="number" id="manualKcal100" placeholder="مثال: 130" oninput="calculateManual()">
+    </div>
+    <div class="form-group">
+      <label class="form-label">الكمية التي أكلتها (بالجرام)</label>
+      <input type="number" id="manualGrams" placeholder="مثال: 200" oninput="calculateManual()">
+    </div>
+    
+    <div class="result-box" id="manualResultBox">
+      <div class="food-info-text">إجمالي السعرات للكمية المدخلة:</div>
+      <div style="font-size: 22px; font-weight: 700; color: var(--accent); margin-top: 5px;" id="manualTotalKcal">0 سعرة</div>
+    </div>
+  </section>
 
-<!-- MODAL -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
- <div class="modal-card">
- <div class="modal-body">
- <button class="modal-close" onclick="closeModal()">✕</button>
- <div class="modal-name" id="mName"></div>
- <div class="modal-name-en" id="mNameEn"></div>
- <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px">القيم الغذائية لكل 100 جرام</div>
- <div class="modal-macros">
- <div class="modal-cell"><div class="modal-val" id="mKcal" style="color:var(--fire2)"></div><div class="modal-lbl">KCAL</div></div>
- <div class="modal-cell"><div class="modal-val" id="mProt" style="color:var(--gold)"></div><div class="modal-lbl">بروتين</div></div>
- <div class="modal-cell"><div class="modal-val" id="mCarb" style="color:var(--teal2)"></div><div class="modal-lbl">كارب</div></div>
- <div class="modal-cell"><div class="modal-val" id="mFat" style="color:var(--blue)"></div><div class="modal-lbl">دهون</div></div>
- </div>
- <div style="font-size:9px;font-weight:700;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px">حساب الكمية الخاصة بك:</div>
- <input type="number" class="modal-calc-input" id="modalGrams" placeholder="أدخل الكمية بالجرام..." oninput="modalCalc()">
- <div class="modal-result-row hide" id="modalResultRow">
- <span id="modalResText"></span>
- <span id="modalResKcal" style="color:var(--fire2);font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;"></span>
- </div>
- </div>
- </div>
-</div>
-
-<div class="toast" id="toast"></div>
+</main>
 
 <script>
-const FOODS = [
- {id:'f01',cat:'fruit',name:'موز',nameEn:'Banana',kcal:89,prot:1.1,carb:22.8,fat:0.3,note:'مصدر ممتاز للبوتاسيوم والطاقة'},
- {id:'f02',cat:'fruit',name:'تفاحة',nameEn:'Apple',kcal:52,prot:0.3,carb:13.8,fat:0.2,note:'غني بالألياف ومضادات الأكسدة'},
- {id:'p01',cat:'protein',name:'صدر دجاج (نيء)',nameEn:'Chicken Breast',kcal:120,prot:22.5,carb:0,fat:2.6,note:'بروتين نقي قليل الدهون'},
- {id:'p03',cat:'protein',name:'بيض كامل',nameEn:'Whole Egg',kcal:155,prot:13,carb:1.1,fat:11,note:'بروتين عالي الجودة البيولوجية'},
- {id:'p05',cat:'protein',name:'تونة في الماء',nameEn:'Tuna',kcal:116,prot:25.5,carb:0,fat:1,note:'بروتين صافي ممتاز للدايت'},
- {id:'g01',cat:'grain',name:'أرز أبيض (جاف)',nameEn:'White Rice (Raw)',kcal:360,prot:6.7,carb:79.0,fat:0.6,note:'القيمة الغذائية للأرز الأبيض وهو غير مطبوخ'},
- {id:'g02',cat:'grain',name:'أرز بني (جاف)',nameEn:'Brown Rice (Raw)',kcal:370,prot:7.5,carb:77.2,fat:2.9,note:'أرز بني غير مطبوخ — ألياف أعلى'},
- {id:'g03',cat:'grain',name:'معكرونة (جافة)',nameEn:'Pasta (Dry)',kcal:371,prot:13.0,carb:74.7,fat:1.5,note:'معكرونة جافة قبل الطهي'},
- {id:'g04',cat:'grain',name:'شوفان (جاف)',nameEn:'Oats (Dry)',kcal:389,prot:16.9,carb:66.3,fat:6.9,note:'ألياف بيتا جلوكان لصحة القلب'},
- {id:'g07',cat:'grain',name:'كسكس (جاف)',nameEn:'Couscous (Dry)',kcal:376,prot:12.8,carb:72.4,fat:0.6,note:'كسكس جاف غير مطبوخ'},
- {id:'g10',cat:'grain',name:'كينوا (جافة)',nameEn:'Quinoa (Dry)',kcal:368,prot:14.1,carb:64.2,fat:6.1,note:'بروتين نباتي كامل — جاف'},
- {id:'g11',cat:'grain',name:'برغل (جاف)',nameEn:'Bulgur (Dry)',kcal:342,prot:12.3,carb:75.8,fat:1.3,note:'برغل قمح جاف غير مطبوخ'},
- {id:'g13',cat:'grain',name:'شعير (جاف)',nameEn:'Barley (Dry)',kcal:354,prot:12.5,carb:73.5,fat:2.3,note:'حبوب الشعير الجافة'},
- {id:'g15',cat:'grain',name:'معكرونة قمح كامل (جافة)',nameEn:'Whole Wheat Pasta (Dry)',kcal:348,prot:14.6,carb:72.5,fat:2.5,note:'معكرونة قمح كامل جافة'},
- {id:'g16',cat:'grain',name:'أرز بسمتي (جاف)',nameEn:'Basmati Rice (Raw)',kcal:350,prot:7.1,carb:78.0,fat:0.6,note:'أرز بسمتي غير مطبوخ'},
- {id:'g18',cat:'grain',name:'فريكة (جافة)',nameEn:'Freekeh (Dry)',kcal:350,prot:13.0,carb:71.0,fat:2.5,note:'قمح أخضر محمّص جاف'},
- {id:'d03',cat:'dairy',name:'زبادي طبيعي',nameEn:'Yogurt',kcal:59,prot:3.5,carb:5,fat:3.3,note:'بروبيوتيك ممتاز للهضم'},
- {id:'d04',cat:'dairy',name:'زبادي يوناني 0%',nameEn:'Greek Yogurt 0%',kcal:59,prot:10,carb:3.6,fat:0.4,note:'بروتين عالي وسعرات منخفضة'},
- {id:'o01',cat:'fat',name:'زيت زيتون',nameEn:'Olive Oil',kcal:884,prot:0,carb:0,fat:100,note:'دهون أحادية صحية للقلب'},
- {id:'n01',cat:'nut',name:'لوز',nameEn:'Almonds',kcal:579,prot:21.2,carb:21.6,fat:49.9,note:'فيتامين E ومغنيسيوم عالي'},
- {id:'l10',cat:'legume',name:'توفو',nameEn:'Tofu',kcal:76,prot:8.1,carb:1.9,fat:4.8,note:'بروتين نباتي كامل'}
+// قاعدة البيانات الشاملة لجميع المكونات (مع الحبوب الجافة)
+const ALL_FOODS = [
+  {id:'f01', name:'موز', kcal:89, prot:1.1, carb:22.8, fat:0.3},
+  {id:'f02', name:'تفاحة', kcal:52, prot:0.3, carb:13.8, fat:0.2},
+  {id:'p01', name:'صدر دجاج (نيء)', kcal:120, prot:22.5, carb:0, fat:2.6},
+  {id:'p03', name:'بيض كامل', kcal:155, prot:13.0, carb:1.1, fat:11.0},
+  {id:'p05', name:'تونة في الماء', kcal:116, prot:25.5, carb:0, fat:1.0},
+  {id:'g01', name:'أرز أبيض (جاف)', kcal:360, prot:6.7, carb:79.0, fat:0.6},
+  {id:'g02', name:'أرز بني (جاف)', kcal:370, prot:7.5, carb:77.2, fat:2.9},
+  {id:'g03', name:'معكرونة (جافة)', kcal:371, prot:13.0, carb:74.7, fat:1.5},
+  {id:'g04', name:'شوفان (جاف)', kcal:389, prot:16.9, carb:66.3, fat:6.9},
+  {id:'g07', name:'كسكس (جاف)', kcal:376, prot:12.8, carb:72.4, fat:0.6},
+  {id:'g10', name:'كينوا (جافة)', kcal:368, prot:14.1, carb:64.2, fat:6.1},
+  {id:'g11', name:'برغل (جاف)', kcal:342, prot:12.3, carb:75.8, fat:1.3},
+  {id:'g13', name:'شعير (جاف)', kcal:354, prot:12.5, carb:73.5, fat:2.3},
+  {id:'g15', name:'معكرونة قمح كامل (جافة)', kcal:348, prot:14.6, carb:72.5, fat:2.5},
+  {id:'g16', name:'أرز بسمتي (جاف)', kcal:350, prot:7.1, carb:78.0, fat:0.6},
+  {id:'g18', name:'فريكة (جافة)', kcal:350, prot:13.0, carb:71.0, fat:2.5},
+  {id:'d03', name:'زبادي طبيعي', kcal:59, prot:3.5, carb:5.0, fat:3.3},
+  {id:'d04', name:'زبادي يوناني 0%', kcal:59, prot:10.0, carb:3.6, fat:0.4},
+  {id:'o01', name:'زيت زيتون', kcal:884, prot:0.0, carb:0.0, fat:100.0},
+  {id:'n01', name:'لوز', kcal:579, prot:21.2, carb:21.6, fat:49.9},
+  {id:'l10', name:'توفو', kcal:76, prot:8.1, carb:1.9, fat:4.8}
 ];
 
-const CATS = {
- fruit: {label:'فواكه', color:'#E87A7A'},
- veg: {label:'خضروات', color:'#7AC87A'},
- protein: {label:'بروتينات', color:'#F5C842'},
- grain: {label:'حبوب وكارب', color:'#00D4AA'},
- dairy: {label:'ألبان', color:'#C8C8FF'},
- legume: {label:'بقوليات', color:'#A8C87A'},
- fat: {label:'دهون', color:'#FF5F1F'},
- nut: {label:'مكسرات', color:'#D4A97A'}
-};
-
-let activeFilter = 'all';
-let searchTerm = '';
-let currentModalFood = null;
-
-function init() {
- populateCalcSelect();
- renderGrid();
+// تعبئة قائمة المكونات عند التحميل
+function populateSelect(foodsToRender) {
+  const select = document.getElementById('foodSelect');
+  select.innerHTML = '<option value="">-- اختر مكوّناً --</option>';
+  foodsToRender.forEach(f => {
+    const opt = document.createElement('option');
+    opt.value = f.id;
+    opt.textContent = `${f.name} (${f.kcal} سعرة / 100g)`;
+    select.appendChild(opt);
+  });
 }
 
-function populateCalcSelect() {
- const sel = document.getElementById('calcSelect');
- FOODS.forEach(f => {
- const op = document.createElement('option');
- op.value = f.id;
- op.textContent = `${f.name} (${f.kcal} kcal)`;
- sel.appendChild(op);
- });
- sel.addEventListener('change', calcResult);
+// تصفية القائمة عبر شريط البحث العلوي
+function filterDropdown(query) {
+  const q = query.trim().toLowerCase();
+  const filtered = ALL_FOODS.filter(f => f.name.toLowerCase().includes(q));
+  populateSelect(filtered);
 }
 
-function setFilter(btn) {
- document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
- btn.classList.add('on');
- activeFilter = btn.dataset.cat;
- renderGrid();
+// حساب السعرات والماكرو للمكون المختاره
+function calculateFood() {
+  const foodId = document.getElementById('foodSelect').value;
+  const grams = parseFloat(document.getElementById('foodGrams').value);
+  const box = document.getElementById('foodResultBox');
+
+  if (!foodId || !grams || grams <= 0) {
+    box.classList.remove('show');
+    return;
+  }
+
+  const food = ALL_FOODS.find(f => f.id === foodId);
+  if (!food) return;
+
+  const ratio = grams / 100;
+  document.getElementById('foodTitleRes').textContent = `${food.name} (${grams} جرام):`;
+  document.getElementById('resKcal').textContent = Math.round(food.kcal * ratio);
+  document.getElementById('resProt').textContent = (food.prot * ratio).toFixed(1) + 'g';
+  document.getElementById('resCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
+  document.getElementById('resFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
+
+  box.classList.add('show');
 }
 
-function handleSearch(val) {
- searchTerm = val.trim().toLowerCase();
- document.getElementById('searchClear').classList.toggle('show', searchTerm.length > 0);
- renderGrid();
+// حساب الحاسبة اليدوية
+function calculateManual() {
+  const kcal100 = parseFloat(document.getElementById('manualKcal100').value);
+  const grams = parseFloat(document.getElementById('manualGrams').value);
+  const box = document.getElementById('manualResultBox');
+
+  if (!kcal100 || !grams || kcal100 <= 0 || grams <= 0) {
+    box.classList.remove('show');
+    return;
+  }
+
+  const total = Math.round((kcal100 / 100) * grams);
+  document.getElementById('manualTotalKcal').textContent = total + ' سعرة حرارية';
+  box.classList.add('show');
 }
 
-function clearSearch() {
- document.getElementById('searchInput').value = '';
- searchTerm = '';
- document.getElementById('searchClear').classList.remove('show');
- renderGrid();
-}
-
-function renderGrid() {
- const sec = document.getElementById('gridSection');
- const emptyEl = document.getElementById('emptyState');
-
- let filtered = FOODS.filter(f => {
- const catOk = activeFilter === 'all' || f.cat === activeFilter;
- const searchOk = !searchTerm || f.name.includes(searchTerm) || (f.nameEn && f.nameEn.toLowerCase().includes(searchTerm));
- return catOk && searchOk;
- });
-
- sec.querySelectorAll('.cat-group').forEach(el => el.remove());
-
- if (filtered.length === 0) {
- emptyEl.classList.add('show');
- document.getElementById('emptyTerm').textContent = searchTerm || activeFilter;
- document.getElementById('filterCount').textContent = '0 مكوّن';
- return;
- }
- emptyEl.classList.remove('show');
- document.getElementById('filterCount').textContent = filtered.length + ' مكوّن';
-
- Object.keys(CATS).forEach(cat => {
- const items = filtered.filter(f => f.cat === cat);
- if (items.length === 0) return;
-
- const group = document.createElement('div');
- group.className = 'cat-group';
- 
- const header = document.createElement('div');
- header.className = 'section-header';
- header.innerHTML = `<div class="section-label" style="background:${CATS[cat].color}15;color:${CATS[cat].color}">${CATS[cat].label}</div><div class="section-count">${items.length}</div>`;
- group.appendChild(header);
-
- const grid = document.createElement('div');
- grid.className = 'food-grid';
- items.forEach(f => grid.appendChild(buildCard(f)));
- group.appendChild(grid);
- sec.appendChild(group);
- });
-}
-
-function buildCard(f) {
- const card = document.createElement('div');
- card.className = 'food-card';
- card.onclick = () => openModal(f);
- card.innerHTML = `
- <div class="food-card-top">
- <div>
- <div class="food-name">${f.name}</div>
- <div class="food-name-en">${f.nameEn}</div>
- </div>
- <div style="text-align:left">
- <div class="food-kcal">${f.kcal}</div>
- <div class="food-kcal-sub">KCAL</div>
- </div>
- </div>
- <div class="food-macros-row">
- <span>🥩 ${f.prot}g</span>
- <span>🌾 ${f.carb}g</span>
- <span>🥑 ${f.fat}g</span>
- </div>
- `;
- return card;
-}
-
-function calcResult() {
- const selVal = document.getElementById('calcSelect').value;
- const grams = parseFloat(document.getElementById('calcGrams').value);
- const resultEl = document.getElementById('calcResult');
-
- if (!selVal || !grams || grams <= 0) { resultEl.classList.remove('show'); return; }
- const food = FOODS.find(f => f.id === selVal);
- if (!food) return;
-
- const ratio = grams / 100;
- document.getElementById('cKcal').textContent = Math.round(food.kcal * ratio);
- document.getElementById('cProt').textContent = (food.prot * ratio).toFixed(1) + 'g';
- document.getElementById('cCarb').textContent = (food.carb * ratio).toFixed(1) + 'g';
- document.getElementById('cFat').textContent = (food.fat * ratio).toFixed(1) + 'g';
- document.getElementById('calcFoodName').innerHTML = `<strong>${food.name}</strong> — ${grams}g`;
- 
- const tipEl = document.getElementById('calcFoodTip');
- if (food.note) { tipEl.textContent = food.note; tipEl.classList.add('show'); }
- else { tipEl.classList.remove('show'); }
- resultEl.classList.add('show');
-}
-
-function openModal(f) {
- currentModalFood = f;
- document.getElementById('mName').textContent = f.name;
- document.getElementById('mNameEn').textContent = f.nameEn;
- document.getElementById('mKcal').textContent = f.kcal;
- document.getElementById('mProt').textContent = f.prot + 'g';
- document.getElementById('mCarb').textContent = f.carb + 'g';
- document.getElementById('mFat').textContent = f.fat + 'g';
- document.getElementById('modalGrams').value = '';
- document.getElementById('modalResultRow').classList.add('hide');
- document.getElementById('modal').classList.add('open');
-}
-
-function closeModal(e) {
- if (e && e.target !== document.getElementById('modal') && !e.target.classList.contains('modal-close')) return;
- document.getElementById('modal').classList.remove('open');
-}
-
-function modalCalc() {
- const g = parseFloat(document.getElementById('modalGrams').value);
- if (!g || g <= 0 || !currentModalFood) return;
- const f = currentModalFood;
- const r = g / 100;
- const row = document.getElementById('modalResultRow');
- document.getElementById('modalResText').textContent = `${g}g: بروتين ${(f.prot*r).toFixed(1)}g · كارب ${(f.carb*r).toFixed(1)}g · دهون ${(f.fat*r).toFixed(1)}g`;
- document.getElementById('modalResKcal').textContent = Math.round(f.kcal * r) + ' kcal';
- row.classList.remove('hide');
-}
-
-init();
+// التشغيل الأولي
+populateSelect(ALL_FOODS);
 </script>
+
 </body>
 </html>
